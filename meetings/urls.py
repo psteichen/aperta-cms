@@ -1,7 +1,9 @@
 from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import permission_required
 
-from .forms import ListMeetingsForm, ModifyMeetingForm, ModifyAttendanceForm
+from attendance.forms import ModifyAttendanceForm
+
+from .forms import ListMeetingsForm, ModifyMeetingForm
 from .views import ModifyMeetingWizard, show_attendance_form
 from .views import index, add, send, list_all, list
 

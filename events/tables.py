@@ -18,6 +18,7 @@ class EventTable(Table):
   row_class	= Column(visible=False, empty_values=()) #used to highlight some rows
   totals	= Column(verbose_name='Présents/Excusés',empty_values=())
   details	= Column(verbose_name='Détails',empty_values=())
+  modify	= Column(verbose_name='Modifier',empty_values=())
 
   def render_row_class(self, record):
     if record.when < date.today():
@@ -30,7 +31,11 @@ class EventTable(Table):
     link = '<a class="btn btn-default btn-sm" href="/events/list/{}/"><span class="glyphicon glyphicon-list"></span></a>'.format(escape(record.pk))
     return mark_safe(link)
 
+  def render_modify(self, record):
+    link = '<a class="btn btn-default btn-sm" href="/events/modify/{}/"><span class="glyphicon glyphicon-pencil"></span></a>'.format(escape(record.pk))
+    return mark_safe(link)
+
   class Meta:
     model = Event
-    fields = ( 'title', 'when', 'location', 'totals', 'details', )
+    fields = ( 'title', 'when', 'location', 'totals', 'details', 'modify', )
     attrs = {"class": "table table-striped"}

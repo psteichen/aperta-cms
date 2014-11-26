@@ -26,7 +26,6 @@ TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = [ 'dev.cms.aperta.lu', ]
 
-
 # Application definition
 
 INSTALLED_APPS = (
@@ -116,6 +115,10 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
+
+# Media files (use uploaded documents)
+MEDIA_ROOT =  '/var/www/aperta.lu/www/files/'
+MEDIA_URL =  'http://aperta.lu/files/'
 
 # LOCAL settings
 

@@ -3,34 +3,27 @@
 
 ACTIONS = (
   {
-    'heading'           : 'Choose actions on <strong>events</strong>:',
+    'heading'           : 'Choisir l\'action à faire sur les <strong>Événements</strong>:',
     'has_perms'         : 'cms.BOARD',
     'actions'   : (
       {
-        'label'         : 'Add Event',
+        'label'         : 'Ajouter un Évènement',
         'glyphicon'     : 'glyphicon-calendar',
-        'desc'          : 'Add a new meeting',
+        'desc'          : 'Ceci ajoute un évènement ou une activité et prépare les invitations/informations a envoyées aux membres.',
         'url'           : '/events/add/',
     	'has_perms'     : 'cms.BOARD',
       },
       {
-        'label'         : 'Send Event Invitations',
+        'label'         : '(R)Envoyer les Invitations/Informations',
         'glyphicon'     : 'glyphicon-calendar',
-        'desc'          : 'Send Invitations (or reminder) for a specified event.',
+        'desc'          : 'Envoie ou renvoie les invitations/informations concernant l\'évènement ou l\'activité choisi.',
         'url'           : '/events/send/',
     	'has_perms'     : 'cms.BOARD',
       },
       {
-        'label'         : 'Modify Event',
+        'label'         : 'Liste des Évènements/Activités',
         'glyphicon'     : 'glyphicon-calendar',
-        'desc'          : 'Modify a meeting',
-        'url'           : '/events/modify/',
-    	'has_perms'     : 'cms.BOARD',
-      },
-      {
-        'label'         : 'List Events',
-        'glyphicon'     : 'glyphicon-calendar',
-        'desc'          : 'List all events',
+        'desc'          : 'Tableau des évènements/activités enregistrer dans la base de données.',
         'url'           : '/events/list_all/',
     	'has_perms'     : 'cms.BOARD',
       },
@@ -40,9 +33,9 @@ ACTIONS = (
     'has_perms'         : 'cms.BOARD',
     'actions'   : (
       { 
-        'label'         : 'Location Management', 
+        'label'         : 'Gestion des Lieux de Rencontre', 
         'glyphicon'     : 'glyphicon-home',
-        'desc'          : 'Add a Location.', 
+        'desc'          : 'Gérer (ajouter/modifier) les lieux de rencontre.', 
         'url'           : '/locations/', 
     	'has_perms'     : 'cms.BOARD',
       },
@@ -51,27 +44,35 @@ ACTIONS = (
 )
 
 EVENTS_TMPL_CONTENT = {
-  'title'       : 'Event Management',
+  'title'       : 'Gestion des Évènements/Activités',
   'template'    : 'actions.html',
   'actions'     : ACTIONS,
-  'add': {
-    'template'	: 'form.html',
-    'title'     : ACTIONS[0]['actions'][0]['desc'],
-    'desc'     	: 'Create Event & Send Invitations',
-    'submit'   	: 'GO',
+  'add' : {
+    'title'     : ACTIONS[0]['actions'][0]['label'],
+    'desc' 	: ACTIONS[0]['actions'][0]['desc'],
+    'first'	: 'first',
+    'prev'	: 'back',
+    'event' : {
+      'title'   : 'Ajouter un évnènenemt/une activité',
+      'next'    : 'soumettre',
+    },
+    'location' : {
+      'title'   : 'Ajouter un lieu de rencontre',
+      'next'    : 'soumettre',
+    },
     'done': {
       'template'	: 'done.html',
-      'title'     	: 'New Event added',
-      'message'     	: '''
-<pre>
-Invitation e-mail: 
+      'title'     	: u'Nouvel(le) évènement/activité [%s] ajouter',
+      'message'     	: u'''
+<blockquote>
+E-mail d'invitation/information: 
 --------------------------------------
 %(email)s
 --------------------------------------
 
-Recipients: 
+Destinataires: 
 %(list)s
-</pre>
+</blockquote>
 ''',
       'email': {
 	'template'	: 'event_invitation.txt',
@@ -94,52 +95,42 @@ Recipients:
       },
     },
   },
-  'attendance': {
-    'template'	: 'done.html',
-    'title'     : u'Participation à la %(meeting)s',
-    'too_late' 	: u'Désolé il est <strong>trop tard</strong> pour s\'inscrire/désister!',
-    'yes'  	: u'%(name)s, par la présente ta <strong>participation</strong> est <strong>confirmé(e)</strong>!',
-    'no'  	: u'%(name)s, merci de nous avoir notifier ton désistement, tu sera <strong>excusé(e)</strong>!',
-    'email' : {
-      'yes'	: u'''
-Par la présente ta participation à la %(meeting)s est confirmé(e)!''',
-      'no'  	: u'''
-Merci de nous avoir notifier ton désistement, pour la %(meeting)s. 
-
-Tu sera excusé(e).''',
-    },
-  },
   'list_all': {
-    'template'  : 'list.html',
-    'title'     : 'Liste des réunions',
-    'desc'     	: ACTIONS[0]['actions'][3]['desc'],
+    'template'  	: 'list.html',
+    'title'     	: ACTIONS[0]['actions'][2]['label'],
+    'desc'     		: ACTIONS[0]['actions'][2]['desc'],
   },
   'list': {
-    'template'  : 'done.html',
-    'title'     : u'Détail de l\'événement "%(event)s"',
+    'template'  	: 'done.html',
+    'title'     	: u'Détail de l\'événement "%(event)s"',
     'overview' : {
       'template'	: 'overview_event.html',
+      'modify'		: u'Modifier',
       'date'		: u'Date et heure',
-      'location'	: u'Lieu',
+      'location'	: u'Lieu de Rencontre',
+      'invitation'	: u'Invitations',
+      'sent'		: u'Envoyées le ',
+      'attachement'	: u'Notice détaillée',
+      'message'		: u'Message',
       'attendance'	: u'Présent(s)',
       'excused'		: u'Excusé(s)',
     },
   },
   'modify' : {
-    'title'     : ACTIONS[0]['actions'][2]['label'],
+    'title'     : 'Modifier un Évènement',
     'first'	: 'first',
     'prev'	: 'back',
-    'list' : {
-      'title'   : 'Choose Event to modify',
-      'next'    : 'next',
+    'event' : {
+      'title'   : 'Modifier %(event)s',
+      'next'    : 'soumettre',
     },
-    'meeting' : {
-      'title'   : 'Modify Event',
-      'next'    : 'submit',
+    'attendance' : {
+      'title'   : 'Ajuster les inscriptions/présences',
+      'next'    : 'soumettre',
     },
     'done' : {
       'template'        : 'done.html',
-      'title'           : 'Event [%s] modified!',
+      'title'           : 'L\'Évènement/activité [%s] a été modifié(e)!',
     },
   },
 }

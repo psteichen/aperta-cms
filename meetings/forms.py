@@ -3,9 +3,7 @@
 from datetime import date
 
 from django.conf import settings
-from django.forms import Form, ModelForm, TextInput, Textarea, HiddenInput, CharField, ModelChoiceField, BooleanField, DateField, ModelMultipleChoiceField, CheckboxSelectMultiple
-
-from members.functions import get_active_members
+from django.forms import Form, ModelForm, TextInput, Textarea, HiddenInput, CharField, ModelChoiceField, BooleanField, DateField
 
 from .models import Meeting
 
@@ -40,9 +38,4 @@ class ModifyMeetingForm(ModelForm):
       'when'	: TextInput(attrs={'type': 'date', }),
       'time'	: TextInput(attrs={'type': 'time', }),
     }
-
-class ModifyAttendanceForm(Form):
-  subscribed	= ModelMultipleChoiceField(label=u'Présent',queryset=get_active_members(),widget=CheckboxSelectMultiple,required=False)
-  excused	= ModelMultipleChoiceField(label=u'Excusé',queryset=get_active_members(),widget=CheckboxSelectMultiple,required=False)
-
 

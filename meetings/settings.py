@@ -9,7 +9,7 @@ ACTIONS = (
       {
         'label'         : u'Ajouter une Réunion Statutaire',
         'glyphicon'     : 'glyphicon-calendar',
-        'desc'          : u'Ceci rajoute une réunion statutaire et prépare les invitations à envoyé pour cette réunion.',
+        'desc'          : u'Ceci rajoute une réunion statutaire et prépare les invitations a envoyées aux membres.',
         'url'           : '/meetings/add/',
     	'has_perms'     : 'cms.BOARD',
       },
