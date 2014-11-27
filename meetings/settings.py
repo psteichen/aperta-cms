@@ -47,16 +47,25 @@ MEETINGS_TMPL_CONTENT = {
   'title'       : u'Gestion des Réunions Statutaires',
   'template'    : 'actions.html',
   'actions'     : ACTIONS,
-  'add': {
-    'template'	: 'form.html',
+  'add' : {
     'title'     : ACTIONS[0]['actions'][0]['label'],
-    'desc'     	: ACTIONS[0]['actions'][0]['desc'],
-    'submit'   	: u'Ajouter',
+    'desc' 	: ACTIONS[0]['actions'][0]['desc'],
+    'first'	: 'first',
+    'prev'	: 'back',
+    'meeting' : {
+      'title'   : 'Ajouter une réunion statutaire',
+      'next'    : 'soumettre',
+    },
+    'location' : {
+      'title'   : 'Ajouter un lieu de rencontre',
+      'next'    : 'soumettre',
+    },
+
     'done': {
       'template'	: 'done.html',
       'title'     	: u'Nouvelle Réunion Statutaire créée',
       'message'     	: u'''
-<pre>
+<blockquote>
 Invitation e-mail: 
 --------------------------------------
 %(email)s
@@ -64,10 +73,25 @@ Invitation e-mail:
 
 Destinataires: 
 %(list)s
-</pre>
+</blockquote>
 ''',
       'email': {
 	'template'	: 'meeting_invitation.txt',
+	'subject'	: u'[51 aperta] %(title)s',
+      },
+    },
+  },
+  'wouldbe': {
+    'template'		: 'form.html',
+    'title'     	: 'Inviter un "WouldBe"',
+    'desc'     		: 'Renseigne les détails de contact du WouldBe que tu souhaite inviter.',
+    'submit'   		: u'Soumettre',
+    'done': {
+      'template'	: 'done.html',
+      'title'     	: u'Invitation d\'un "WouldBe"',
+      'message'     	: u'Le "WouldBe" : %(name)s a été invité à la : %(meeting)s',
+      'email': {
+	'template'	: 'wouldbe_meeting_invitation.txt',
 	'subject'	: u'[51 aperta] %(title)s',
       },
     },

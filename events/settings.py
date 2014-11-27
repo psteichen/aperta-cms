@@ -8,21 +8,21 @@ ACTIONS = (
     'actions'   : (
       {
         'label'         : 'Ajouter un Évènement',
-        'glyphicon'     : 'glyphicon-calendar',
+        'glyphicon'     : 'glyphicon-glass',
         'desc'          : 'Ceci ajoute un évènement ou une activité et prépare les invitations/informations a envoyées aux membres.',
         'url'           : '/events/add/',
     	'has_perms'     : 'cms.BOARD',
       },
       {
         'label'         : '(R)Envoyer les Invitations/Informations',
-        'glyphicon'     : 'glyphicon-calendar',
+        'glyphicon'     : 'glyphicon-glass',
         'desc'          : 'Envoie ou renvoie les invitations/informations concernant l\'évènement ou l\'activité choisi.',
         'url'           : '/events/send/',
     	'has_perms'     : 'cms.BOARD',
       },
       {
         'label'         : 'Liste des Évènements/Activités',
-        'glyphicon'     : 'glyphicon-calendar',
+        'glyphicon'     : 'glyphicon-glass',
         'desc'          : 'Tableau des évènements/activités enregistrer dans la base de données.',
         'url'           : '/events/list_all/',
     	'has_perms'     : 'cms.BOARD',

@@ -3,27 +3,20 @@
 
 ACTIONS = (
   {
-    'heading'           : 'Choose actions on <strong>members</strong>:',
+    'heading'           : 'Choisir l\'action sur les <strong>Members</strong>:',
     'has_perms'		: 'cms.BOARD',
     'actions'   : (
       {
-        'label'         : 'Add Member',
+        'label'         : 'Ajouter un Membre',
         'glyphicon'     : 'glyphicon-user',
-        'desc'          : 'Add a new member',
+        'desc'          : 'Ceci ajoute un membre.', 
         'url'           : '/members/add/',
    	'has_perms'	: 'cms.BOARD',
       },
       {
-        'label'         : 'Modify Member',
+        'label'         : 'Liste des Membres',
         'glyphicon'     : 'glyphicon-user',
-        'desc'          : 'Modify member',
-        'url'           : '/members/modify/',
-   	'has_perms'	: 'cms.BOARD',
-      },
-      {
-        'label'         : 'List Members',
-        'glyphicon'     : 'glyphicon-user',
-        'desc'          : 'List all members',
+        'desc'          : 'Tableau de tous le membres dans la base de donn√e.',
         'url'           : '/members/list/',
    	'has_perms'	: 'cms.BOARD',
       },

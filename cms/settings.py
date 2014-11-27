@@ -117,8 +117,9 @@ STATICFILES_FINDERS = (
 
 
 # Media files (use uploaded documents)
-MEDIA_ROOT =  '/var/www/aperta.lu/www/files/'
-MEDIA_URL =  'http://aperta.lu/files/'
+#MEDIA_ROOT =  '/var/www/aperta.lu/www/files/'
+MEDIA_ROOT =  '/Users/pst/Projects/APERTA/media/'
+MEDIA_URL =  'https://aperta.lu/files/'
 
 # LOCAL settings
 
@@ -252,7 +253,6 @@ TEMPLATE_CONTENT['home'] = {
 from members.settings import *
 TEMPLATE_CONTENT['members'] = MEMBERS_TMPL_CONTENT
 
-
 #attendance
 from attendance.settings import *
 TEMPLATE_CONTENT['attendance'] = ATTENDANCE_TMPL_CONTENT
@@ -271,6 +271,10 @@ MEETINGS_ATTENDANCE_URL = ATTENDANCE_BASE_URL + 'meetings/'
 from events.settings import *
 TEMPLATE_CONTENT['events'] = EVENTS_TMPL_CONTENT
 EVENTS_ATTENDANCE_URL = ATTENDANCE_BASE_URL + 'events/'
+
+#selling
+from selling.settings import *
+TEMPLATE_CONTENT['selling'] = SELLING_TMPL_CONTENT
 
 #webcontent
 #from webcontent.settings import *

@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from django.db.models import Model, CharField, DateField, ForeignKey, TimeField, DateTimeField, IntegerField
+from django.db.models import Model, CharField, DateField, ForeignKey, TimeField, DateTimeField, IntegerField, FileField, OneToOneField
 
 from members.models import Member
 from locations.models import Location
@@ -10,17 +10,21 @@ class Meeting(Model):
   title		= CharField(verbose_name='Titre',max_length=100)
   when		= DateField(verbose_name='Date')
   time		= TimeField(verbose_name='Heure de début')
-  location	= ForeignKey(Location,verbose_name='Lieu')
+  location	= ForeignKey(Location,verbose_name='Lieu de Rencontre',blank=True,null=True)
   deadline	= DateField(verbose_name='Deadline')
+  attachement	= FileField(verbose_name='Notice détaillée',upload_to='meetings',blank=True,null=True)
   
   def __unicode__(self):
     return unicode(self.title) + ' du ' + unicode(self.when)
 
 
 class Invitation(Model):
-  meeting	= ForeignKey(Meeting)
+  meeting	= OneToOneField(Meeting)
   message	= CharField(max_length=5000)
-  sent		= DateTimeField()
+  sent		= DateTimeField(blank=True,null=True)
 
   def __unicode__(self):
-    return u'Invitations pour: ' + unicode(self.meeting) + u' envoyées à: ' + self.sent.strftime('%Y-%m-%d %H:%M')
+    sent = ''
+    if self.sent:
+      sent = u' envoyées le ' + self.sent.strftime('%Y-%m-%d à %H:%M')
+    return u'Invitations pour: ' + unicode(self.meeting) + sent

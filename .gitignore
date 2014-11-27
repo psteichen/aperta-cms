@@ -54,6 +54,7 @@ docs/_build/
 target/
 
 #project specific
+.env
 */migrations/
 db.sqlite
 HERE

@@ -36,15 +36,17 @@ def gen_attendance_links(event,event_type,email):
 
   return links
 
-def gen_invitation_message(template,event,event_type,member):
+def gen_invitation_message(template,event,event_type,invitee,sponsor=False):
   content = {}
+
+  if sponsor: content['sponsor'] = gen_member_fullname(sponsor)
 
   content['title'] = event.title
   content['when'] = event.when
   content['time'] = event.time
   content['location'] = event.location
   content['deadline'] = event.deadline
-  content['attendance'] = gen_attendance_links(event,event_type,member.email)
+  content['attendance'] = gen_attendance_links(event,event_type,invitee.email)
 
   return render_to_string(template,content)
 

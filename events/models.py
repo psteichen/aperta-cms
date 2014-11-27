@@ -9,8 +9,8 @@ class Event(Model):
   MEET = 0
   OTH = 1
   TYPES = (
-    (MEET, 'Réunion statutaire'),
-    (OTH,  'Autre Evénement/Rencontre'),
+    (MEET, u'Réunion statutaire'),
+    (OTH,  u'Autre Évènement/Rencontre/Activité'),
   )
 
   title		= CharField(verbose_name='Titre',max_length=100)
@@ -32,5 +32,6 @@ class Invitation(Model):
   def __unicode__(self):
     sent = ''
     if self.sent:
-      sent = u' envoyé le ' + unicode(self.sent)
-    return unicode(self.event) + sent
+      sent = u' envoyées le ' + self.sent.strftime('%Y-%m-%d à %H:%M')
+    return u'Invitations pour: ' + unicode(self.event) + sent
+
