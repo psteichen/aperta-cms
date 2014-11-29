@@ -3,21 +3,21 @@
 
 ACTIONS = (
   {
-    'heading'           : 'Choisir l\'action sur les <strong>Members</strong>:',
+    'heading'           : 'Choisir l\'action sur les <strong>Produits</strong>:',
     'has_perms'		: 'cms.BOARD',
     'actions'   : (
       {
         'label'         : 'Ajouter un Produit',
-        'glyphicon'     : 'glyphicon-glass',
+        'glyphicon'     : 'glyphicon-euro',
         'desc'          : 'Ceci ajoute un produit.', 
         'url'           : '/selling/add/',
    	'has_perms'	: 'cms.BOARD',
       },
       {
         'label'         : 'Liste des Produits',
-        'glyphicon'     : 'glyphicon-glass',
+        'glyphicon'     : 'glyphicon-euro',
         'desc'          : 'Tableau de tous les produits dans la base de donnée.',
-        'url'           : '/selling/list/',
+        'url'           : '/selling/list_all/',
    	'has_perms'	: 'cms.BOARD',
       },
     ),
@@ -30,14 +30,14 @@ SELLING_TMPL_CONTENT = {
   'actions'     : ACTIONS,
   'add': {
     'template'		: 'form.html',
-    'title'     	: ACTIONS[0]['actions'][0]['desc'],
+    'title'     	: ACTIONS[0]['actions'][0]['label'],
     'desc'      	: ACTIONS[0]['actions'][0]['desc'],
     'first'             : u'début',
     'prev'              : u'précédent',
     'overview' : {
       'title'           : 'Overview',
     },
-    'produit' : {
+    'product' : {
       'title'           : u'Créer un nouveau Produit',
       'next'            : 'suivant',
     },
@@ -79,10 +79,10 @@ SELLING_TMPL_CONTENT = {
       'title'           : u'Produit [%s] modifié!',
     },
   },
-  'list': {
+  'list_all': {
     'template'  	: 'list.html',
-    'title'     	: 'List of Members',
-    'desc'     		: '',
+    'title'     	: ACTIONS[0]['actions'][1]['label'],
+    'desc'      	: ACTIONS[0]['actions'][1]['desc'],
   },
   'order': {
     'template'		: 'form.html',

@@ -1,14 +1,16 @@
 from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import permission_required
 
-from .views import index, list_all, list, order
+from .views import index, list_all, list#, order
 
 from .forms import AddProductForm, AddPackagingForm, AddPriceForm
 from .views import AddProductWizard
 
-from .forms import ModifyProductForm, ModifyPackagingForm, ModifyPriceForm
-from .views import ModifyProductWizard, show_packaging_form, show_price_form
+#from .forms import ModifyProductForm, ModifyPackagingForm, ModifyPriceForm
+#from .views import ModifyProductWizard, show_packaging_form, show_price_form
 
+from .forms import SelectProductForm, AmountForm
+from .views import OrderWizard
 
 # add product wizard #
 #forms
@@ -25,31 +27,44 @@ add_product_wrapper = permission_required('cms.BOARD',raise_exception=True)(add_
 
 # modify product wizard #
 #forms
-modify_product_forms = [
-        ('product'	, ModifyProductForm),
-        ('packaging'	, ModifyPackagingForm),
-        ('price'	, ModifyPriceForm),
-]
+#modify_product_forms = [
+#        ('product'	, ModifyProductForm),
+#        ('packaging'	, ModifyPackagingForm),
+#        ('price'	, ModifyPriceForm),
+#]
 #condition dict
-modify_product_condition_dict = {
-	'packaging'	: show_packaging_form,
-	'price'		: show_price_form,
-}
+#modify_product_condition_dict = {
+#	'packaging'	: show_packaging_form,
+#	'price'		: show_price_form,
+#}
 #view
-modify_product_wizard = ModifyProductWizard.as_view(modify_product_forms, condition_dict=modify_product_condition_dict)
+#modify_product_wizard = ModifyProductWizard.as_view(modify_product_forms, condition_dict=modify_product_condition_dict)
 #wrapper with specific permissions
-modify_product_wrapper = permission_required('cms.BOARD',raise_exception=True)(modify_product_wizard)
+#modify_product_wrapper = permission_required('cms.BOARD',raise_exception=True)(modify_product_wizard)
+
+
+# order wizard #
+#forms
+order_forms = [
+        ('select'	, SelectProductForm),
+        ('amount'	, AmountForm),
+]
+#view
+order_wizard = OrderWizard.as_view(order_forms)
+#wrapper with specific permissions
+#modify_product_wrapper = permission_required('cms.BOARD',raise_exception=True)(modify_product_wizard)
+
 
 urlpatterns = patterns('',
   url(r'^$', index, name='index'),
 
   url(r'^add/$', add_product_wrapper, name='add'),
 
-  url(r'^modify/(?P<product_id>.+?)/$', modify_product_wrapper, name='modify'),
+#  url(r'^modify/(?P<product_id>.+?)/$', modify_product_wrapper, name='modify'),
 
   url(r'^list_all/$', list_all, name='list_all'),
   url(r'^list/(?P<product_id>.+?)/$', list, name='list'),
 
-  url(r'^order/$', order, name='order'),
+  url(r'^order/$', order_wizard, name='order'),
 
 )

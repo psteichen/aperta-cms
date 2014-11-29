@@ -46,6 +46,7 @@ INSTALLED_APPS = (
   'attendance',
   'meetings',
   'events',
+  'selling',
   'webcontent',
 )
 
@@ -220,6 +221,14 @@ ACTIONS = (
         'url'           : '/members/',
     	'has_perms' 	: 'cms.BOARD',
       },
+      {         
+        'label'         : u'Gestion des Ventes', 
+        'glyphicon'     : 'glyphicon-euro',
+        'desc'          : 'Gérer les Produits à vendre pour une bonne cause.',
+        'url'           : '/selling/',
+    	'has_perms' 	: 'cms.BOARD',
+      },
+
     ),
   },
   {
