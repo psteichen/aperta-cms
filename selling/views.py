@@ -13,7 +13,7 @@ from django_tables2  import RequestConfig
 
 from cms.functions import notify_by_email, show_form
 
-from .forms import AddProductForm, AddPackagingForm, AddPriceForm
+from .forms import OrderForm
 from .models import Product, Packaging, Price, Order
 from .tables import ProductTable
 
@@ -308,80 +308,62 @@ class ModifyEventWizard(SessionWizardView):
 
 # order #
 #########
+def order(r, hash):
+  r.breadcrumbs( ( ('home','/'),
+                   ('selling','/selling/'),
+                   ('order products','/selling/order/'),
+               ) )
 
-#order formwizard
-class OrderWizard(SessionWizardView):
+  if r.POST:
+    e_template =  settings.TEMPLATE_CONTENT['selling']['order']['done']['email']['template']
 
-  file_storage = FileSystemStorage()
-
-  def get_template_names(self):
-    return 'wizard.html'
-
-  def get_context_data(self, form, **kwargs):
-    context = super(OrderWizard, self).get_context_data(form=form, **kwargs)
-
-    #add breadcrumbs to context
-    self.request.breadcrumbs( ( ('home','/'),
-                                ('selling','/selling/'),
-                                ('order products','/selling/order/'),
-                            ) )
-
-    if self.steps.current != None:
-      context.update({'title': settings.TEMPLATE_CONTENT['selling']['order']['title']})
-      context.update({'first': settings.TEMPLATE_CONTENT['selling']['order']['first']})
-      context.update({'prev': settings.TEMPLATE_CONTENT['selling']['order']['prev']})
-      context.update({'step_title': settings.TEMPLATE_CONTENT['selling']['order'][self.steps.current]['title']})
-      context.update({'next': settings.TEMPLATE_CONTENT['selling']['order'][self.steps.current]['next']})
-
-    return context
-
-  def done(self, fl, form_dict, **kwargs):
-    self.request.breadcrumbs( ( ('home','/'),
-                                ('selling','/selling/'),
-                                ('order products','/selling/order/'),
-                            ) )
-
-    template = settings.TEMPLATE_CONTENT['selling']['order']['done']['template']
-    error_message = ''
-
-    P = Pa = Pr = None
-    pf = form_dict['product']
-    paf = form_dict['packaging']
-    pif = form_dict['price']
-    errors = { 'ok': True, 'where': (), }
-
-    if paf.is_valid():
-      Pa = paf.save()
-    else: 
-      errors['ok'] = False
-      errors['where'].add(paf)
-
-    if pif.is_valid():
-      Pi = pif.save()
-    else: 
-      errors['ok'] = False
-      errors['where'].add(pif)
-
-    if pf.is_valid():
-      P = pf.save(commit=False)
-      P.packaging = Pa
-      P.price = Pi
-      P.save()
+    of = OrderForm(r.POST)
+    if of.is_valid():
+      products = of.cleaned_data['product']
 
       title = settings.TEMPLATE_CONTENT['selling']['order']['done']['title']
+      
+      #invitation email with "YES/NO button"
+      subject = settings.TEMPLATE_CONTENT['selling']['order']['done']['email']['subject'] % { 'title': unicode(Ev.title) }
+      invitation_message = gen_invitation_message(e_template,Ev,Event.OTH,m)
+      message_content = {
+          'FULLNAME'    : gen_member_fullname(m),
+          'MESSAGE'     : invitation_message,
+      }
+      #send email
+      ok=notify_by_email(r.user.email,m.email,subject,message_content)
+      if not ok: 
+        email_error['ok']=False
+        email_error['who'].add(m.email)
 
-      # errors detected -> show error messages
-      if not errors['ok']:
-        return render(self.request, settings.TEMPLATE_CONTENT['selling']['order']['done']['template'], {
+      # error in email -> show error messages
+      if not email_error['ok']:
+        return render(r, settings.TEMPLATE_CONTENT['selling']['send']['done']['template'], {
 	                'title': title, 
-        	        'error_message': settings.TEMPLATE_CONTENT['error']['email'] + ' ; '.join([e for e in errors['where']]),
+        	        'error_message': settings.TEMPLATE_CONTENT['error']['email'] + ' ; '.join([e for e in email_error['who']]),
                       })
 
       # all fine -> done
       else:
-        return render(self.request, settings.TEMPLATE_CONTENT['selling']['order']['done']['template'], {
+        return render(r, settings.TEMPLATE_CONTENT['selling']['send']['done']['template'], {
 	                'title': title, 
-        	        'message': settings.TEMPLATE_CONTENT['selling']['order']['done']['message'] + P.title,
+        	        'message': settings.TEMPLATE_CONTENT['selling']['send']['done']['message'] + ' ; '.join([gen_member_fullname(m) for m in get_active_members()]),
                       })
 
+    # form not valid -> error
+    else:
+      return render(r, settings.TEMPLATE_CONTENT['selling']['order']['done']['template'], {
+                'title': settings.TEMPLATE_CONTENT['selling']['order']['title'], 
+                'error_message': settings.TEMPLATE_CONTENT['error']['gen'] + ' ; '.join([e for e in lef.errors]),
+                })
+
+  # no post yet -> empty form
+  else:
+    form = OrderForm()
+    return render(r, settings.TEMPLATE_CONTENT['selling']['order']['template'], {
+                'title': settings.TEMPLATE_CONTENT['selling']['order']['title'],
+                'desc': settings.TEMPLATE_CONTENT['selling']['order']['desc'],
+                'submit': settings.TEMPLATE_CONTENT['selling']['order']['submit'],
+                'form': form,
+                })
 

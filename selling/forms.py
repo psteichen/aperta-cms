@@ -1,7 +1,7 @@
 # coding=utf-8
 
 from django.conf import settings
-from django.forms import Form, ModelForm, TextInput, Textarea, HiddenInput, CharField, ModelChoiceField, BooleanField, DateField, MultipleModelChoiceField, CheckboxSelectMultiple, IntegerField
+from django.forms import Form, ModelForm, TextInput, Textarea, HiddenInput, CharField, ModelChoiceField, BooleanField, DateField, ModelMultipleChoiceField, CheckboxSelectMultiple, IntegerField
 
 from .models import Product, Packaging, Price, Order
 
@@ -26,9 +26,7 @@ class AddPriceForm(ModelForm):
 
 
 #order forms
-class SelectProductForm(Form):
-  products	= MultipleModelChoiceField(queryset=Product.objects.all(),widget=CheckboxSelectMultiple)
-
-class AmountForm(Form):
+class OrderForm(Form):
+  products	= ModelMultipleChoiceField(queryset=Product.objects.all(),widget=CheckboxSelectMultiple)
   amount	= IntegerField()
 
