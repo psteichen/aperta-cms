@@ -1,4 +1,5 @@
-from django.db.models import Model, CharField, IntegerField, DecimalField, ForeignKey, DateField, ManyToManyField 
+from django.conf import settings
+from django.db.models import Model, CharField, IntegerField, DecimalField, ForeignKey, DateField, ManyToManyField, ImageField 
 
 from members.models import Member
 
@@ -14,6 +15,7 @@ class Price(Model):
 class Product(Model):
   title		= CharField(max_length=250)
   desc		= CharField(max_length=500)
+  image		= ImageField(upload_to=settings.ORDER_IMAGE_DIR,blank=True,null=True)
   packaging	= ForeignKey(Packaging)
   price		= ForeignKey(Price)
 

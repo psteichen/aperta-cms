@@ -15,7 +15,7 @@ from cms.functions import notify_by_email, show_form
 
 from members.functions import get_active_members, gen_member_fullname
 
-from .functions import gen_order_hash, check_order_hash, gen_order_initial
+from .functions import gen_order_hash, check_order_hash, gen_order_initial, gen_information_message
 from .forms import OrderModelFormSet
 from .models import Product, Packaging, Price, Order, Receipt
 from .tables import ProductTable
@@ -129,11 +129,10 @@ def notify(r):
 
   template =  settings.TEMPLATE_CONTENT['selling']['notify']['template']
   title = settings.TEMPLATE_CONTENT['selling']['notify']['title']
-  message = settings.TEMPLATE_CONTENT['selling']['notify']['message']
   e_template =  settings.TEMPLATE_CONTENT['selling']['notify']['email']['template']
   subject = settings.TEMPLATE_CONTENT['selling']['notify']['email']['subject']
       
-  email_error = { 'ok': True, 'who': (), }
+  email_error = { 'ok': True, 'who': [], }
   for m in get_active_members():
     #information email
     information_message = gen_information_message(e_template,m)
@@ -145,13 +144,13 @@ def notify(r):
     ok=notify_by_email(False,m.email,subject,message_content)
     if not ok: 
       email_error['ok']=False
-      email_error['who'].add(m.email)
+      email_error['who'].append(m.email)
 
-  message += ' ; '.join([gen_member_fullname(m) for m in get_active_members()])
+  message = settings.TEMPLATE_CONTENT['selling']['notify']['message'] % { 'message': information_message, 'recipients': ' ; '.join([gen_member_fullname(m) for m in get_active_members()]), }
 
   # error in email -> error message
   if not email_error['ok']:
-    message = settings.TEMPLATE_CONTENT['error']['email'] + ' ; '.join([e for e in email_error['who']])
+    message += settings.TEMPLATE_CONTENT['error']['email'] + ' ; '.join([e for e in email_error['who']])
 
   return render(r, template, {
 	             'title': title, 
@@ -309,7 +308,7 @@ def order(r, hash):
       overview = ''
 
       member = None
-      ch = check_order_hash()
+      ch = check_order_hash(hash)
       if not ch['ok']:
         # error in hash
         return render(r, settings.TEMPLATE_CONTENT['selling']['order']['done']['template'], {
@@ -352,7 +351,7 @@ def order(r, hash):
 
   # no post yet -> empty form
   else:
-    ch = check_order_hash()
+    ch = check_order_hash(hash)
     if not ch['ok']:
       # error in hash
       return render(r, settings.TEMPLATE_CONTENT['selling']['order']['done']['template'], {

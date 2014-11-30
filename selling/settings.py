@@ -66,10 +66,22 @@ SELLING_TMPL_CONTENT = {
     'template'		: 'done.html',
     'title'     	: ACTIONS[0]['actions'][2]['label'],
     'desc'      	: ACTIONS[0]['actions'][2]['desc'],
-    'message'     	: u'Details ci-après: ',
+    'message'     	: u'''
+<pre>
+Message d'information :
+------------------------------
+%(message)s
+------------------------------
+
+Destinataires :
+------------------------------
+%(recipients)s
+------------------------------
+</pre>
+''',
     'email': {
-      'template'	: 'done.html',
-      'subject'     	: 'Nouveau Produit ajouter.',
+      'template'	: 'selling_notify.txt',
+      'subject'     	: '[51 aperta] Vente de bienfaisance',
     },
   },
   'modify': {

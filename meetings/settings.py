@@ -1,4 +1,4 @@
-# Application settings for meetngs app
+# Application settings for meetings app
 # coding=utf-8
 
 ACTIONS = (

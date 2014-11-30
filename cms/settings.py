@@ -10,8 +10,8 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-import os
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+from os import path
+BASE_DIR = path.dirname(path.dirname(__file__))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
@@ -85,7 +85,7 @@ WSGI_APPLICATION = 'cms.wsgi.application'
 DATABASES = {
   'default': {
     'ENGINE': 'django.db.backends.sqlite3',
-    'NAME': os.path.join(BASE_DIR, 'cms/db.sqlite'),
+    'NAME': path.join(BASE_DIR, 'cms/db.sqlite'),
   }
 }
 
@@ -107,9 +107,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+STATIC_ROOT = path.join(BASE_DIR, 'static/')
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'cms/static/'),
+    path.join(BASE_DIR, 'cms/static/'),
 )
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -132,8 +132,8 @@ LOGIN_REDIRECT_URL="/"
 
 #where to find templates
 TEMPLATE_DIRS = (
-  os.path.join(BASE_DIR, 'cms/templates/'),
-  os.path.join(BASE_DIR, 'cms/templates/email/'),
+  path.join(BASE_DIR, 'cms/templates/'),
+  path.join(BASE_DIR, 'cms/templates/email/'),
 )
 
 #emails
@@ -163,7 +163,7 @@ TEMPLATE_CONTENT = {
     'css' : {
         'bt'            : 'https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css',
         'bt_theme'      : 'https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css',
-        'own'           : STATIC_URL + 'css/bt-smash.css',
+        'own'           : STATIC_URL + 'css/bt-aperta.css',
         'dtpicker'      : STATIC_URL + 'css/jquery.datetimepicker.css',
 #        'dtpicker'      : 'https://raw.githubusercontent.com/xdan/datetimepicker/master/jquery.datetimepicker.css',
     },
@@ -285,8 +285,9 @@ EVENTS_ATTENDANCE_URL = ATTENDANCE_BASE_URL + 'events/'
 #selling
 from selling.settings import *
 TEMPLATE_CONTENT['selling'] = SELLING_TMPL_CONTENT
-ORDER_URL = 'https://' + ALLOWED_HOSTS[0] + '/order/'
+ORDER_URL = 'https://' + ALLOWED_HOSTS[0] + '/selling/order/'
 ORDER_SALT = 'vHJe$43%e"G'
+ORDER_IMAGE_DIR = path.join(MEDIA_ROOT,'products')
 
 #webcontent
 #from webcontent.settings import *

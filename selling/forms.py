@@ -11,7 +11,7 @@ class AddProductForm(ModelForm):
 
   class Meta:
     model = Product
-    fields = ( 'title', 'desc', )
+    fields = ( 'title', 'desc', 'image', )
 
 class AddPackagingForm(ModelForm):
 

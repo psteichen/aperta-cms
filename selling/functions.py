@@ -21,14 +21,14 @@ def gen_order_hash(email):
   h.update(unicode(email)) #message
   return unicode(h.hexdigest())
 
-def gen_order_links(email):
+def gen_order_link(email):
   return path.join(settings.ORDER_URL, gen_order_hash(email))
 
-def check_order_hash():
+def check_order_hash(h):
   out = {'ok': False,}
 
   for m in get_active_members():
-    if gen_order_hash(m.email) == hash:
+    if gen_order_hash(m.email) == h:
       out['member'] = m
       out['ok'] = True
 
@@ -44,6 +44,13 @@ def gen_order_initial():
     initial_data.append(data)
 
   return initial_data
+
+def gen_information_message(template,member):
+  content = {}
+
+  content['url'] = gen_order_link(member.email)
+
+  return render_to_string(template,content)
 
 def gen_receipt_message(template,order,member):
   content = {}

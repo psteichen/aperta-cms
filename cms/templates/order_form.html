@@ -8,28 +8,20 @@
 {% endblock %}
 
 {% block form %}
-  <h1 class="panel-title">{{ title }}</h1>
+  <h1>{{ title }}</h1>
   <p>{{ desc }}</p>
   <form role="form" class="form-horizontal" action="." method="post">
   {% csrf_token %}
   {{ formset.management_form }}
   {% for form in formset %}
-   {% for field in form %}
-   {% if not field.is_hidden %}
-    <div class="form-group">
+    <div class="row form-group placeholders">
      <div class="col-xs-6 col-sm-3">
-      <img data-src="holder.js/200x200/auto/sky" class="img-responsive" alt="{{ field.label }}">
-      <h4>{{ field|addclass:"form-control" }}</h4>
-      <span class="text-muted">{{ field.help_text }}</span>
-      {% if field.errors %}
-        <p>{{ field.errors }}</p>
-      {% endif %}
+      <img data-src="holder.js/200x200/auto/sky" class="img-responsive" alt="{{ form.product.label }}" src="{{ form.product.image }}">
+      <h3>{{ form.product.title|addclass:"form-control" }}</h3>
+      <span class="text-muted">{{ form.product.desc }}</span>
+      <h4>{{ form.amount|addclass:"form-control" }}</h4>
      </div>
     </div>
-   {% else %}
-    <div class="hidden">{{ field }}</div>
-   {% endif %}
-   {% endfor %}
   {% endfor %}
   <div class="btn-toolbar">
    <div class="btn-group">

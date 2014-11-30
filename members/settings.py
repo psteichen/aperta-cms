@@ -3,33 +3,33 @@
 
 ACTIONS = (
   {
-    'heading'           : 'Choisir l\'action sur les <strong>Members</strong>:',
+    'heading'           :u'Choisir l\'action sur les <strong>Members</strong>:',
     'has_perms'		: 'cms.BOARD',
     'actions'   : (
       {
-        'label'         : 'Ajouter un Membre',
+        'label'         :u'Ajouter un Membre',
         'glyphicon'     : 'glyphicon-user',
-        'desc'          : 'Ceci ajoute un membre.', 
+        'desc'          :u'Ceci ajoute un membre.', 
         'url'           : '/members/add/',
    	'has_perms'	: 'cms.BOARD',
       },
       {
-        'label'         : 'Liste des Membres',
+        'label'         :u'Liste des Membres',
         'glyphicon'     : 'glyphicon-user',
-        'desc'          : 'Tableau de tous le membres dans la base de donn�e.',
+        'desc'          : u'Tableau de tous les membres enregistrer dans la base de données.',
         'url'           : '/members/list/',
    	'has_perms'	: 'cms.BOARD',
       },
     ),
   },
   {
-    'heading'           : 'Choose actions on <strong>roles</strong>:',
+    'heading'           :u'Choisir l\'action sur les <strong>Roles</strong>:',
     'has_perms'		: 'cms.BOARD',
     'actions'   : (
       { 
-        'label'         : 'Add Role', 
+        'label'         :u'Ajouter un Rôle', 
         'glyphicon'     : 'glyphicon-user',
-        'desc'          : 'Add a Member Role', 
+        'desc'          :u'Ajouter un rôle du comité d\'administration', 
         'url'           : '/members/role/add/', 
    	'has_perms'	: 'cms.BOARD',
       },
