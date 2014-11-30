@@ -85,13 +85,14 @@ SELLING_TMPL_CONTENT = {
     'desc'      	: ACTIONS[0]['actions'][1]['desc'],
   },
   'order': {
-    'template'        	: 'order_form.html',
+#    'template'        	: 'order_form.html',
+    'template'        	: 'form.html',
     'title'     	: u'Commander des Produits',
     'desc'      	: u'Acheter des Produits pour les revendre et récolter de l\'argent pour une bonne oeuvre.',
     'submit'            : 'soumettre',
     'done' : {
       'template'        : 'done.html',
-      'title'           : u'Ta Commande.',
+      'title'           : u'[51 aperta] Commande du %(date)s.',
     },
   },
 }

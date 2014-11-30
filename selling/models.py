@@ -1,4 +1,6 @@
-from django.db.models import Model, CharField, IntegerField, DecimalField, ForeignKey, DateField 
+from django.db.models import Model, CharField, IntegerField, DecimalField, ForeignKey, DateField, ManyToManyField 
+
+from members.models import Member
 
 class Packaging(Model):
   desc		= CharField(max_length=500)
@@ -15,9 +17,13 @@ class Product(Model):
   packaging	= ForeignKey(Packaging)
   price		= ForeignKey(Price)
 
-class Order(Model):
-  date		= DateField()
+class Order(Model)
   product	= ForeignKey(Product)
   amount	= IntegerField()
-  selling	= DecimalField(max_digits=6,decimal_places=2)
+
+class Receipt(Model):
+  member	= ForeignKey(Member)
+  date		= DateField()
+  order		= ManyToManyField(Order)
+  total		= DecimalField(max_digits=6,decimal_places=2)
 

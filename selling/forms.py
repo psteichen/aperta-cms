@@ -2,6 +2,7 @@
 
 from django.conf import settings
 from django.forms import Form, ModelForm, TextInput, Textarea, HiddenInput, CharField, ModelChoiceField, BooleanField, DateField, ModelMultipleChoiceField, CheckboxSelectMultiple, IntegerField
+from django.db.models import modelformset_factory, BaseModelFormSet
 
 from .models import Product, Packaging, Price, Order
 
@@ -26,7 +27,12 @@ class AddPriceForm(ModelForm):
 
 
 #order forms
-class OrderForm(Form):
-  products	= ModelMultipleChoiceField(queryset=Product.objects.all(),widget=CheckboxSelectMultiple)
-  amount	= IntegerField()
+class OrderForm(ModelForm):
+  product	= CharField(label=u'Produit(s)',widget=TextInput(attrs={'readonly', 'size': 50}))
+  amount	= IntegerField(label=u'Quantité')
+
+  class Meta:
+    model = Order
+
+MultiOrderModelFormSet = modelformset_factory(Order, form=OrderForm, formset=BaseModelFormSet)
 
