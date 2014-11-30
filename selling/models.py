@@ -17,7 +17,7 @@ class Product(Model):
   packaging	= ForeignKey(Packaging)
   price		= ForeignKey(Price)
 
-class Order(Model)
+class Order(Model):
   product	= ForeignKey(Product)
   amount	= IntegerField()
 

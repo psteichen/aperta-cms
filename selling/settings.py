@@ -20,6 +20,13 @@ ACTIONS = (
         'url'           : '/selling/list_all/',
    	'has_perms'	: 'cms.BOARD',
       },
+      {
+        'label'         : 'Notification de nouveaux Produits',
+        'glyphicon'     : 'glyphicon-euro',
+        'desc'          : 'Envoie d\'un email d\'information sur les nouveaux produits',
+        'url'           : '/selling/notify/',
+   	'has_perms'	: 'cms.BOARD',
+      },
     ),
   },
 )
@@ -55,6 +62,16 @@ SELLING_TMPL_CONTENT = {
       'message'     	: u'Details ci-après: ',
     },
   },
+  'notify': {
+    'template'		: 'done.html',
+    'title'     	: ACTIONS[0]['actions'][2]['label'],
+    'desc'      	: ACTIONS[0]['actions'][2]['desc'],
+    'message'     	: u'Details ci-après: ',
+    'email': {
+      'template'	: 'done.html',
+      'subject'     	: 'Nouveau Produit ajouter.',
+    },
+  },
   'modify': {
     'title'     	: 'Modifier un Produit',
     'first'             : 'first',
@@ -85,14 +102,17 @@ SELLING_TMPL_CONTENT = {
     'desc'      	: ACTIONS[0]['actions'][1]['desc'],
   },
   'order': {
-#    'template'        	: 'order_form.html',
-    'template'        	: 'form.html',
+    'template'        	: 'order_form.html',
     'title'     	: u'Commander des Produits',
     'desc'      	: u'Acheter des Produits pour les revendre et récolter de l\'argent pour une bonne oeuvre.',
     'submit'            : 'soumettre',
     'done' : {
       'template'        : 'done.html',
-      'title'           : u'[51 aperta] Commande du %(date)s.',
+      'title'           : u'Détail de votre Commande du %(date)s.',
+      'email' : {
+        'template'	: 'receipt.txt',
+        'subject'	: '[51 aperta] Commande du %(date)s.',
+      },
     },
   },
 }

@@ -12,7 +12,8 @@
   <p>{{ desc }}</p>
   <form role="form" class="form-horizontal" action="." method="post">
   {% csrf_token %}
-  {% for form in forms %}
+  {{ formset.management_form }}
+  {% for form in formset %}
    {% for field in form %}
    {% if not field.is_hidden %}
     <div class="form-group">

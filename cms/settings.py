@@ -180,6 +180,7 @@ TEMPLATE_CONTENT = {
     'email'             : 'Error in email notification!',
     'no-data'           : 'No data!',
     'duplicate'         : 'Duplicate found, reconsider your input!',
+    'hash'         	: 'Page not found',
   },
   'auth' : {
     'title': 'Authentication',
@@ -284,6 +285,8 @@ EVENTS_ATTENDANCE_URL = ATTENDANCE_BASE_URL + 'events/'
 #selling
 from selling.settings import *
 TEMPLATE_CONTENT['selling'] = SELLING_TMPL_CONTENT
+ORDER_URL = 'https://' + ALLOWED_HOSTS[0] + '/order/'
+ORDER_SALT = 'vHJe$43%e"G'
 
 #webcontent
 #from webcontent.settings import *

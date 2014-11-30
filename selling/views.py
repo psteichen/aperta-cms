@@ -15,8 +15,8 @@ from cms.functions import notify_by_email, show_form
 
 from members.functions import get_active_members, gen_member_fullname
 
-from .functions import gen_hash
-from .forms import MultiOrderModelFormSet
+from .functions import gen_order_hash, check_order_hash, gen_order_initial
+from .forms import OrderModelFormSet
 from .models import Product, Packaging, Price, Order, Receipt
 from .tables import ProductTable
 
@@ -118,70 +118,46 @@ class AddProductWizard(SessionWizardView):
                       })
 
 
-# send #
-########
+# notify #
+##########
 @permission_required('cms.BOARD',raise_exception=True)
-def send(r):
+def notify(r):
   r.breadcrumbs( ( ('home','/'),
                    ('selling','/selling/'),
-                   ('send event invitations','/selling/send/'),
+                   ('notify members','/selling/notify/'),
                ) )
 
-  if r.POST:
-    e_template =  settings.TEMPLATE_CONTENT['selling']['send']['done']['email']['template']
-
-    lef = ListEventsForm(r.POST)
-    if lef.is_valid():
-      Ev = lef.cleaned_data['selling']
-
-      title = settings.TEMPLATE_CONTENT['selling']['send']['done']['title'] % unicode(Ev.title)
+  template =  settings.TEMPLATE_CONTENT['selling']['notify']['template']
+  title = settings.TEMPLATE_CONTENT['selling']['notify']['title']
+  message = settings.TEMPLATE_CONTENT['selling']['notify']['message']
+  e_template =  settings.TEMPLATE_CONTENT['selling']['notify']['email']['template']
+  subject = settings.TEMPLATE_CONTENT['selling']['notify']['email']['subject']
       
-      email_error = { 'ok': True, 'who': (), }
-      for m in get_active_members():
-   
-        #invitation email with "YES/NO button"
-        subject = settings.TEMPLATE_CONTENT['selling']['send']['done']['email']['subject'] % { 'title': unicode(Ev.title) }
-        invitation_message = gen_invitation_message(e_template,Ev,Event.OTH,m)
-        message_content = {
-          'FULLNAME'    : gen_member_fullname(m),
-          'MESSAGE'     : invitation_message,
-        }
-        #send email
-        ok=notify_by_email(r.user.email,m.email,subject,message_content)
-        if not ok: 
-          email_error['ok']=False
-          email_error['who'].add(m.email)
+  email_error = { 'ok': True, 'who': (), }
+  for m in get_active_members():
+    #information email
+    information_message = gen_information_message(e_template,m)
+    message_content = {
+      'FULLNAME'    : gen_member_fullname(m),
+      'MESSAGE'     : information_message,
+    }
+    #notify email
+    ok=notify_by_email(False,m.email,subject,message_content)
+    if not ok: 
+      email_error['ok']=False
+      email_error['who'].add(m.email)
 
-      # error in email -> show error messages
-      if not email_error['ok']:
-        return render(r, settings.TEMPLATE_CONTENT['selling']['send']['done']['template'], {
-	                'title': title, 
-        	        'error_message': settings.TEMPLATE_CONTENT['error']['email'] + ' ; '.join([e for e in email_error['who']]),
-                      })
+  message += ' ; '.join([gen_member_fullname(m) for m in get_active_members()])
 
-      # all fine -> done
-      else:
-        return render(r, settings.TEMPLATE_CONTENT['selling']['send']['done']['template'], {
-	                'title': title, 
-        	        'message': settings.TEMPLATE_CONTENT['selling']['send']['done']['message'] + ' ; '.join([gen_member_fullname(m) for m in get_active_members()]),
-                      })
+  # error in email -> error message
+  if not email_error['ok']:
+    message = settings.TEMPLATE_CONTENT['error']['email'] + ' ; '.join([e for e in email_error['who']])
 
-    # form not valid -> error
-    else:
-      return render(r, settings.TEMPLATE_CONTENT['selling']['send']['done']['template'], {
-                'title': settings.TEMPLATE_CONTENT['selling']['send']['title'], 
-                'error_message': settings.TEMPLATE_CONTENT['error']['gen'] + ' ; '.join([e for e in lef.errors]),
+  return render(r, template, {
+	             'title': title, 
+       		     'message': message
                 })
-  # no post yet -> empty form
-  else:
-    form = ListEventsForm()
-    return render(r, settings.TEMPLATE_CONTENT['selling']['send']['template'], {
-                'title': settings.TEMPLATE_CONTENT['selling']['send']['title'],
-                'desc': settings.TEMPLATE_CONTENT['selling']['send']['desc'],
-                'submit': settings.TEMPLATE_CONTENT['selling']['send']['submit'],
-                'form': form,
-                })
- 
+
 
 # list #
 #########
@@ -320,66 +296,74 @@ def order(r, hash):
   if r.POST:
     e_template =  settings.TEMPLATE_CONTENT['selling']['order']['done']['email']['template']
 
-    ofs = MultiOrderModelFormSet(r.POST)
+    ofs = OrderModelFormSet(r.POST)
     if ofs.is_valid():
       order = ofs.save(commit=False)
 
-      date = date.today().strftime(u'%Y-%m-%d à %H:%M')
-      total = order.amount.all().count()
+      o_date = date.today().strftime(u'%Y-%m-%d %H:%M')
+      total = 0
+      for o in order:
+        total += o.amount
 
-      title = settings.TEMPLATE_CONTENT['selling']['order']['done']['title'] % { 'date': date }
+      title = settings.TEMPLATE_CONTENT['selling']['order']['done']['title'] % { 'date': o_date }
+      overview = ''
 
-      for m in get_active_members():
-        if gen_hash(m.email) == hash:
-      
-          overview = gen_receipt(o_template,order,m)
+      member = None
+      ch = check_order_hash()
+      if not ch['ok']:
+        # error in hash
+        return render(r, settings.TEMPLATE_CONTENT['selling']['order']['done']['template'], {
+        	        	'error_message': settings.TEMPLATE_CONTENT['error']['hash'],
+                     })
+      else:
+        member = ch['member']
 
-          #send full order including receipt by email
-          subject = settings.TEMPLATE_CONTENT['selling']['order']['done']['email']['subject']
-          e_receipt = gen_e_receipt(e_template,order,m)
-          message_content = {
-              'FULLNAME'    : gen_member_fullname(m),
-              'MESSAGE'     : e_receipt,
-          }
-          #send email
-          ok=notify_by_email(False,m.email,subject,message_content)
-          if not ok: 
-            # error in email -> show error messages
-            return render(r, settings.TEMPLATE_CONTENT['selling']['order']['done']['template'], {
-	                'title': title, 
-        	        'error_message': settings.TEMPLATE_CONTENT['error']['email'],
-                         })
+      overview = gen_receipt_message(o_template,order,member)
 
-          # all fine -> done
-          else:
-            try:
-              order.save()
-              R = Receipt(member=m,date=date,order=order,total=total)
-	      return render(r, settings.TEMPLATE_CONTENT['selling']['send']['done']['template'], {
+      #send full order including receipt by email
+      subject = settings.TEMPLATE_CONTENT['selling']['order']['done']['email']['subject'] % { 'date': o_date }
+
+      e_receipt = gen_receipt_message(e_template,order,member)
+      message_content = {
+        'FULLNAME'    : gen_member_fullname(member),
+        'MESSAGE'     : e_receipt,
+      }
+      #send email
+      ok=notify_by_email(False,member.email,subject,message_content)
+      if not ok: 
+        # error in email -> show error messages
+        return render(r, settings.TEMPLATE_CONTENT['selling']['order']['done']['template'], {
 				'title': title, 
-	        	        'message': overview,
-			   })
+        	        	'error_message': settings.TEMPLATE_CONTENT['error']['email'],
+                     })
+      order.save()
+      R = Receipt(member=member,date=o_date,order=order,total=total)
+      # all fine -> done
+      return render(r, settings.TEMPLATE_CONTENT['selling']['order']['done']['template'], {
+			'title': title, 
+        	        'message': overview,
+		   })
 
-            except:
-              return render(r, settings.TEMPLATE_CONTENT['selling']['order']['done']['template'], {
-	                	'title': title, 
-        	        	'error_message': settings.TEMPLATE_CONTENT['error']['receipt'],
-                           })
-            
     # form not valid -> error
     else:
       return render(r, settings.TEMPLATE_CONTENT['selling']['order']['done']['template'], {
-                'title': settings.TEMPLATE_CONTENT['selling']['order']['title'], 
                 'error_message': settings.TEMPLATE_CONTENT['error']['gen'] + ' ; '.join([e for e in ofs.errors]),
                 })
 
   # no post yet -> empty form
   else:
-    form = MultiOrderModelFormSet()
+    ch = check_order_hash()
+    if not ch['ok']:
+      # error in hash
+      return render(r, settings.TEMPLATE_CONTENT['selling']['order']['done']['template'], {
+        	        	'error_message': settings.TEMPLATE_CONTENT['error']['hash'],
+                   })
+
+    formset = OrderModelFormSet(initial=gen_order_initial())
     return render(r, settings.TEMPLATE_CONTENT['selling']['order']['template'], {
                 'title': settings.TEMPLATE_CONTENT['selling']['order']['title'],
                 'desc': settings.TEMPLATE_CONTENT['selling']['order']['desc'],
                 'submit': settings.TEMPLATE_CONTENT['selling']['order']['submit'],
-                'form': form,
+                'formset': formset,
                 })
 

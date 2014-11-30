@@ -7,46 +7,55 @@ from django.conf import settings
 from django.template.loader import render_to_string
 
 from members.functions import get_active_members
-from events.models import Event
+
+from .models import Product
 
 ################################
 # SELLING SUPPORTING FUNCTIONS #
 ################################
 
-def gen_hash(email):
+def gen_order_hash(email):
   #hash
   h = hashlib.md5()
-  h.update(unicode(email)) #salt (email)
-  if yes: h.update('YES') #second salt (YES)
-  else: h.update('NO') #second salt (NO)
-  h.update(unicode(event.pk) + unicode(event.when)) #message
+  h.update(settings.ORDER_SALT) #salt
+  h.update(unicode(email)) #message
   return unicode(h.hexdigest())
 
-def gen_attendance_links(event,event_type,email):
-  attendance_url = ''
-  if event_type == Event.MEET:
-    attendance_url = path.join(settings.MEETINGS_ATTENDANCE_URL, unicode(event.pk))
-  if event_type == Event.OTH:
-    attendance_url = path.join(settings.EVENTS_ATTENDANCE_URL, unicode(event.pk))
+def gen_order_links(email):
+  return path.join(settings.ORDER_URL, gen_order_hash(email))
 
-  links = {
-    'YES' : path.join(attendance_url, gen_hash(event,email)),
-    'NO'  : path.join(attendance_url, gen_hash(event,email,False)),
-  }
+def check_order_hash():
+  out = {'ok': False,}
 
-  return links
+  for m in get_active_members():
+    if gen_order_hash(m.email) == hash:
+      out['member'] = m
+      out['ok'] = True
 
-def gen_invitation_message(template,event,event_type,invitee,sponsor=False):
+  return out
+
+def gen_order_initial():
+  initial_data = []
+
+  P = Product.objects.all()
+  for p in P:
+    data = {}
+    data['product'] = p
+    initial_data.append(data)
+
+  return initial_data
+
+def gen_receipt_message(template,order,member):
   content = {}
 
-  if sponsor: content['sponsor'] = gen_member_fullname(sponsor)
+  content['member'] = gen_member_fullname(member)
 
+#HERE
   content['title'] = event.title
   content['when'] = event.when
   content['time'] = event.time
   content['location'] = event.location
   content['deadline'] = event.deadline
-  content['attendance'] = gen_attendance_links(event,event_type,invitee.email)
 
   return render_to_string(template,content)
 
