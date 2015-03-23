@@ -21,10 +21,10 @@ SECRET_KEY = 'i7_hpg!p406zhnei*v6(v+bm@rav4(r!)090re3df52o9b71c1'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
 TEMPLATE_DEBUG = False
 
-ALLOWED_HOSTS = [ 'dev.cms.aperta.lu', ]
+ALLOWED_HOSTS = [ 'cms.aperta.lu', ]
+
 
 # Application definition
 
@@ -46,7 +46,6 @@ INSTALLED_APPS = (
   'attendance',
   'meetings',
   'events',
-  'selling',
   'webcontent',
 )
 
@@ -117,14 +116,9 @@ STATICFILES_FINDERS = (
 )
 
 
-# Media files (use uploaded documents)
-#MEDIA_ROOT =  '/var/www/aperta.lu/www/files/'
-MEDIA_ROOT =  '/Users/pst/Projects/APERTA/media/'
-MEDIA_URL =  'https://aperta.lu/files/'
-
 # LOCAL settings
 
-APP_ENV='DEV'
+#APP_ENV='DEV'
 
 #login/auth (used by the login_required decorator)
 LOGIN_URL="/login/"
@@ -155,24 +149,24 @@ TEMPLATE_CONTENT = {
     'copyright'         : 'FIFTY-ONE Luxembourg APERTA a.s.b.l.',
     'title'             : 'Club Management System',
     'logo' : {
-      'title'		: 'FIFTY-ONE<br/>Luxembourg<br/><strong><em>aperta</em></strong>',
+      'title'		: 'FIFTY-ONE<br/><strong><em>APERTA</em></strong>',
       'img'		: 'http://aperta.lu/pics/logo-51-aperta_picto.png',
     },
     'description'       : '',
     'keywords'          : '',
     'css' : {
-        'bt'            : 'https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css',
-        'bt_theme'      : 'https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css',
-        'own'           : STATIC_URL + 'css/bt-smash.css',
-        'dtpicker'      : STATIC_URL + 'css/jquery.datetimepicker.css',
-#        'dtpicker'      : 'https://raw.githubusercontent.com/xdan/datetimepicker/master/jquery.datetimepicker.css',
+#        'bt'            : '//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css',
+        'bt_theme'      : '//maxcdn.bootstrapcdn.com/bootswatch/3.3.2/yeti/bootstrap.min.css',
+        'own'           : STATIC_URL + 'css/own.css',
+#        'dtpicker'      : STATIC_URL + 'css/jquery.datetimepicker.css',
+        'dtpicker'      : 'https://raw.githubusercontent.com/xdan/datetimepicker/master/jquery.datetimepicker.css',
     },
     'js' : {
-        'bt'       	: 'https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js',
+        'bt'       	: '//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js',
         'jq'		: 'https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js',
-        'dtjq'		: STATIC_URL + 'js/jquery.js',
-        'dtpicker'      : STATIC_URL + 'js/jquery.datetimepicker.js',
-#        'dtpicker'      : 'https://raw.githubusercontent.com/xdan/datetimepicker/master/jquery.datetimepicker.js',
+#        'dtjq'		: STATIC_URL + 'js/jquery.js',
+#        'dtpicker'      : STATIC_URL + 'js/jquery.datetimepicker.js',
+        'dtpicker'      : 'https://raw.githubusercontent.com/xdan/datetimepicker/master/jquery.datetimepicker.js',
     },
   },
   'error' : {
@@ -206,26 +200,27 @@ except:
 ACTIONS = (
   {
     'has_perms' 	: 'cms.BOARD',
-    'actions'   : (
+    'heading' 		: 'Administration',
+    'actions' : (
       {         
         'label'         : u'Gestion des Réunions Statutaires', 
-        'glyphicon'     : 'glyphicon-calendar',
+        'icon'     	: 'calendar',
         'desc'          : 'Outil de gestion des réunions statutaires.',
         'url'           : '/meetings/',
     	'has_perms' 	: 'cms.BOARD',
       },
       {         
         'label'         : u'Gestion des Members', 
-        'glyphicon'     : 'glyphicon-user',
-        'desc'          : 'Gérer les members et de leurs affiliations.',
+        'icon'     	: 'user',
+        'desc'          : 'Gérer les members et leurs affiliations.',
         'url'           : '/members/',
     	'has_perms' 	: 'cms.BOARD',
       },
       {         
-        'label'         : u'Gestion des Ventes', 
-        'glyphicon'     : 'glyphicon-euro',
-        'desc'          : 'Gérer les Produits à vendre pour une bonne cause.',
-        'url'           : '/selling/',
+        'label'         : u'Gestion de la Trésorerie', 
+        'icon'     	: 'euro',
+        'desc'          : 'Gérer les comptes et autres aspects financiers.',
+        'url'           : '/finance/',
     	'has_perms' 	: 'cms.BOARD',
       },
 
@@ -233,17 +228,25 @@ ACTIONS = (
   },
   {
     'has_perms' 	: 'cms.COMM',
+    'heading' 		: 'Communication',
     'actions'   : (
       { 
-        'label'         : 'Gestion d\'événements', 
-        'glyphicon'     : 'glyphicon-glass',
+        'label'         : 'Gestion des événements', 
+        'icon'     	: 'glass',
         'desc'          : 'Gérer les actvities et événements spéciaux (hors réunions statutaires).',
         'url'           : '/events/',
     	'has_perms' 	: 'cms.COMM',
       },
+      { 
+        'label'        	: u'Gestion des Lieux de Rencontre', 
+        'icon'     	: 'home',
+        'desc'         	: u'Gérer (ajouter/modifier) les lieux de rencontre.', 
+        'url'          	: '/locations/', 
+        'has_perms'    	: 'cms.COMM',
+      },
       {         
         'label'         : 'Gestion du contenu en-ligne', 
-        'glyphicon'     : 'glyphicon-cloud',
+        'icon'     	: 'cloud',
         'desc'          : 'Gestion et mise-à-jour du contenu du site web public.',
         'url'           : '/webcontent/',
     	'has_perms' 	: 'cms.COMM',
@@ -253,7 +256,6 @@ ACTIONS = (
 )
 
 TEMPLATE_CONTENT['home'] = {
-  'title'     	: 'What do you want to do today ?',
   'template'    : 'actions.html',
   'actions'     : ACTIONS,
 }
@@ -261,6 +263,7 @@ TEMPLATE_CONTENT['home'] = {
 #members
 from members.settings import *
 TEMPLATE_CONTENT['members'] = MEMBERS_TMPL_CONTENT
+
 
 #attendance
 from attendance.settings import *
@@ -280,10 +283,6 @@ MEETINGS_ATTENDANCE_URL = ATTENDANCE_BASE_URL + 'meetings/'
 from events.settings import *
 TEMPLATE_CONTENT['events'] = EVENTS_TMPL_CONTENT
 EVENTS_ATTENDANCE_URL = ATTENDANCE_BASE_URL + 'events/'
-
-#selling
-from selling.settings import *
-TEMPLATE_CONTENT['selling'] = SELLING_TMPL_CONTENT
 
 #webcontent
 #from webcontent.settings import *

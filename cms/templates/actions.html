@@ -6,18 +6,20 @@
   {% for part in actions %}
   {% if part.has_perms in perms or not part.has_perms %}
   <div class="col-xs-6">
-    <div class="panel panel-default">
+    <div class="panel panel-primary">
+     {% if part.heading %}
       <div class="panel-heading">
-        {% if part.heading %}<p>{{ part.heading|safe }}</p>{% endif %}
+       <h3 class="panel-title">{{ part.heading|safe }}</h3>
       </div>
+     {% endif %}
       <div class="panel-body">
         <center>
         {% for action in part.actions %}
         {% if action.has_perms in perms or not action.has_perms %}
           {% if action.url %}
-            <a class="btn btn-primary" href="{{ action.url }}" role="button">{% if action.glyphicon %}<span class="glyphicon {{ action.glyphicon }}"></span>{% endif %}&nbsp;&nbsp;{{ action.label }}&nbsp;</a>
+            <a class="btn btn-default" href="{{ action.url }}" role="button">{% if action.icon %}<span class="glyphicon glyphicon-{{ action.icon }}"></span>{% endif %}&nbsp;&nbsp;{{ action.label }}&nbsp;</a>
      	    <br />
-     	    {% if action.desc %}<span class="btn-footer">( {{ action.desc }} )</span>{% endif %}
+     	    {% if action.desc %}<p>{{ action.desc }}</p>{% endif %}
      	    <br />
      	    <br />
           {% endif %}

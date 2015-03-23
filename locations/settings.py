@@ -1,44 +1,25 @@
 # Application settings for locatins app
 # coding=utf-8
 
-ACTIONS = (
-  {
-    'heading'           : 'Choisir l\'action à faire sur les <strong>Lieux de Rencontres</strong>:',
-    'has_perms'         : 'cms.COMM',
-    'actions'   : (
-      { 
-        'label'         : 'Ajouter un Lieu de Rencontres', 
-        'glyphicon'     : 'glyphicon-home',
-        'desc'          : 'Ajouter un Lieu de Rencontres (restaurant ou autre).', 
-        'url'           : '/locations/add/', 
-    	'has_perms'     : 'cms.COMM',
-      },
-      {
-        'label'         : 'Modifier un Lieu de Rencontres',
-        'glyphicon'     : 'glyphicon-home',
-        'desc'          : 'Modifier un lieu de rencontres.',
-        'url'           : '/locations/modify/',
-    	'has_perms'     : 'cms.COMM',
-      },
-      {
-        'label'         : 'Liste des Lieux de Rencontres',
-        'glyphicon'     : 'glyphicon-home',
-        'desc'          : 'Tableau de tous les lieux de rencontres enregistrer dans la base de données.',
-        'url'           : '/locations/list/',
-    	'has_perms'     : 'cms.COMM',
-      },
-    ),
-  },
-)
+ACTIONS = {
+  'main' : (
+    { 
+      'label'         	: 'Ajouter', 
+      'icon'     	: 'plus',
+      'url'           	: '/locations/add/', 
+      'has_perms'     	: 'cms.COMM',
+    },
+  ),
+}
 
 LOCATIONS_TMPL_CONTENT = {
   'title'       	: 'Gestions de Lieux de Rencontres',
-  'template'    	: 'actions.html',
-  'actions'     	: ACTIONS,
+  'template'    	: 'list.html',
+  'actions'     	: ACTIONS['main'],
   'add': {
     'template'		: 'form.html',
-    'title'     	: ACTIONS[0]['actions'][0]['label'],
-    'desc'     		: ACTIONS[0]['actions'][0]['desc'],
+    'title'         	: u'Ajouter un Lieu de Rencontres', 
+    'desc'          	: u'Ajouter un Lieu de Rencontres (restaurant ou autre).', 
     'submit'   		: u'Nouveau lieu de rencontres',
     'done': {
       'template'	: 'done.html',
@@ -47,26 +28,22 @@ LOCATIONS_TMPL_CONTENT = {
     },
   },
   'modify' : {
-    'title'     	: ACTIONS[0]['actions'][1]['label'],
-    'first'           	: 'first',
-    'prev'            	: 'back',
-    'list' : {
-      'title'         	: u'Choisir Lieu de Rencontres à modifier',
-      'next'          	: 'next',
-    },
+    'title'         	: 'Modifier un Lieu de Rencontres',
+    'desc'          	: 'Modifier un lieu de rencontre et le contact y associé.',
+    'first'           	: 'début',
+    'prev'            	: 'retour',
     'location' : {
       'title'         	: u'Modifier un Lieu de Rencontres',
-      'next'          	: 'submit',
+      'next'          	: 'suite',
+    },
+    'contact' : {
+      'title'         	: u'Modifier le Contact',
+      'next'          	: 'soumettre',
     },
     'done' : {
       'template'      	: 'done.html',
       'title'         	: u'Lieu de Rencontres [%s] a été modifié!',
     },
-  },
-  'list': {
-    'template'  	: 'list.html',
-    'title'    		: ACTIONS[0]['actions'][2]['label'],
-    'desc'     		: ACTIONS[0]['actions'][2]['desc'],
   },
 }
 

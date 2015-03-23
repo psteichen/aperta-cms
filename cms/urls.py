@@ -24,8 +24,6 @@ urlpatterns = patterns('',
 
   url(r'^events/', include('events.urls')),
 
-  url(r'^selling/', include('selling.urls')),
-
 #  url(r'^webcontent/', include('webcontent.urls')),
 
   url(r'^admin/', include(admin.site.urls)),

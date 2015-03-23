@@ -20,6 +20,14 @@ def gen_member_initial(m):
   initial_data['start_date'] = m.start_date
   initial_data['end_date'] = m.end_date
   initial_data['status'] = m.status
+  try:
+    role = Role.objects.get(member__pk=m.pk)
+    if role.end_date:
+      initial_data['role'] = unicode(role.title) + ' (' + unicode(role.start_date) + ' - ' + unicode(role.end_date) +')'
+    else:
+      initial_data['role'] = unicode(role.title) + ' (depuis ' + unicode(role.start_date) + ')'
+  except:
+    initial_data['role'] = ''
 
   return initial_data
 

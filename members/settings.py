@@ -1,68 +1,46 @@
 # Application settings for members app
 # coding=utf-8
 
-ACTIONS = (
-  {
-    'heading'           : 'Choisir l\'action sur les <strong>Members</strong>:',
-    'has_perms'		: 'cms.BOARD',
-    'actions'   : (
-      {
-        'label'         : 'Ajouter un Membre',
-        'glyphicon'     : 'glyphicon-user',
-        'desc'          : 'Ceci ajoute un membre.', 
-        'url'           : '/members/add/',
-   	'has_perms'	: 'cms.BOARD',
-      },
-      {
-        'label'         : 'Liste des Membres',
-        'glyphicon'     : 'glyphicon-user',
-        'desc'          : 'Tableau de tous le membres dans la base de donn�e.',
-        'url'           : '/members/list/',
-   	'has_perms'	: 'cms.BOARD',
-      },
-    ),
-  },
-  {
-    'heading'           : 'Choose actions on <strong>roles</strong>:',
-    'has_perms'		: 'cms.BOARD',
-    'actions'   : (
-      { 
-        'label'         : 'Add Role', 
-        'glyphicon'     : 'glyphicon-user',
-        'desc'          : 'Add a Member Role', 
-        'url'           : '/members/role/add/', 
-   	'has_perms'	: 'cms.BOARD',
-      },
-     ),
-  },
-
-)
+ACTIONS = {
+  'main' : (
+    {
+      'label'		: u'Ajouter',
+      'icon'     	: 'plus',
+      'url'           	: '/members/add/',
+      'has_perms'	: 'cms.BOARD',
+    },
+  ),
+  'modify' : (
+    { 
+      'label'         	: u'Ajouter un Rôle', 
+      'icon'     	: 'plus',
+      'url'           	: '/members/role/add/', 
+      'has_perms'	: 'cms.BOARD',
+    },
+  ),
+}
 
 MEMBERS_TMPL_CONTENT = {
-  'title'       : 'Member Management',
-  'template'    : 'actions.html',
-  'actions'     : ACTIONS,
+  'title'       	: 'Gestion des Membres',
+  'template'  		: 'list.html',
+  'actions'     	: ACTIONS['main'],
   'add': {
-    'template'	: 'form.html',
-    'title'     : ACTIONS[0]['actions'][0]['desc'],
-    'desc'     	: '',
-    'submit'   	: 'Add Member',
+    'template'		: 'form.html',
+    'title'     	: u'Ajouter un Membre',
+    'desc'     		: u'Ajouter un nouveau membre, would-be ou autre.',
+    'submit'   		: u'Ajouter',
     'done': {
       'template'	: 'done.html',
-      'title'     	: 'New Member added.',
-      'message'     	: 'Details here: ',
+      'title'     	: u'Un nouveau Membre a été rajouté.',
+      'message'     	: u'Détails : ',
     },
   },
   'modify': {
-    'title'     	: ACTIONS[0]['actions'][1]['desc'],
-    'first'             : 'first',
-    'prev'              : 'back',
+    'actions'     	: ACTIONS['modify'],
+    'first'             : u'début',
+    'prev'              : u'retour',
     'overview' : {
-      'title'           : 'Overview',
-    },
-    'list' : {
-      'title'           : 'Choose Member to modify',
-      'next'            : 'next',
+      'title'           : u'Résumé',
     },
     'member' : {
       'title'           : 'Modify Member',
@@ -76,11 +54,6 @@ MEMBERS_TMPL_CONTENT = {
       'template'        : 'done.html',
       'title'           : 'Member [%s] modified!',
     },
-  },
-  'list': {
-    'template'  	: 'list.html',
-    'title'     	: 'List of Members',
-    'desc'     		: '',
   },
   'profile': {
     'template'  	: 'done.html',
@@ -96,13 +69,13 @@ MEMBERS_TMPL_CONTENT = {
   'role' : {
     'add': {
       'template'	: 'form.html',
-      'title'     	: ACTIONS[1]['actions'][0]['desc'],
+      'title'     	: u'Ajouter un Rôle',
       'desc'     	: '',
-      'submit'   	: 'Add Member Role',
+      'submit'   	: u'Ajouter',
       'done': {
         'template'	: 'done.html',
-        'title'     	: 'New Member Role added.',
-        'message'     	: 'Details here: ',
+        'title'     	: u'Un nouveau Rôle a été rajouté.',
+        'message'     	: u'Détails : ',
       },
     },
   },

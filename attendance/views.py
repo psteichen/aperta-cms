@@ -3,6 +3,7 @@
 #
 from datetime import date, datetime
 
+from django.utils import timezone
 from django.shortcuts import render
 from django.conf import settings
 
@@ -40,7 +41,7 @@ def attendance(r, event_type, event_id, attendance_hash):
     e_yes = settings.TEMPLATE_CONTENT['attendance']['event']['email']['yes'] % { 'event': E.title, }
     e_no = settings.TEMPLATE_CONTENT['attendance']['event']['email']['no'] % { 'event': E.title, }
 
-  if date.today() >= deadline:
+  if timezone.now() >= deadline:
     message = settings.TEMPLATE_CONTENT['attendance']['too_late']
   else:
     for m in get_active_members():
@@ -60,6 +61,8 @@ def attendance(r, event_type, event_id, attendance_hash):
           A.save()
           notify=True
           message = settings.TEMPLATE_CONTENT['attendance']['yes'] % { 'name': gen_member_fullname(m), }
+          #add meeting information to the confirmation message
+          message += settings.TEMPLATE_CONTENT['attendance']['details'] % { 'when': M.when, 'time': M.time, 'location': M.location, }
           e_message = e_yes
   
         if gen_hash(M,m.email,False) == attendance_hash:
@@ -70,6 +73,7 @@ def attendance(r, event_type, event_id, attendance_hash):
           notify=True
           message = settings.TEMPLATE_CONTENT['attendance']['no'] % { 'name': gen_member_fullname(m), }
           e_message = e_no
+
 
       if event_type == 'events':
         try:
@@ -94,6 +98,7 @@ def attendance(r, event_type, event_id, attendance_hash):
           notify=True
           message = settings.TEMPLATE_CONTENT['attendance']['no'] % { 'name': gen_member_fullname(m), }
           e_message = e_no
+
   
       if notify:
         #notify by email

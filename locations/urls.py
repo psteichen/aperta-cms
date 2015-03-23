@@ -1,15 +1,15 @@
 from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import permission_required
 
-from .views import index, add, list
-from .forms import ListLocationsForm, LocationForm
+from .views import list, add, delete
+from .forms import LocationForm, ContactForm
 from .views import ModifyLocationWizard
 
 # modify location wizard #
 #forms
 modify_location_forms = [
-        ('list'         , ListLocationsForm),
         ('location'	, LocationForm),
+        ('contact'	, ContactForm),
 ]
 #view
 modify_location_wizard = ModifyLocationWizard.as_view(modify_location_forms)
@@ -18,9 +18,9 @@ modify_location_wrapper = permission_required('cms.COMM',raise_exception=True)(m
 
 
 urlpatterns = patterns('',
-  url(r'^$', index, name='index'),
+  url(r'^$', list, name='list'),
 
   url(r'^add/$', add, name='add'),
-  url(r'^modify/$', modify_location_wrapper, name='modify'),
-  url(r'^list/$', list, name='list'),
+  url(r'^modify/(?P<location_id>.+?)$', modify_location_wrapper, name='modify'),
+  url(r'^delete/(?P<location_id>.+?)$', delete, name='delete'),
 )

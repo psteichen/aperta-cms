@@ -1,24 +1,15 @@
 <div class="overview">
 <div class="panel panel-primary">
   <div class="panel-body">
-    {% if modify %}
-    <div class="pull-right">
-      <a class="btn btn-danger" href="{{ modify }}">{{ overview.modify }}</a>
-    </div>
-    {% endif %}
     <div class="row">
       <div class="col-sm-6">
         {{ overview.date }}<p class="lead">{{ when }} {{ time }}</p>
+      </div>
+      <div class="col-sm-6">
         {{ overview.location }}<address class="lead">{{ location }}<br/>{{ address }}</address>
       </div>
-      <div class="col-sm-5">
-        <p>{{ overview.invitation }}</p>
-        {{ overview.sent }}<p class="lead">{{ sent }}</p>
-        {{ overview.message }}<p class="lead">{{ invitation_message }}</p>
-        <a href="{{ attachement }}" class="btn btn-info" target="_blank">{{ overview.attachement }}</a>
-      </div>
     </div>
-    <hr/>
+    <br/>
     <div class="row">
       <div class="col-sm-6">
         {{ overview.attendance }} ({{ attendance|length }})

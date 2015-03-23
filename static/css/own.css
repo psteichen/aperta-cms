@@ -1,0 +1,16 @@
+/* adjustmenes of the bt theme */
+
+.container-fluid {
+  padding: 0;
+}
+
+.navbar {
+  margin-bottom: 5px;
+}
+.navbar-default {
+  padding: 5px 20px;
+}
+
+.footer {
+  padding: 5px 20px;
+}

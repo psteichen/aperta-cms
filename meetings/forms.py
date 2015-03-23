@@ -3,39 +3,28 @@
 from datetime import date
 
 from django.conf import settings
-from django.forms import Form, ModelForm, TextInput, Textarea, HiddenInput, CharField, ModelChoiceField, BooleanField, DateField
+from django.forms import Form, ModelForm, TextInput, Textarea, HiddenInput, CharField, ModelChoiceField, BooleanField, DateField, ModelMultipleChoiceField, CheckboxSelectMultiple
 
-from members.models import Member
+from members.functions import get_active_members
 
 from .models import Meeting
 
-#add meeting form
-class AddMeetingForm(ModelForm):
-  new_location		= BooleanField(label='Créer un nouveau lieu de rencontre',required=False)
+#meeting form
+class MeetingForm(ModelForm):
   additional_message 	= CharField(label='Message supplémentaire',widget=Textarea(attrs={'placeholder': "Message à transmettre dans l'invitation.",}),required=False)
   send 			= BooleanField(label='Envoi direct des invitations',required=False)
 
   class Meta:
     model = Meeting
-    fields = ( 'title', 'when', 'time', 'location', 'new_location',  'deadline', 'additional_message', 'attachement', 'send', )
+    fields = ( 'title', 'when', 'time', 'location', 'num', 'deadline', 'additional_message', 'send', )
     widgets = {
 #      'title'	: TextInput(attrs={'readonly': 'readonly', }),
       'when'	: TextInput(attrs={'type': 'date', }),
 #      'time'	: TextInput(attrs={'type': 'time', }),
-      'deadline': TextInput(attrs={'type': 'date', }),
+      'deadline': TextInput(attrs={'type': 'datetime', }),
       'num'	: HiddenInput(),
     }
 
-
-#wouldbe form
-class WouldBeForm(ModelForm):
-
-  class Meta:
-    model = Member
-    fields = ( 'first_name', 'last_name', 'email', ) 
-    widgets = {
-      'email'		: TextInput(attrs={'type': 'email', }),
-    }
 
 #modify wizard forms
 class ListMeetingsForm(Form):
@@ -51,4 +40,9 @@ class ModifyMeetingForm(ModelForm):
       'when'	: TextInput(attrs={'type': 'date', }),
       'time'	: TextInput(attrs={'type': 'time', }),
     }
+
+class ModifyAttendanceForm(Form):
+  subscribed	= ModelMultipleChoiceField(label=u'Présent',queryset=get_active_members(),widget=CheckboxSelectMultiple,required=False)
+  excused	= ModelMultipleChoiceField(label=u'Excusé',queryset=get_active_members(),widget=CheckboxSelectMultiple,required=False)
+
 

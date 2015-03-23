@@ -13,64 +13,32 @@ from .forms import MemberForm, RoleForm
 from .tables  import MemberTable
 
 
-# index #
+# list #
 #########
 @permission_required('cms.BOARD')
-def index(request):
+def list(request):
   request.breadcrumbs( ( ('home','/'),
                          ('members','/members/'),
-                        ) )
+                     ) )
+
+  table = MemberTable(Member.objects.all().order_by('status', 'last_name'))
+  RequestConfig(request, paginate={"per_page": 75}).configure(table)
 
   return render(request, settings.TEMPLATE_CONTENT['members']['template'], {
                         'title': settings.TEMPLATE_CONTENT['members']['title'],
                         'actions': settings.TEMPLATE_CONTENT['members']['actions'],
+                        'table': table,
                         })
-
-# role_add #
-############
-@permission_required('cms.BOARD')
-def role_add(r):
-  r.breadcrumbs( ( ('home','/'),
-                   ('members','/members/'),
-                   ('add a role','/members/role/add/'),
-                ) )
-
-  if r.POST:
-    rf = RoleForm(r.POST)
-    if rf.is_valid():
-      Rl = rf.save()
-      
-      # all fine -> done
-      return render(r, settings.TEMPLATE_CONTENT['members']['role']['add']['done']['template'], {
-                'title': settings.TEMPLATE_CONTENT['members']['role']['add']['done']['title'], 
-                'message': settings.TEMPLATE_CONTENT['members']['role']['add']['done']['message'] + unicode(Rl),
-                })
-
-    # form not valid -> error
-    else:
-      return render(r, settings.TEMPLATE_CONTENT['members']['role']['add']['done']['template'], {
-                'title': settings.TEMPLATE_CONTENT['members']['role']['add']['done']['title'], 
-                'error_message': settings.TEMPLATE_CONTENT['error']['gen'] + ' ; '.join([e for e in rf.errors]),
-                })
-
-  # no post yet -> empty form
-  else:
-    form = RoleForm()
-    return render(r, settings.TEMPLATE_CONTENT['members']['role']['add']['template'], {
-                'title': settings.TEMPLATE_CONTENT['members']['role']['add']['title'],
-                'desc': settings.TEMPLATE_CONTENT['members']['role']['add']['desc'],
-                'submit': settings.TEMPLATE_CONTENT['members']['role']['add']['submit'],
-                'form': form,
-                })
 
 
 # add #
 #######
 @permission_required('cms.BOARD')
 def add(r):
-  r.breadcrumbs( ( ('home','/'),
-                   ('members','/members/'),
-                   ('add a member','/members/add/'),
+  r.breadcrumbs( ( 
+			('home','/'),
+                   	('members','/members/'),
+                   	('add a member','/members/add/'),
                 ) )
 
   if r.POST:
@@ -107,7 +75,7 @@ def add(r):
 
 #modify helper functions
 def show_role_form(wizard):
-  return show_form(wizard,'member','role',True)
+  return show_form(wizard,'member','mod_role',True)
 
 #modify formwizard
 class ModifyMemberWizard(SessionWizardView):
@@ -119,13 +87,12 @@ class ModifyMemberWizard(SessionWizardView):
     context = super(ModifyMemberWizard, self).get_context_data(form=form, **kwargs)
 
     #add breadcrumbs to context
-    self.request.breadcrumbs( ( ('home','/'),
-         	                ('member','/members/'),
-	               	        ('modify a member','/members/modify/'),
+    self.request.breadcrumbs( ( 
+				('home','/'),
+                   		('members','/members/'),
                             ) )
 
     if self.steps.current != None:
-      context.update({'title': settings.TEMPLATE_CONTENT['members']['modify']['title']})
       context.update({'first': settings.TEMPLATE_CONTENT['members']['modify']['first']})
       context.update({'prev': settings.TEMPLATE_CONTENT['members']['modify']['prev']})
       context.update({'step_title': settings.TEMPLATE_CONTENT['members']['modify'][self.steps.current]['title']})
@@ -140,38 +107,42 @@ class ModifyMemberWizard(SessionWizardView):
     if step is None:
       step = self.steps.current
 
+    M = Member.objects.get(pk=self.kwargs['mem_id'])
+
     if step == 'member':
-      cleaned_data = self.get_cleaned_data_for_step('list') or {}
-      if cleaned_data != {}:
-        form.initial = gen_member_initial(cleaned_data['members'])
-        form.instance = Member.objects.get(pk=cleaned_data['members'].id)
+      form.initial = gen_member_initial(M)
+      form.instance = Member.objects.get(pk=M.pk)
+      try:
+        role = Role.objects.get(member__pk=M.pk)
+      except:
+        del form.fields['role']
+        del form.fields['mod_role']
 
     if step == 'role':
-      cleaned_data = self.get_cleaned_data_for_step('list') or {}
-      if cleaned_data != {}:
-        role = Role.objects.get(member=cleaned_data['members'].id)
-        form.initial = gen_role_initial(role)
-        form.instance = role
+      role = Role.objects.get(member=M.pk)
+      form.initial = gen_role_initial(role)
+      form.instance = role
 
     return form
 
-  def done(self, fl, **kwargs):
-    self.request.breadcrumbs( ( ('home','/'),
-         	                ('member','/members/'),
-                	        ('modify a member','/members/modify/'),
+  def done(self, fl, form_dict, **kwargs):
+    self.request.breadcrumbs( ( 
+				('home','/'),
+         	                ('members','/members/'),
                             ) )
 
     template = settings.TEMPLATE_CONTENT['members']['modify']['done']['template']
 
-    M = R = None
-    mf = fl[1]
-    role = mf.cleaned_data['role']
-    if role: rf = fl[2]
+    M = R = rf = None
+    mf = form_dict['member']
+    try:
+      rf = form_dict['role']
+    except: pass
 
     if mf.is_valid():
       M = mf.save()
 
-    if role: 
+    if rf: 
       if rf.is_valid():
         R = rf.save()
 
@@ -182,33 +153,53 @@ class ModifyMemberWizard(SessionWizardView):
                  })
 
 
-# list #
-#########
+# role_add #
+############
 @permission_required('cms.BOARD')
-def list(request):
-  request.breadcrumbs( ( ('home','/'),
-                         ('members','/members/'),
-                         ('list members','/members/list/'),
-                        ) )
+def role_add(r):
+  r.breadcrumbs( ( 
+			('home','/'),
+                   	('members','/members/'),
+                   	('add a role','/members/role/add/'),
+                ) )
 
-  table = MemberTable(Member.objects.all().order_by('status', 'last_name'))
-  RequestConfig(request, paginate={"per_page": 75}).configure(table)
+  if r.POST:
+    rf = RoleForm(r.POST)
+    if rf.is_valid():
+      Rl = rf.save()
+      
+      # all fine -> done
+      return render(r, settings.TEMPLATE_CONTENT['members']['role']['add']['done']['template'], {
+                'title': settings.TEMPLATE_CONTENT['members']['role']['add']['done']['title'], 
+                'message': settings.TEMPLATE_CONTENT['members']['role']['add']['done']['message'] + unicode(Rl),
+                })
 
-  return render(request, settings.TEMPLATE_CONTENT['members']['list']['template'], {
-                        'title': settings.TEMPLATE_CONTENT['members']['list']['title'],
-                        'desc': settings.TEMPLATE_CONTENT['members']['list']['desc'],
-                        'table': table,
-                        })
+    # form not valid -> error
+    else:
+      return render(r, settings.TEMPLATE_CONTENT['members']['role']['add']['done']['template'], {
+                'title': settings.TEMPLATE_CONTENT['members']['role']['add']['done']['title'], 
+                'error_message': settings.TEMPLATE_CONTENT['error']['gen'] + ' ; '.join([e for e in rf.errors]),
+                })
 
+  # no post yet -> empty form
+  else:
+    form = RoleForm()
+    return render(r, settings.TEMPLATE_CONTENT['members']['role']['add']['template'], {
+                'title': settings.TEMPLATE_CONTENT['members']['role']['add']['title'],
+                'desc': settings.TEMPLATE_CONTENT['members']['role']['add']['desc'],
+                'submit': settings.TEMPLATE_CONTENT['members']['role']['add']['submit'],
+                'form': form,
+                })
 
 
 # profile #
 ###########
 @login_required
 def profile(r, username):
-  r.breadcrumbs( ( ('home','/'),
-                   ('members','/members/'),
-                   ('member profile','/members/profile/'),
+  r.breadcrumbs( ( 
+			('home','/'),
+                   	('members','/members/'),
+                   	('user profile','/members/profile/'),
                ) )
 
   member = Member.objects.get(user=r.user)

@@ -4,10 +4,15 @@
 ATTENDANCE_TMPL_CONTENT = {
   'template'	: 'done.html',
   'too_late' 	: u'Désolé il est <strong>trop tard</strong> pour s\'inscrire/désister!',
-  'yes'  	: u''''<p>%(name)s, par la présente ta <strong>participation</strong> est <strong>confirmé(e)</strong></p>!
-<a href="/meetings/wouldbe/%(meeting_num)s/%(attendance_hash)s/" class="btn btn-info">Inviter un "WouldBe" (?)</a>
-''',
+  'yes'  	: u'%(name)s, par la présente ta <strong>participation</strong> est <strong>confirmé(e)</strong>!',
   'no'  	: u'%(name)s, merci de nous avoir notifier ton désistement, tu sera <strong>excusé(e)</strong>!',
+  'details'  	: u'''<p>Pour rappel:
+<ul>
+<strong>Lieu  : %(location)s</strong><br/>
+<em>Date  : %(when)s</em><br/>
+Heure : %(time)s<br/>
+</ul></p>
+''',
   'event': {
     'title'	: u'Participation à l\'événement "%(event)s"',
     'email' : {

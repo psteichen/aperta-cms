@@ -3,7 +3,7 @@
 from django.forms import Form, ModelForm, Textarea, ModelChoiceField
 from django.conf import settings
 
-from .models import Location
+from .models import Location, Contact
 
 #location form
 class LocationForm(ModelForm):
@@ -15,7 +15,9 @@ class LocationForm(ModelForm):
       'address'         : Textarea(),
     }
 
-#modify location wizard forms
-class ListLocationsForm(Form):
-  locations = ModelChoiceField(queryset=Location.objects.all())
+class ContactForm(ModelForm):
+
+  class Meta:
+    model = Contact
+    fields = ( 'first_name', 'last_name', 'tel', 'mobile', 'email', )
 

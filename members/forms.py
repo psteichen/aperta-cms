@@ -1,6 +1,8 @@
+#coding=utf-8
+
 from datetime import date
 
-from django.forms import Form, ModelForm, TextInput, Textarea, ModelChoiceField, BooleanField
+from django.forms import Form, ModelForm, TextInput, Textarea, ModelChoiceField, BooleanField, CharField
 from django.conf import settings
 
 from .models import Member, Role
@@ -34,7 +36,8 @@ class ListMembersForm(Form):
   members = ModelChoiceField(label='Member',queryset=Member.objects.all().order_by('last_name'))
 
 class ModifyMemberForm(MemberForm):
-  role = BooleanField(label='Modify role:',required=False)
+  role = CharField(label=u'Rôle:',widget=TextInput(attrs={'disabled': 'disabled', }),required=False)
+  mod_role = BooleanField(label='Modify role:',required=False)
 
 class ModifyRoleForm(RoleForm):
   class Meta:

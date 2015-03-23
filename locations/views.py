@@ -19,19 +19,23 @@ from .tables  import LocationTable
 # VIEWS #
 #########
 
-# index #
-#########
+# list #
+########
 @permission_required('cms.COMM',raise_exception=True)
-def index(r):
-  r.breadcrumbs( ( ('home','/'),
-                   ('locations','/locations/'),
+def list(r):
+  r.breadcrumbs( ( 
+			('home','/'),
+                   	('locations','/locations/'),
                ) )
+
+  table = LocationTable(Location.objects.all())
+  RequestConfig(r, paginate={"per_page": 75}).configure(table)
 
   return render(r, settings.TEMPLATE_CONTENT['locations']['template'], {
                    'title': settings.TEMPLATE_CONTENT['locations']['title'],
                    'actions': settings.TEMPLATE_CONTENT['locations']['actions'],
-               })
-
+                   'table': table,
+                })
 
 
 # add #
@@ -131,21 +135,22 @@ class ModifyLocationWizard(SessionWizardView):
                  })
 
 
-# list #
-########
+# delete #
+##########
 @permission_required('cms.COMM',raise_exception=True)
-def list(r):
-  r.breadcrumbs( ( ('home','/'),
-                   ('locations','/locations/'),
-                   ('list locations','/locations/list/'),
+def delete(r,location_id):
+  r.breadcrumbs( ( 
+			('home','/'),
+                   	('locations','/locations/'),
+                   	('delete a location','/locations/delete/'),
                ) )
 
-  table = LocationTable(Location.objects.all())
-  RequestConfig(r, paginate={"per_page": 75}).configure(table)
+  Lo = Location.objects.get(pk=location_id)
+      
+  # all fine -> done
+  return render(r, settings.TEMPLATE_CONTENT['locations']['add']['done']['template'], {
+               		'title': settings.TEMPLATE_CONTENT['locations']['add']['done']['title'], 
+                	'message': settings.TEMPLATE_CONTENT['locations']['add']['done']['message'] + unicode(Lo),
+               })
 
-  return render(r, settings.TEMPLATE_CONTENT['locations']['list']['template'], {
-                   'title': settings.TEMPLATE_CONTENT['locations']['list']['title'],
-                   'desc': settings.TEMPLATE_CONTENT['locations']['list']['desc'],
-                   'table': table,
-                })
 

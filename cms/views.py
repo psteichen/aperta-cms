@@ -61,5 +61,5 @@ def visualiseDateTime(dtIn):
 ################
 @login_required
 def home(request):
-  return render(request, settings.TEMPLATE_CONTENT['home']['template'], { 'title': settings.TEMPLATE_CONTENT['home']['title'], 'actions': settings.TEMPLATE_CONTENT['home']['actions'], })
+  return render(request, settings.TEMPLATE_CONTENT['home']['template'], { 'actions': settings.TEMPLATE_CONTENT['home']['actions'], })
 

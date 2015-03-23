@@ -10,7 +10,7 @@ class Meeting_Attendance(Model):
   meeting	= ForeignKey(Meeting)
   member	= ForeignKey(Member)
   timestamp	= DateTimeField()
-  present	= BooleanField(default=None)
+  present	= BooleanField()
   
   def __unicode__(self):
     present = ''
@@ -20,7 +20,6 @@ class Meeting_Attendance(Model):
       present = 'NO'
     return unicode(self.member) + ' / ' + unicode(self.meeting) + ' (' + unicode(self.timestamp) +') - ' + present
 
-
   class Meta:
     unique_together = ( 'member', 'meeting', )
 
@@ -28,7 +27,7 @@ class Event_Attendance(Model):
   event		= ForeignKey(Event)
   member	= ForeignKey(Member)
   timestamp	= DateTimeField()
-  present	= BooleanField(default=None)
+  present	= BooleanField()
   
   def __unicode__(self):
     present = ''
@@ -38,6 +37,6 @@ class Event_Attendance(Model):
       present = 'NO'
     return unicode(self.member) + ' / ' + unicode(self.event) + ' (' + unicode(self.timestamp) +') - ' + present
 
-
   class Meta:
     unique_together = ( 'member', 'event', )
+

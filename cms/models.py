@@ -2,9 +2,9 @@ from django.db import models
 
 # this is only used to set custom permissions:
 #
-#  - cms.BOARD       (Member of the Management Board)
-#  - cms.COMM        (Communication Manager aka Chef du Protocole)
-#  - cms.MEMBER      (APERTA Member)
+#  - cms.BOARD       (member of the Management Board)
+#  - cms.COMM        (communication manager)
+#  - cms.MEMBER      (APERTA member)
 #
 # including a little hack so that we can use these sepcific
 # permissions in a choices field for HR creation
@@ -23,8 +23,8 @@ class User(models.Model):
   class Meta:
     permissions = (
       ('BOARD'  , 'Member of the Board'),
-      ('COMM'   , 'Communication Manager aka Chef du Protocole'),
-      ('MEMBER' , 'APERTA Member'),
+      ('COMM'   , 'Communication manager'),
+      ('MEMBER' , 'APERTA member'),
     )
 
 
