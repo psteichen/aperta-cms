@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import permission_required
 
-from .views import index, list_all, list, order
+from .views import index, list_all, list, order, notify
 
 from .forms import AddProductForm, AddPackagingForm, AddPriceForm
 from .views import AddProductWizard
@@ -45,6 +45,7 @@ urlpatterns = patterns('',
   url(r'^$', index, name='index'),
 
   url(r'^add/$', add_product_wrapper, name='add'),
+  url(r'^notify/$', notify, name='notify'),
 
 #  url(r'^modify/(?P<product_id>.+?)/$', modify_product_wrapper, name='modify'),
 

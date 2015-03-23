@@ -20,6 +20,13 @@ ACTIONS = (
         'url'           : '/selling/list_all/',
    	'has_perms'	: 'cms.BOARD',
       },
+      {
+        'label'         : 'Notification de nouveaux Produits',
+        'glyphicon'     : 'glyphicon-euro',
+        'desc'          : 'Envoie d\'un email d\'information sur les nouveaux produits',
+        'url'           : '/selling/notify/',
+   	'has_perms'	: 'cms.BOARD',
+      },
     ),
   },
 )
@@ -53,6 +60,28 @@ SELLING_TMPL_CONTENT = {
       'template'	: 'done.html',
       'title'     	: 'Nouveau Produit ajouter.',
       'message'     	: u'Details ci-après: ',
+    },
+  },
+  'notify': {
+    'template'		: 'done.html',
+    'title'     	: ACTIONS[0]['actions'][2]['label'],
+    'desc'      	: ACTIONS[0]['actions'][2]['desc'],
+    'message'     	: u'''
+<pre>
+Message d'information :
+------------------------------
+%(message)s
+------------------------------
+
+Destinataires :
+------------------------------
+%(recipients)s
+------------------------------
+</pre>
+''',
+    'email': {
+      'template'	: 'selling_notify.txt',
+      'subject'     	: '[51 aperta] Vente de bienfaisance',
     },
   },
   'modify': {
@@ -91,7 +120,11 @@ SELLING_TMPL_CONTENT = {
     'submit'            : 'soumettre',
     'done' : {
       'template'        : 'done.html',
-      'title'           : u'Ta Commande.',
+      'title'           : u'Détail de votre Commande du %(date)s.',
+      'email' : {
+        'template'	: 'receipt.txt',
+        'subject'	: '[51 aperta] Commande du %(date)s.',
+      },
     },
   },
 }

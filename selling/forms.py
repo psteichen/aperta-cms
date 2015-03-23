@@ -1,7 +1,8 @@
 # coding=utf-8
 
 from django.conf import settings
-from django.forms import Form, ModelForm, TextInput, Textarea, HiddenInput, CharField, ModelChoiceField, BooleanField, DateField, ModelMultipleChoiceField, CheckboxSelectMultiple, IntegerField
+from django.forms import Form, ModelForm, TextInput, Textarea, HiddenInput, CharField, ModelChoiceField, BooleanField, DateField, IntegerField
+from django.forms.models import modelformset_factory, BaseModelFormSet
 
 from .models import Product, Packaging, Price, Order
 
@@ -10,7 +11,7 @@ class AddProductForm(ModelForm):
 
   class Meta:
     model = Product
-    fields = ( 'title', 'desc', )
+    fields = ( 'title', 'desc', 'image', )
 
 class AddPackagingForm(ModelForm):
 
@@ -26,7 +27,18 @@ class AddPriceForm(ModelForm):
 
 
 #order forms
-class OrderForm(Form):
-  products	= ModelMultipleChoiceField(queryset=Product.objects.all(),widget=CheckboxSelectMultiple)
-  amount	= IntegerField()
+class OrderForm(ModelForm):
+
+  class Meta:
+    model = Order
+    fields = ( 'product', 'amount', )
+    labels = {
+      'product'		: u'Produit(s)',
+      'amount'		: u'Quantité',
+    }
+    widgets = {
+      'product'		: TextInput(attrs={'readonly': 'readlonly', 'size': 50}),
+    }
+
+OrderModelFormSet = modelformset_factory(Order, form=OrderForm, formset=BaseModelFormSet)
 

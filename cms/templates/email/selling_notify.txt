@@ -1,0 +1,7 @@
+{% autoescape off %}
+De nouveau produit sont disponible pour notre vente de bienfaisance.
+
+Merci de consulter notre site en-ligne pour faire une commande :
+
+	Commander en ligne :	{{ url }}
+{% endautoescape %}
