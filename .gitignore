@@ -58,3 +58,5 @@ target/
 */migrations/
 db.sqlite
 HERE
+cms/settings.py
+cms/wsgi.py

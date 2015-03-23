@@ -118,7 +118,7 @@ STATICFILES_FINDERS = (
 
 # LOCAL settings
 
-#APP_ENV='DEV'
+APP_ENV='DEV'
 
 #login/auth (used by the login_required decorator)
 LOGIN_URL="/login/"
@@ -140,6 +140,10 @@ Amicalement,
 Le comité APERTA
 ''',
 }
+
+#media stuff
+MEDIA_ROOT = "/var/www/aperta.lu/dev.cms/media/"
+MEDIA_URL = "/media/"
 
 #content for templates and views
 TEMPLATE_CONTENT = {

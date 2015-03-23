@@ -28,16 +28,16 @@ LOCATIONS_TMPL_CONTENT = {
     },
   },
   'modify' : {
-    'title'         	: 'Modifier un Lieu de Rencontres',
-    'desc'          	: 'Modifier un lieu de rencontre et le contact y associé.',
     'first'           	: 'début',
     'prev'            	: 'retour',
     'location' : {
       'title'         	: u'Modifier un Lieu de Rencontres',
+      'desc'         	: u'Modifier les détails d\'un Lieu de Rencontres',
       'next'          	: 'suite',
     },
     'contact' : {
       'title'         	: u'Modifier le Contact',
+      'desc'         	: u'Modifier les détails de la personne de Contact',
       'next'          	: 'soumettre',
     },
     'done' : {
