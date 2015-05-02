@@ -1,3 +1,4 @@
+- members: in tables: row_class issue ! -> to be fixed
 - modify events: refactor selon new meetings way of doing
 - test cms.MEMBER login functionnalities
 - webcontent: full implementation
