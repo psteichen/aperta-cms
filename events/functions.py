@@ -4,6 +4,8 @@ from os import path
 from django.conf import settings
 from django.template.loader import render_to_string
 
+from cms.functions import visualiseDateTime
+
 from attendance.models import Event_Attendance
 from members.functions import get_active_members
 
@@ -15,8 +17,8 @@ def gen_event_overview(template,event):
   content = { 'overview' : settings.TEMPLATE_CONTENT['events']['details']['overview'] }
 
   content['title'] = event.title
-  content['when'] = event.when
-  content['time'] = event.time
+  content['when'] = visualiseDateTime(event.when)
+  content['time'] = visualiseDateTime(event.time)
   content['location'] = event.location.name
   content['address'] = event.location.address
   content['attendance'] = Event_Attendance.objects.filter(event=event,present=True).only('member')

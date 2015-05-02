@@ -4,6 +4,7 @@ from os import path
 from django.conf import settings
 from django.template.loader import render_to_string
 
+from cms.functions import visualiseDateTime
 from attendance.models import Meeting_Attendance
 from members.models import Member
 from members.functions import get_active_members
@@ -17,8 +18,8 @@ def gen_meeting_overview(template,meeting):
 
   content['title'] = meeting.title
   content['modify'] = '/meetings/modify/' + unicode(meeting.num)
-  content['when'] = meeting.when
-  content['time'] = meeting.time
+  content['when'] = visualiseDateTime(meeting.when)
+  content['time'] = visualiseDateTime(meeting.time)
   content['location'] = meeting.location.name
   content['address'] = meeting.location.address
   content['attendance'] = Meeting_Attendance.objects.filter(meeting=meeting,present=True).only('member')

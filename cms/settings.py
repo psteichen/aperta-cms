@@ -91,7 +91,8 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
 
-LANGUAGE_CODE = 'en-gb'
+LANGUAGE_CODE = 'fr-FR'
+LC_ALL = 'fr_FR.utf8' #to be used inpython afterwards
 
 TIME_ZONE = 'Europe/Luxembourg'
 
