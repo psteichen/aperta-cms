@@ -3,7 +3,8 @@
 {% load extra_tags %}
 
 {% block content %}
-<h2>{{ title }}</h2>
+<h1>{{ title }}</h1>
+{% if desc %}<p class="well well-sm">{{ desc }}</p>{% endif %}
 {% if error_message %}<p class="error">{{ error_message }}</p>{% endif %}
 <form role="form" class="form-horizontal" action="" method="post">
 {% csrf_token %}
@@ -11,7 +12,7 @@
  {{ wizard.form.non_form_errors }}
  <div class="panel panel-primary">
   <div class="panel-heading">
-   <h2 class="panel-title">{{ desc }}&nbsp;<span class="badge pull-right">step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</span></h2>
+   <h2 class="panel-title">{{ step_title }}&nbsp;<span class="badge pull-right">step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</span></h2>
   </div>
   <div class="panel-body">
   {% if wizard.form.forms %}

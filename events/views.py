@@ -4,7 +4,7 @@
 from datetime import date, timedelta, datetime
 
 from django.shortcuts import render
-from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.formtools.wizard.views import SessionWizardView
 from django.conf import settings
 
@@ -22,31 +22,38 @@ from .forms import EventForm, ListEventsForm
 from .tables  import EventTable
 
 
-# index #
-#########
-@permission_required('cms.COMM',raise_exception=True)
-def index(r):
-  r.breadcrumbs( ( ('home','/'),
-                   ('events','/events/'),
+################
+# EVENTS VIEWS #
+################
+
+# list #
+########
+@login_required
+def list(r):
+  r.breadcrumbs( ( 
+			('home','/'),
+                   	('events','/events/'),
                ) )
+
+  table = EventTable(Event.objects.all().order_by('-id'))
+  RequestConfig(r, paginate={"per_page": 75}).configure(table)
 
   return render(r, settings.TEMPLATE_CONTENT['events']['template'], {
                    'title': settings.TEMPLATE_CONTENT['events']['title'],
                    'actions': settings.TEMPLATE_CONTENT['events']['actions'],
-               })
+                   'table': table,
+                })
 
 
-################
-# EVENTS VIEWS #
-################
 
 # add #
 #######
 @permission_required('cms.COMM',raise_exception=True)
 def add(r):
-  r.breadcrumbs( ( ('home','/'),
-                   ('events','/events/'),
-                   ('add a event','/events/add/'),
+  r.breadcrumbs( ( 
+			('home','/'),
+                   	('events','/events/'),
+                   	('add event','/events/add/'),
                ) )
 
   if r.POST:
@@ -109,110 +116,83 @@ def add(r):
                 'form': form,
                 })
 
+
 # send #
 ########
 @permission_required('cms.COMM',raise_exception=True)
-def send(r):
-  r.breadcrumbs( ( ('home','/'),
-                   ('events','/events/'),
-                   ('send event invitations','/events/send/'),
+def send(r,event_id):
+  r.breadcrumbs( ( 
+			('home','/'),
+                   	('events','/events/'),
+                   	('send event invitations','/events/send/'),
                ) )
 
-  if r.POST:
-    e_template =  settings.TEMPLATE_CONTENT['events']['send']['done']['email']['template']
+  e_template =  settings.TEMPLATE_CONTENT['events']['send']['done']['email']['template']
 
-    lef = ListEventsForm(r.POST)
-    if lef.is_valid():
-      Ev = lef.cleaned_data['events']
+  Ev = Event.objects.get(id=event_id)
+  I = Invitation.objects.get(event=Ev)
 
-      title = settings.TEMPLATE_CONTENT['events']['send']['done']['title'] % unicode(Ev.title)
+  title = settings.TEMPLATE_CONTENT['events']['send']['done']['title'] % unicode(Ev.title)
       
-      email_error = { 'ok': True, 'who': (), }
-      for m in get_active_members():
+  email_error = { 'ok': True, 'who': (), }
+  for m in get_active_members():
    
-        #invitation email with "YES/NO button"
-        subject = settings.TEMPLATE_CONTENT['events']['send']['done']['email']['subject'] % { 'title': unicode(Ev.title) }
-        invitation_message = gen_invitation_message(e_template,Ev,Event.OTH,m)
-        message_content = {
-          'FULLNAME'    : gen_member_fullname(m),
-          'MESSAGE'     : invitation_message,
-        }
-        #send email
-        ok=notify_by_email(r.user.email,m.email,subject,message_content)
-        if not ok: 
-          email_error['ok']=False
-          email_error['who'].add(m.email)
+    #invitation email with "YES/NO button"
+    subject = settings.TEMPLATE_CONTENT['events']['send']['done']['email']['subject'] % { 'title': unicode(Ev.title) }
+    invitation_message = gen_invitation_message(e_template,Ev,Event.OTH,m)
+    message_content = {
+      'FULLNAME'    : gen_member_fullname(m),
+      'MESSAGE'     : invitation_message,
+    }
+    #send email
+    ok=notify_by_email(r.user.email,m.email,subject,message_content)
+    if not ok: 
+      email_error['ok']=False
+      email_error['who'].add(m.email)
 
-      # error in email -> show error messages
-      if not email_error['ok']:
-        return render(r, settings.TEMPLATE_CONTENT['events']['send']['done']['template'], {
+  # error in email -> show error messages
+  if not email_error['ok']:
+    return render(r, settings.TEMPLATE_CONTENT['events']['send']['done']['template'], {
 	                'title': title, 
         	        'error_message': settings.TEMPLATE_CONTENT['error']['email'] + ' ; '.join([e for e in email_error['who']]),
-                      })
+                  })
 
-      # all fine -> done
-      else:
-        return render(r, settings.TEMPLATE_CONTENT['events']['send']['done']['template'], {
+  # all fine -> done
+  else:
+    return render(r, settings.TEMPLATE_CONTENT['events']['send']['done']['template'], {
 	                'title': title, 
         	        'message': settings.TEMPLATE_CONTENT['events']['send']['done']['message'] + ' ; '.join([gen_member_fullname(m) for m in get_active_members()]),
-                      })
-
-    # form not valid -> error
-    else:
-      return render(r, settings.TEMPLATE_CONTENT['events']['send']['done']['template'], {
-                'title': settings.TEMPLATE_CONTENT['events']['send']['title'], 
-                'error_message': settings.TEMPLATE_CONTENT['error']['gen'] + ' ; '.join([e for e in lef.errors]),
-                })
-  # no post yet -> empty form
-  else:
-    form = ListEventsForm()
-    return render(r, settings.TEMPLATE_CONTENT['events']['send']['template'], {
-                'title': settings.TEMPLATE_CONTENT['events']['send']['title'],
-                'desc': settings.TEMPLATE_CONTENT['events']['send']['desc'],
-                'submit': settings.TEMPLATE_CONTENT['events']['send']['submit'],
-                'form': form,
-                })
+                  })
  
 
-# list #
-#########
-@permission_required('cms.COMM',raise_exception=True)
-def list(r, event_id):
-  r.breadcrumbs( ( ('home','/'),
-                   ('events','/events/'),
-                   ('list event n. '+event_id,'/events/list/'+event_id+'/'),
+# details #
+###########
+@login_required
+def details(r, event_id):
+  r.breadcrumbs( ( 
+			('home','/'),
+                   	('events','/events/'),
+                   	('details for event n. '+event_id,'/events/details/'+event_id+'/'),
                ) )
 
   event = Event.objects.get(pk=event_id)
-  title = settings.TEMPLATE_CONTENT['events']['list']['title'] % { 'event' : event.title, }
-  message = gen_event_overview(settings.TEMPLATE_CONTENT['events']['list']['overview']['template'],event)
+  title = settings.TEMPLATE_CONTENT['events']['details']['title'] % { 'event' : event.title, }
+  message = gen_event_overview(settings.TEMPLATE_CONTENT['events']['details']['overview']['template'],event)
 
-  return render(r, settings.TEMPLATE_CONTENT['events']['list']['template'], {
+  return render(r, settings.TEMPLATE_CONTENT['events']['details']['template'], {
                    'title': title,
                    'message': message,
                 })
 
-# list_all #
-############
-@permission_required('cms.COMM',raise_exception=True)
-def list_all(r):
-  r.breadcrumbs( ( ('home','/'),
-                   ('events','/events/'),
-                   ('list events','/events/list_all/'),
-               ) )
 
-  table = EventTable(Event.objects.all())
-  RequestConfig(r, paginate={"per_page": 75}).configure(table)
+# modify  #
+###########
 
-  return render(r, settings.TEMPLATE_CONTENT['events']['list_all']['template'], {
-                   'title': settings.TEMPLATE_CONTENT['events']['list_all']['title'],
-                   'desc': settings.TEMPLATE_CONTENT['events']['list_all']['desc'],
-                   'table': table,
-                })
-
+#modify helper functions
+def show_attendance_form(wizard):
+  return show_form(wizard,'meeting','attendance',True)
 
 # modify formwizard #
-#####################
 class ModifyEventWizard(SessionWizardView):
 
   def get_template_names(self):

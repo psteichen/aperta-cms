@@ -10,9 +10,7 @@ from django.conf import settings
 
 from django_tables2  import RequestConfig
 
-from cms.functions import show_form
-
-from .functions import gen_location_initial, gen_contact_initial
+from .functions import gen_location_initial
 from .models import Location
 from .forms import LocationForm
 from .tables  import LocationTable
@@ -79,9 +77,6 @@ def add(r):
 
 # modify formwizard #
 #####################
-def show_contact_form(wiz):
-  return show_form(wiz,'location','ct',True)
-
 class ModifyLocationWizard(SessionWizardView):
 
   def get_template_names(self):
@@ -97,10 +92,10 @@ class ModifyLocationWizard(SessionWizardView):
                             ) )
 
     if self.steps.current != None:
-      context.update({'title': settings.TEMPLATE_CONTENT['locations']['modify'][self.steps.current]['title']})
-      context.update({'desc': settings.TEMPLATE_CONTENT['locations']['modify'][self.steps.current]['desc']})
+      context.update({'title': settings.TEMPLATE_CONTENT['locations']['modify']['title']})
       context.update({'first': settings.TEMPLATE_CONTENT['locations']['modify']['first']})
       context.update({'prev': settings.TEMPLATE_CONTENT['locations']['modify']['prev']})
+      context.update({'step_title': settings.TEMPLATE_CONTENT['locations']['modify'][self.steps.current]['title']})
       context.update({'next': settings.TEMPLATE_CONTENT['locations']['modify'][self.steps.current]['next']})
 
     return context
@@ -108,24 +103,19 @@ class ModifyLocationWizard(SessionWizardView):
   def get_form(self, step=None, data=None, files=None):
     form = super(ModifyLocationWizard, self).get_form(step, data, files)
 
-    L = Location.objects.get(pk=self.kwargs['location_id'])
-
     # determine the step if not given
     if step is None:
       step = self.steps.current
 
     if step == 'location':
-      form.initial = gen_location_initial(L)
-      form.instance = L
-
-    if step == 'contact':
-      if L.contact:
-        form.initial = gen_contact_initial(L.contact)
-        form.instance = L.contact
+      cleaned_data = self.get_cleaned_data_for_step('list') or {}
+      if cleaned_data != {}:
+        form.initial = gen_location_initial(cleaned_data['locations'])
+        form.instance = Location.objects.get(pk=cleaned_data['locations'].id)
 
     return form
 
-  def done(self, fl, form_dict, **kwargs):
+  def done(self, fl, **kwargs):
     self.request.breadcrumbs( ( ('home','/'),
                                 ('locations','/locations/'),
                                 ('modify a location','/locations/modify/'),
@@ -133,20 +123,10 @@ class ModifyLocationWizard(SessionWizardView):
 
     template = settings.TEMPLATE_CONTENT['locations']['modify']['done']['template']
 
-    L = C = None
-    lf = form_dict['location']
-
-    contact = lf.cleaned_data['ct']
-    if contact:
-      cf = form_dict['contact']
-      if cf.is_valid():
-        C = cf.save()
-
+    L = None
+    lf = fl[1]
     if lf.is_valid():
-      L = lf.save(commit=False)
-      if contact:
-        L.contact = C
-      L.save()
+      L = lf.save()
 
     title = settings.TEMPLATE_CONTENT['locations']['modify']['done']['title'] % L
 

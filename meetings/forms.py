@@ -41,8 +41,3 @@ class ModifyMeetingForm(ModelForm):
       'time'	: TextInput(attrs={'type': 'time', }),
     }
 
-class ModifyAttendanceForm(Form):
-  subscribed	= ModelMultipleChoiceField(label=u'Présent',queryset=get_active_members(),widget=CheckboxSelectMultiple,required=False)
-  excused	= ModelMultipleChoiceField(label=u'Excusé',queryset=get_active_members(),widget=CheckboxSelectMultiple,required=False)
-
-

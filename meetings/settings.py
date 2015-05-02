@@ -1,4 +1,4 @@
-# Application settings for meetings app
+# Application settings for meetngs app
 # coding=utf-8
 
 ACTIONS = {
@@ -13,26 +13,26 @@ ACTIONS = {
       'label'         	: u'Gestion des Lieux de Rencontre', 
       'icon'     	: 'home',
       'url'           	: '/locations/', 
-      'has_perms'     	: 'cms.BOARD',
+      'has_perms'     	: 'cms.COMM',
     },
   ),
 }
 
 MEETINGS_TMPL_CONTENT = {
-  'title'       	: u'Gestion des Réunions Statutaires',
+  'title'       	: u'Réunions Statutaires',
   'template'    	: 'list.html',
   'actions'     	: ACTIONS['main'],
   'add': {
     'template'		: 'form.html',
-    'title'     	: u'Prochaine Réunion  Statutaire',
-    'desc'          	: u'Ceci créé la prochaine réunion statutaire et prépare les invitations à envoyé.',
+    'title'     	: u'Prochaine Réunion Statutaire',
+    'desc'          	: u'Ceci créé la prochaine réunion statutaire et prépare les invitations à envoyer.',
     'submit'   		: u'Ajouter',
     'done': {
       'template'	: 'done.html',
       'title'     	: u'Nouvelle Réunion Statutaire créée',
       'message'     	: u'''
 <pre>
-Invitation e-mail: 
+Message d'invitation: 
 --------------------------------------
 %(email)s
 --------------------------------------
@@ -50,7 +50,7 @@ Destinataires:
   'send': {
     'template'		: 'form.html',
     'title'         	: u'(R)Envoyer Invitations',
-    'desc'          	: u'Envoie ou renvoie les inviations pour la réunion statutaire choisie, par e-mail.',
+    'desc'          	: u'Envoie ou renvoie les invitations pour la réunion statutaire choisie, par e-mail.',
     'submit'   		: u'Envoyer',
     'done': {
       'template'	: 'done.html',

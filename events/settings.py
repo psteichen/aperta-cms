@@ -1,146 +1,99 @@
 # Application settings for events app
 # coding=utf-8
 
-ACTIONS = (
-  {
-    'heading'           : 'Choose actions on <strong>events</strong>:',
-    'has_perms'         : 'cms.BOARD',
-    'actions'   : (
-      {
-        'label'         : 'Add Event',
-        'glyphicon'     : 'glyphicon-calendar',
-        'desc'          : 'Add a new meeting',
-        'url'           : '/events/add/',
-    	'has_perms'     : 'cms.BOARD',
-      },
-      {
-        'label'         : 'Send Event Invitations',
-        'glyphicon'     : 'glyphicon-calendar',
-        'desc'          : 'Send Invitations (or reminder) for a specified event.',
-        'url'           : '/events/send/',
-    	'has_perms'     : 'cms.BOARD',
-      },
-      {
-        'label'         : 'Modify Event',
-        'glyphicon'     : 'glyphicon-calendar',
-        'desc'          : 'Modify a meeting',
-        'url'           : '/events/modify/',
-    	'has_perms'     : 'cms.BOARD',
-      },
-      {
-        'label'         : 'List Events',
-        'glyphicon'     : 'glyphicon-calendar',
-        'desc'          : 'List all events',
-        'url'           : '/events/list_all/',
-    	'has_perms'     : 'cms.BOARD',
-      },
-    ),
-  },
-  {
-    'has_perms'         : 'cms.BOARD',
-    'actions'   : (
-      { 
-        'label'         : 'Location Management', 
-        'glyphicon'     : 'glyphicon-home',
-        'desc'          : 'Add a Location.', 
-        'url'           : '/locations/', 
-    	'has_perms'     : 'cms.BOARD',
-      },
-    ),
-  },
-)
+ACTIONS = {
+  'main': (
+    {
+      'label'           : u'Ajouter un évènement',
+      'icon'            : 'plus',
+      'url'             : '/events/add/',
+      'has_perms'       : 'cms.COMM',
+    },
+    {
+      'label'           : u'Gestion des Lieux de Rencontre',
+      'icon'            : 'home',
+      'url'             : '/locations/',
+      'has_perms'       : 'cms.COMM',
+    },
+  ),
+}
 
 EVENTS_TMPL_CONTENT = {
-  'title'       : 'Event Management',
-  'template'    : 'actions.html',
-  'actions'     : ACTIONS,
+  'title'       	: u'Évènements',
+  'template'    	: 'list.html',
+  'actions'     	: ACTIONS['main'],
   'add': {
-    'template'	: 'form.html',
-    'title'     : ACTIONS[0]['actions'][0]['desc'],
-    'desc'     	: 'Create Event & Send Invitations',
-    'submit'   	: 'GO',
+    'template'		: 'form.html',
+    'title'     	: u'Créer un évènement',
+    'desc'     		: u'Ceci créé un évènement et prépare les invitations à envoyer.',
+    'submit'   		: u'Ajouter',
     'done': {
       'template'	: 'done.html',
-      'title'     	: 'New Event added',
+      'title'     	: u'Nouvel évènement créé.',
       'message'     	: '''
 <pre>
-Invitation e-mail: 
+Message d'invitation : 
 --------------------------------------
 %(email)s
 --------------------------------------
 
-Recipients: 
+Destinataires : 
 %(list)s
 </pre>
 ''',
       'email': {
 	'template'	: 'event_invitation.txt',
-	'subject'	: '[51 aperta] %(title)s',
+	'subject'	: u'[51 aperta] %(title)s',
       },
     },
   },
   'send': {
-    'template'	: 'form.html',
-    'title'     : ACTIONS[0]['actions'][1]['label'],
-    'desc'     	: ACTIONS[0]['actions'][1]['desc'],
-    'submit'   	: 'GO',
+    'template'		: 'form.html',
+    'title'     	: u'(R)Envoyer Invitations',
+    'desc'              : u'Envoie ou renvoie les invitations pour l\'évènement choisie, par e-mail.',
+    'submit'            : u'Envoyer',
     'done': {
       'template'	: 'done.html',
-      'title'     	: 'Invitations Event: %s',
-      'message'     	: 'Sent to: ',
+      'title'     	: u'Invitations pour la : %s envoyées',
+      'message'         : u'Destinataires : ',
       'email': {
 	'template'	: 'event_invitation.txt',
-	'subject'	: '[51 aperta] %(title)s',
+	'subject'	: u'[51 aperta] %(title)s',
       },
     },
   },
-  'attendance': {
-    'template'	: 'done.html',
-    'title'     : u'Participation à la %(meeting)s',
-    'too_late' 	: u'Désolé il est <strong>trop tard</strong> pour s\'inscrire/désister!',
-    'yes'  	: u'%(name)s, par la présente ta <strong>participation</strong> est <strong>confirmé(e)</strong>!',
-    'no'  	: u'%(name)s, merci de nous avoir notifier ton désistement, tu sera <strong>excusé(e)</strong>!',
-    'email' : {
-      'yes'	: u'''
-Par la présente ta participation à la %(meeting)s est confirmé(e)!''',
-      'no'  	: u'''
-Merci de nous avoir notifier ton désistement, pour la %(meeting)s. 
-
-Tu sera excusé(e).''',
-    },
-  },
-  'list_all': {
-    'template'  : 'list.html',
-    'title'     : 'Liste des réunions',
-    'desc'     	: ACTIONS[0]['actions'][3]['desc'],
-  },
-  'list': {
-    'template'  : 'done.html',
-    'title'     : u'Détail de l\'événement "%(event)s"',
-    'overview' : {
-      'template'	: 'overview_event.html',
-      'date'		: u'Date et heure',
-      'location'	: u'Lieu',
-      'attendance'	: u'Présent(s)',
-      'excused'		: u'Excusé(s)',
-    },
-  },
   'modify' : {
-    'title'     : ACTIONS[0]['actions'][2]['label'],
-    'first'	: 'first',
-    'prev'	: 'back',
+    'title'             : u'Modifier un Evènement',
+    'desc'              : u'Modifier les détails et les présences d\'un évènement.',
+    'first'             : u'début',
+    'prev'              : u'retour',
     'list' : {
-      'title'   : 'Choose Event to modify',
-      'next'    : 'next',
+      'title'           : u'Choisir l\'évènement à modifier',
+      'next'            : 'suivant',
     },
     'meeting' : {
-      'title'   : 'Modify Event',
-      'next'    : 'submit',
+      'title'           : u'Modifier l\'évènement %(event)s',
+      'next'            : 'suivant',
+    },
+    'attendance' : {
+      'title'           : u'Ajuster les présences',
+      'next'            : 'soumettre',
     },
     'done' : {
       'template'        : 'done.html',
-      'title'           : 'Event [%s] modified!',
+      'title'           : u'[%s] a été modifiée!',
+    },
+  },
+  'details': {
+    'template'          : 'done.html',
+    'title'             : u'Détail de l\'évènement %(event)s',
+    'overview' : {
+      'template'        : 'overview_event.html',
+      'modify'          : u'Modifier',
+      'date'            : u'Date et heure',
+      'location'        : u'Lieu de rencontre',
+      'attendance'      : u'Présent(s)',
+      'excused'         : u'Excusé(s)',
     },
   },
 }
-

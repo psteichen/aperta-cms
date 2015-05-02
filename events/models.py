@@ -17,7 +17,7 @@ class Event(Model):
   when		= DateField(verbose_name='Date')
   time		= TimeField(verbose_name='Heure de début')
   location	= ForeignKey(Location,verbose_name='Lieu')
-  deadline	= DateField(verbose_name='Deadline')
+  deadline	= DateTimeField(verbose_name='Deadline')
   
   def __unicode__(self):
     return unicode(self.title) + ' du ' + unicode(self.when)

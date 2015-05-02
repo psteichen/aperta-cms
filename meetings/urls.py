@@ -1,7 +1,9 @@
 from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import permission_required
 
-from .forms import ListMeetingsForm, ModifyMeetingForm, ModifyAttendanceForm
+from attendance.forms import ModifyAttendanceForm
+
+from .forms import ListMeetingsForm, ModifyMeetingForm
 from .views import ModifyMeetingWizard, show_attendance_form
 from .views import list, add, send, details
 
@@ -25,7 +27,7 @@ urlpatterns = patterns('',
   url(r'^list/(?P<meeting_num>.+?)/$', details, name='details'),
 
   url(r'^add/$', add, name='add'),
-  url(r'^send/$', send, name='send'),
+  url(r'^send/(?P<meeting_num>.+?)/$', send, name='send'),
 
   url(r'^modify/(?P<meeting_num>.+?)/$', modify_meeting_wrapper, name='modify'),
 )

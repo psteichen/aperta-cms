@@ -10,8 +10,8 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-from os import path
-BASE_DIR = path.dirname(path.dirname(__file__))
+import os
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
@@ -84,7 +84,7 @@ WSGI_APPLICATION = 'cms.wsgi.application'
 DATABASES = {
   'default': {
     'ENGINE': 'django.db.backends.sqlite3',
-    'NAME': path.join(BASE_DIR, 'cms/db.sqlite'),
+    'NAME': os.path.join(BASE_DIR, 'cms/db.sqlite'),
   }
 }
 
@@ -106,9 +106,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = path.join(BASE_DIR, 'static/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 STATICFILES_DIRS = (
-    path.join(BASE_DIR, 'cms/static/'),
+    os.path.join(BASE_DIR, 'cms/static/'),
 )
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -118,7 +118,7 @@ STATICFILES_FINDERS = (
 
 # LOCAL settings
 
-APP_ENV='DEV'
+#APP_ENV='DEV'
 
 #login/auth (used by the login_required decorator)
 LOGIN_URL="/login/"
@@ -126,8 +126,8 @@ LOGIN_REDIRECT_URL="/"
 
 #where to find templates
 TEMPLATE_DIRS = (
-  path.join(BASE_DIR, 'cms/templates/'),
-  path.join(BASE_DIR, 'cms/templates/email/'),
+  os.path.join(BASE_DIR, 'cms/templates/'),
+  os.path.join(BASE_DIR, 'cms/templates/email/'),
 )
 
 #emails
@@ -141,10 +141,6 @@ Le comité APERTA
 ''',
 }
 
-#media stuff
-MEDIA_ROOT = "/var/www/aperta.lu/dev.cms/media/"
-MEDIA_URL = "/media/"
-
 #content for templates and views
 TEMPLATE_CONTENT = {
   #basic/generic content for all templates/views:
@@ -154,13 +150,15 @@ TEMPLATE_CONTENT = {
     'title'             : 'Club Management System',
     'logo' : {
       'title'		: 'FIFTY-ONE<br/><strong><em>APERTA</em></strong>',
-      'img'		: 'http://aperta.lu/pics/logo-51-aperta_picto.png',
+      'img'		: 'https://aperta.lu/pics/logo-51-aperta_picto.png',
     },
     'description'       : '',
     'keywords'          : '',
     'css' : {
+#        'bt'            : '//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css',
         'bt_theme'      : '//maxcdn.bootstrapcdn.com/bootswatch/3.3.2/yeti/bootstrap.min.css',
         'own'           : STATIC_URL + 'css/own.css',
+#        'dtpicker'      : STATIC_URL + 'css/jquery.datetimepicker.css',
         'dtpicker'      : 'https://raw.githubusercontent.com/xdan/datetimepicker/master/jquery.datetimepicker.css',
     },
     'js' : {
@@ -176,7 +174,6 @@ TEMPLATE_CONTENT = {
     'email'             : 'Error in email notification!',
     'no-data'           : 'No data!',
     'duplicate'         : 'Duplicate found, reconsider your input!',
-    'hash'         	: 'Page not found',
   },
   'auth' : {
     'title': 'Authentication',
@@ -202,58 +199,58 @@ except:
 # home
 ACTIONS = (
   {
-    'has_perms' 	: 'cms.BOARD',
-    'heading' 		: 'Administration',
+    'has_perms' 	: 'cms.MEMBER',
+    'heading' 		: 'Association',
     'actions' : (
       {         
-        'label'         : u'Gestion des Réunions Statutaires', 
+        'label'         : u'Réunions Statutaires', 
         'icon'     	: 'calendar',
         'desc'          : 'Outil de gestion des réunions statutaires.',
         'url'           : '/meetings/',
-    	'has_perms' 	: 'cms.BOARD',
+    	'has_perms' 	: 'cms.MEMBER',
       },
       {         
-        'label'         : u'Gestion des Members', 
+        'label'         : u'Membres', 
         'icon'     	: 'user',
         'desc'          : 'Gérer les members et leurs affiliations.',
         'url'           : '/members/',
-    	'has_perms' 	: 'cms.BOARD',
+    	'has_perms' 	: 'cms.MEMBER',
       },
-      {         
-        'label'         : u'Gestion de la Trésorerie', 
-        'icon'     	: 'euro',
-        'desc'          : 'Gérer les comptes et autres aspects financiers.',
-        'url'           : '/finance/',
-    	'has_perms' 	: 'cms.BOARD',
-      },
+#      {         
+#        'label'         : u'Trésorerie', 
+#       'icon'     	: 'euro',
+#       'desc'          : 'Gérer les comptes et autres aspects financiers.',
+#       'url'           : '/finance/',
+#   	'has_perms' 	: 'cms.BOARD',
+#     },
 
     ),
   },
   {
-    'has_perms' 	: 'cms.COMM',
-    'heading' 		: 'Communication',
+    'has_perms' 	: 'cms.MEMBER',
+    'heading' 		: 'Activités',
     'actions'   : (
       { 
-        'label'         : 'Gestion des événements', 
+        'label'         : 'Évènements', 
         'icon'     	: 'glass',
-        'desc'          : 'Gérer les actvities et événements spéciaux (hors réunions statutaires).',
+        'desc'          : 'Gérer les actvitiés et évènements (hors réunions statutaires).',
         'url'           : '/events/',
-    	'has_perms' 	: 'cms.COMM',
+    	'has_perms' 	: 'cms.MEMBER',
       },
       { 
-        'label'        	: u'Gestion des Lieux de Rencontre', 
+        'label'        	: u'Lieux de Rencontre', 
         'icon'     	: 'home',
         'desc'         	: u'Gérer (ajouter/modifier) les lieux de rencontre.', 
         'url'          	: '/locations/', 
         'has_perms'    	: 'cms.COMM',
       },
-      {         
-        'label'         : 'Gestion du contenu en-ligne', 
-        'icon'     	: 'cloud',
-        'desc'          : 'Gestion et mise-à-jour du contenu du site web public.',
-        'url'           : '/webcontent/',
-    	'has_perms' 	: 'cms.COMM',
-      },
+#     {         
+#       'label'         : 'Site web', 
+#       'icon'     	: 'cloud',
+#       'desc'          : 'Gestion et mise-à-jour du contenu du site web public.',
+#       'url'           : '/webcontent/',
+#   	'has_perms' 	: 'cms.COMM',
+#     },
     ),
   },
 )
@@ -286,13 +283,6 @@ MEETINGS_ATTENDANCE_URL = ATTENDANCE_BASE_URL + 'meetings/'
 from events.settings import *
 TEMPLATE_CONTENT['events'] = EVENTS_TMPL_CONTENT
 EVENTS_ATTENDANCE_URL = ATTENDANCE_BASE_URL + 'events/'
-
-#selling
-from selling.settings import *
-TEMPLATE_CONTENT['selling'] = SELLING_TMPL_CONTENT
-ORDER_URL = 'https://' + ALLOWED_HOSTS[0] + '/selling/order/'
-ORDER_SALT = 'vHJe$43%e"G'
-ORDER_IMAGE_DIR = path.join(MEDIA_ROOT,'products')
 
 #webcontent
 #from webcontent.settings import *

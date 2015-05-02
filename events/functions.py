@@ -12,7 +12,7 @@ from members.functions import get_active_members
 ###############################
 
 def gen_event_overview(template,event):
-  content = { 'overview' : settings.TEMPLATE_CONTENT['events']['list']['overview'] }
+  content = { 'overview' : settings.TEMPLATE_CONTENT['events']['details']['overview'] }
 
   content['title'] = event.title
   content['when'] = event.when

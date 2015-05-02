@@ -4,7 +4,7 @@
 from datetime import date, timedelta, datetime
 
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.formtools.wizard.views import SessionWizardView
 from django.conf import settings
 
@@ -23,6 +23,10 @@ from .models import Meeting, Invitation
 from .forms import  MeetingForm, ListMeetingsForm
 from .tables  import MeetingTable
 
+
+#################
+# MEETING VIEWS #
+#################
 
 # list #
 ########
@@ -43,17 +47,14 @@ def list(r):
                 })
 
 
-#################
-# MEETING VIEWS #
-#################
-
 # add #
 #######
-@login_required
+@permission_required('cms.BOARD',raise_exception=True)
 def add(r):
-  r.breadcrumbs( ( ('home','/'),
-                   ('meetings','/meetings/'),
-                   ('add a meeting','/meetings/add/'),
+  r.breadcrumbs( ( 	
+			('home','/'),
+                   	('meetings','/meetings/'),
+                   	('add meeting','/meetings/add/'),
                ) )
 
   if r.POST:
@@ -124,11 +125,12 @@ def add(r):
 
 # send #
 ########
-@login_required
+@permission_required('cms.BOARD',raise_exception=True)
 def send(r, meeting_num):
-  r.breadcrumbs( ( ('home','/'),
-                   ('meetings','/meetings/'),
-                   ('send meeting invitations','/meetings/send/'),
+  r.breadcrumbs( ( 
+			('home','/'),
+                   	('meetings','/meetings/'),
+                   	('send meeting invitations','/meetings/send/'),
                ) )
 
   e_template =  settings.TEMPLATE_CONTENT['meetings']['send']['done']['email']['template']
@@ -174,9 +176,10 @@ def send(r, meeting_num):
 ############
 @login_required
 def details(r, meeting_num):
-  r.breadcrumbs( ( ('home','/'),
-                   ('meetings','/meetings/'),
-                   ('details for meeting n. '+meeting_num,'/meetings/list/'+meeting_num+'/'),
+  r.breadcrumbs( ( 
+			('home','/'),
+                   	('meetings','/meetings/'),
+                   	('details for meeting n. '+meeting_num,'/meetings/list/'+meeting_num+'/'),
                ) )
 
   meeting = Meeting.objects.get(num=meeting_num)
