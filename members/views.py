@@ -10,18 +10,20 @@ from cms.functions import show_form
 from .functions import gen_member_initial, gen_role_initial, gen_member_overview, gen_member_fullname
 from .models import Member, Role
 from .forms import MemberForm, RoleForm
-from .tables  import MemberTable
+from .tables  import MemberTable, MgmtMemberTable
 
 
 # list #
 #########
-@permission_required('cms.BOARD')
+@permission_required('cms.MEMBER')
 def list(request):
   request.breadcrumbs( ( ('home','/'),
                          ('members','/members/'),
                      ) )
 
   table = MemberTable(Member.objects.all().order_by('status', 'last_name'))
+  if request.user.has_perm('cms.BOARD'):
+    table = MgmtMemberTable(Member.objects.all().order_by('status', 'last_name'))
   RequestConfig(request, paginate={"per_page": 75}).configure(table)
 
   return render(request, settings.TEMPLATE_CONTENT['members']['template'], {
@@ -125,8 +127,6 @@ class ModifyMemberWizard(SessionWizardView):
       role = Role.objects.get(member=M.pk)
       form.initial = gen_role_initial(role)
       form.instance = role
-    if step == 'add_role':
-      form.fields['member'].initial = M
 
     return form
 
@@ -155,7 +155,9 @@ class ModifyMemberWizard(SessionWizardView):
         R = mrf.save()
     if arf: 
       if arf.is_valid():
-        R = arf.save()
+        R = arf.save(commit=False)
+        R.member = M
+        R.save()
 
     title = settings.TEMPLATE_CONTENT['members']['modify']['done']['title'] % M
 
@@ -219,6 +221,7 @@ def profile(r, username):
 
   return render(r, settings.TEMPLATE_CONTENT['members']['profile']['template'], {
                    'title': title,
+                   'actions':settings.TEMPLATE_CONTENT['members']['profile']['actions'],
                    'message': message,
                 })
 

@@ -5,6 +5,7 @@ from django.db import models
 #  - cms.BOARD       (member of the Management Board)
 #  - cms.COMM        (communication manager)
 #  - cms.MEMBER      (APERTA member)
+#  - cms.ADMIN       (django superuser)
 #
 # including a little hack so that we can use these sepcific
 # permissions in a choices field for HR creation

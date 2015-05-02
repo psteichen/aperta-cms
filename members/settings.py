@@ -16,6 +16,14 @@ ACTIONS = {
       'has_perms'	: 'cms.BOARD',
     },
   ),
+  'profile' : (
+    {
+      'label'		: u'Back-office',
+      'icon'     	: 'king',
+      'url'           	: '/admin/',
+      'has_perms'	: 'superuser',
+    },
+  ),
 }
 
 MEMBERS_TMPL_CONTENT = {
@@ -58,6 +66,7 @@ MEMBERS_TMPL_CONTENT = {
   },
   'profile': {
     'template'  	: 'done.html',
+    'actions'     	: ACTIONS['profile'],
     'title'     	: u'Profile utilisateur',
     'overview' : {
       'template'	: 'overview_member.html',

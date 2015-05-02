@@ -27,7 +27,7 @@ class EventTable(Table):
     return '{} / {}'.format(Event_Attendance.objects.filter(event=record,present=True).count(),Event_Attendance.objects.filter(event=record,present=False).count())
 
   def render_details(self, record):
-    link = '<a class="btn btn-default btn-sm" href="/events/list/{}/"><span class="glyphicon glyphicon-list"></span></a>'.format(escape(record.pk))
+    link = '<a class="btn btn-info btn-sm" href="/events/list/{}/"><span class="glyphicon glyphicon-list"></span></a>'.format(escape(record.pk))
     return mark_safe(link)
 
   class Meta:

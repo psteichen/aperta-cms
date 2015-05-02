@@ -5,6 +5,12 @@ admin.autodiscover()
 
 from .views import home
 
+# custom error views
+handler400 = 'cms.errors.code400'
+handler403 = 'cms.errors.code403'
+handler404 = 'cms.errors.code404'
+handler500 = 'cms.errors.code500'
+
 urlpatterns = patterns('',
   url(r'^$', home, name='home'),
 
@@ -14,17 +20,16 @@ urlpatterns = patterns('',
   url(r'^chgpwd/$', 'django.contrib.auth.views.password_change', {'template_name': 'chgpwd.html', 'post_change_redirect': '/chgpwd-done/'}, name='chgpwd'),
   url(r'^chgpwd-done/$', 'django.contrib.auth.views.password_change_done', {'template_name': 'done/chgpwd.html'}, name='chgpwd-done'),
 
-  url(r'^members/', include('members.urls')),
-
   url(r'^attendance/', include('attendance.urls')),
-
   url(r'^locations/', include('locations.urls')),
 
   url(r'^meetings/', include('meetings.urls')),
+  url(r'^members/', include('members.urls')),
+#  url(r'^finance/', include('finance.urls')),
 
   url(r'^events/', include('events.urls')),
-
+#  url(r'^selling/', include('selling.urls')),
 #  url(r'^webcontent/', include('webcontent.urls')),
-
+ 
   url(r'^admin/', include(admin.site.urls)),
 )

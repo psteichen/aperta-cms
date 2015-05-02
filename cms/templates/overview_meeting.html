@@ -1,11 +1,6 @@
 <div class="overview">
 <div class="panel panel-primary">
   <div class="panel-body">
-    {% if overview.modify %}
-    <div class="pull-right">
-      <a class="btn btn-danger" href="{{ modify }}" role="button"><span class="glyphicon glyphicon-pencil"></span>&nbsp;&nbsp;{{ overview.modify }}&nbsp;</a>
-    </div>
-    {% endif %}
     <div class="row">
       <div class="col-sm-6">
         {{ overview.date }}<p class="lead">{{ when }} à {{ time }}</p>

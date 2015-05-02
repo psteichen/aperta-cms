@@ -12,7 +12,7 @@ class RoleForm(ModelForm):
 
   class Meta:
     model = Role
-    fields = ( 'title', 'desc', 'start_date', 'end_date', 'member', ) 
+    fields = ( 'title', 'desc', 'start_date', 'end_date', ) 
     widgets = {
       'start_date'	: TextInput(attrs={'type': 'date', }),
       'end_date'	: TextInput(attrs={'type': 'date', }),

@@ -1,6 +1,16 @@
 {% extends "base.html" %}
 
 {% block content %}
+  {% block actions %}
+    <div class="pull-right">
+      {% for a in actions %}
+       {% if a.has_perms in perms or not a.has_perms %}
+        {% if a.url %}<a class="btn btn-danger" href="{{ a.url }}" role="button">{% if a.icon %}<span class="glyphicon glyphicon-{{ a.icon }}"></span>{% endif %}&nbsp;&nbsp;{{ a.label }}&nbsp;</a>{% endif %}
+       {% endif %}
+      {% endfor %}
+    </div>
+  {% endblock %}
+
   {% if title %}<h2>{{ title }}</h2>{% endif %}
   <p class="error">{{ error_message }}</p>
   {% if message %}<p>{{ message|safe }}</p>{% endif %}

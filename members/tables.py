@@ -14,6 +14,33 @@ from .models import Member, Role
 
 #table for visualisation via django_tables2
 class MemberTable(Table):
+  role		= Column(verbose_name=u'Rôle',empty_values=())
+  meetings	= Column(verbose_name=u'Réunions statutaires<br/>(présent / excusé)',empty_values=())
+
+  def render_last_name(self, value):
+    return unicode.upper(value)
+
+  def render_role(self, value, record):
+    try:
+      role = Role.objects.get(member__id=record.id)
+      if role.end_date:
+        return unicode(role.title) + ' (' + unicode(role.start_date) + ' - ' + unicode(role.end_date) +')'
+      else:
+        return unicode(role.title) + ' (depuis ' + unicode(role.start_date) + ')'
+    except:
+      return ''
+
+  def render_meetings(self, record):
+    MA = Meeting_Attendance.objects.filter(member=record)
+    return '{} / {}'.format(MA.filter(present=True).count(),MA.filter(present=False).count())
+
+  class Meta:
+    model = Member
+    fields = ( 'first_name', 'last_name', 'email', 'start_date', 'end_date', 'status', 'role', 'meetings', )
+    attrs = {"class": "table table-striped"}
+
+#management table
+class MgmtMemberTable(Table):
   row_class     = Column(visible=False, empty_values=()) #used to highlight some rows
   role		= Column(verbose_name=u'Rôle',empty_values=())
   meetings	= Column(verbose_name=u'Réunions statutaires<br/>(présent / excusé)',empty_values=())

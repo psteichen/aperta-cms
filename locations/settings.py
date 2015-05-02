@@ -13,7 +13,7 @@ ACTIONS = {
 }
 
 LOCATIONS_TMPL_CONTENT = {
-  'title'       	: 'Gestions de Lieux de Rencontres',
+  'title'       	: u'Lieux de Rencontres et d\'Activités',
   'template'    	: 'list.html',
   'actions'     	: ACTIONS['main'],
   'add': {

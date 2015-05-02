@@ -171,22 +171,34 @@ TEMPLATE_CONTENT = {
     },
   },
   'error' : {
-    'gen'               : 'Error in input validation!',
-    'email'             : 'Error in email notification!',
-    'no-data'           : 'No data!',
-    'duplicate'         : 'Duplicate found, reconsider your input!',
+    400 : {
+      'template'	: 'error400.html',
+    },
+    403 : {
+      'template'	: 'error403.html',
+    },
+    404 : {
+      'template'	: 'error404.html',
+    },
+    500 : {
+      'template'	: 'error500.html',
+    },
+    'gen'               : u'Error dans la saisie!',
+    'email'             : u'Error dans l\'envoi d\'e-mail!',
+    'no-data'           : u'Pas de données!',
+    'duplicate'         : u'Doublon, vérifiez votre saisie!',
   },
   'auth' : {
-    'title': 'Authentication',
-    'submit': 'Login',
+    'title': u'Authentification',
+    'submit': u'Se connecter',
     'chgpwd' : {
-      'title': 'Change password for User: ',
-      'submit': 'Change',
+      'title': u'Changer le mot de passe pour: ',
+      'submit': u'Changer',
       'done' : {
-        'title': 'Password Change completed successfully',
-        'message': 'Your password has been changed successfully. Please re-login with your new credentials.',
+        'title': u'Changement du mot de passe réussi.',
+        'message': u'Ton mot de passe a été changé avec succès. Merci de te reconnecter avec le nouveau mot de passe.',
         'backurl': '/',
-        'backurl_txt': 'Back to main page.',
+        'backurl_txt': u'Retour vers l\'applicaion.',
       },
     },
   },

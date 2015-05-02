@@ -18,6 +18,27 @@ class MeetingTable(Table):
   row_class	= Column(visible=False, empty_values=()) #used to highlight some rows
   totals	= Column(verbose_name='Présents/Excusés',empty_values=())
   details	= Column(verbose_name='Détails',empty_values=())
+
+  def render_row_class(self, record):
+    if record.when < date.today():
+      return 'danger'
+
+  def render_totals(self, record):
+    return '{} / {}'.format(Meeting_Attendance.objects.filter(meeting=record,present=True).count(),Meeting_Attendance.objects.filter(meeting=record,present=False).count())
+
+  def render_details(self, record):
+    link = '<a class="btn btn-info btn-sm" href="/meetings/list/{}/"><span class="glyphicon glyphicon-list"></span></a>'.format(escape(record.num))
+    return mark_safe(link)
+
+  class Meta:
+    model = Meeting
+    fields = ( 'title', 'when', 'location', 'totals', )
+    attrs = {"class": "table table-striped"}
+
+class MgmtMeetingTable(Table):
+  row_class	= Column(visible=False, empty_values=()) #used to highlight some rows
+  totals	= Column(verbose_name='Présents/Excusés',empty_values=())
+  details	= Column(verbose_name='Détails',empty_values=())
   send		= Column(verbose_name='Invitations',empty_values=())
   modify	= Column(verbose_name='Modifier',empty_values=())
 

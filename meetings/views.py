@@ -21,7 +21,7 @@ from attendance.models import Meeting_Attendance
 from .functions import gen_meeting_overview, gen_meeting_initial, gen_current_attendance
 from .models import Meeting, Invitation
 from .forms import  MeetingForm, ListMeetingsForm
-from .tables  import MeetingTable
+from .tables  import MeetingTable, MgmtMeetingTable
 
 
 #################
@@ -30,7 +30,7 @@ from .tables  import MeetingTable
 
 # list #
 ########
-@login_required
+@permission_required('cms.MEMBER',raise_exception=True)
 def list(r):
   r.breadcrumbs( ( 
 			('home','/'),
@@ -38,6 +38,8 @@ def list(r):
                ) )
 
   table = MeetingTable(Meeting.objects.all().order_by('-num'))
+  if r.user.has_perm('cms.BOARD'):
+    table = MgmtMeetingTable(Meeting.objects.all().order_by('-num'))
   RequestConfig(r, paginate={"per_page": 75}).configure(table)
 
   return render(r, settings.TEMPLATE_CONTENT['meetings']['template'], {

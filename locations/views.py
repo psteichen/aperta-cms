@@ -28,7 +28,7 @@ def list(r):
                    	('locations','/locations/'),
                ) )
 
-  table = LocationTable(Location.objects.all())
+  table = LocationTable(Location.objects.all().order_by('-id'))
   RequestConfig(r, paginate={"per_page": 75}).configure(table)
 
   return render(r, settings.TEMPLATE_CONTENT['locations']['template'], {
