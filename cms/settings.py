@@ -155,6 +155,7 @@ TEMPLATE_CONTENT = {
     },
     'description'       : '',
     'keywords'          : '',
+    'favicon'		: STATIC_URL + '/favicon.ico',
     'css' : {
 #        'bt'            : '//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css',
         'bt_theme'      : '//maxcdn.bootstrapcdn.com/bootswatch/3.3.2/yeti/bootstrap.min.css',
