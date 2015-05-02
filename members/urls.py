@@ -1,8 +1,8 @@
 from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import login_required, permission_required
 
-from .forms import ListMembersForm, ModifyMemberForm, ModifyRoleForm
-from .views import ModifyMemberWizard, show_role_form
+from .forms import ListMembersForm, ModifyMemberForm, ModifyRoleForm, RoleForm
+from .views import ModifyMemberWizard, show_mod_role_form, show_add_role_form
 from .views import list, profile, add
 from .views import role_add
 
@@ -10,11 +10,13 @@ from .views import role_add
 #forms
 modify_member_forms = [
         ('member'       , ModifyMemberForm),
-        ('role'         , ModifyRoleForm),
+        ('mod_role'     , ModifyRoleForm),
+        ('add_role'     , RoleForm),
 ]
 #condition dict
 modify_member_condition_dict = {
-	'role'		: show_role_form,
+	'mod_role'	: show_mod_role_form,
+	'add_role'	: show_add_role_form,
 }
 
 #view

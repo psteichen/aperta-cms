@@ -4,24 +4,22 @@
 ACTIONS = {
   'main' : (
     {
-      'label'		: u'Ajouter',
+      'label'		: u'Nouveau Membre',
       'icon'     	: 'plus',
       'url'           	: '/members/add/',
       'has_perms'	: 'cms.BOARD',
     },
-  ),
-  'modify' : (
     { 
-      'label'         	: u'Ajouter un Rôle', 
-      'icon'     	: 'plus',
-      'url'           	: '/members/role/add/', 
+      'label'         	: u'Gestion des Rôles', 
+      'icon'     	: 'user',
+      'url'           	: '/members/role/', 
       'has_perms'	: 'cms.BOARD',
     },
   ),
 }
 
 MEMBERS_TMPL_CONTENT = {
-  'title'       	: 'Gestion des Membres',
+  'title'       	: 'Membres',
   'template'  		: 'list.html',
   'actions'     	: ACTIONS['main'],
   'add': {
@@ -36,19 +34,22 @@ MEMBERS_TMPL_CONTENT = {
     },
   },
   'modify': {
-    'actions'     	: ACTIONS['modify'],
     'first'             : u'début',
     'prev'              : u'retour',
     'overview' : {
       'title'           : u'Résumé',
     },
     'member' : {
-      'title'           : 'Modify Member',
-      'next'            : 'submit',
+      'title'           : u'Modifier le Member',
+      'next'            : 'enregistrer',
     },
-    'role' : {
-      'title'           : 'Modify Role',
-      'next'            : 'submit',
+    'mod_role' : {
+      'title'           : u'Modifier le Rôle',
+      'next'            : 'enregistrer',
+    },
+    'add_role' : {
+      'title'           : u'Ajouter un rôle',
+      'next'            : 'enregistrer',
     },
     'done' : {
       'template'        : 'done.html',

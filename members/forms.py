@@ -37,7 +37,8 @@ class ListMembersForm(Form):
 
 class ModifyMemberForm(MemberForm):
   role = CharField(label=u'Rôle:',widget=TextInput(attrs={'disabled': 'disabled', }),required=False)
-  mod_role = BooleanField(label='Modify role:',required=False)
+  mod_role = BooleanField(label=u'Modifier le rôle:',required=False)
+  add_role = BooleanField(label=u'Ajouter un rôle:',required=False)
 
 class ModifyRoleForm(RoleForm):
   class Meta:

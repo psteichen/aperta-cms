@@ -19,21 +19,21 @@ class MemberTable(Table):
   meetings	= Column(verbose_name=u'Réunions statutaires<br/>(présent / excusé)',empty_values=())
   modify	= Column(verbose_name=u'Modifier',empty_values=())
 
-  def render_row_class(self, record):
-    code = ''
+  def render_row_class(self, value, record):
+    cl = ''
     if record.status == Member.ACT:
-      code = 'success'
+      cl = 'success'
     if record.status == Member.WBE:
-      code = 'info'
+      cl = 'info'
 
     att = record.attendance.all().count()
     exc = record.excused.all().count()
     if att == 0:
-      code = 'warning'
+      cl = 'warning'
     if record.end_date or record.status == Member.STB or (att == 0 and exc == 0):
-      code = 'danger'
+      cl = 'danger'
 
-    return code
+    return cl
 
   def render_last_name(self, value):
     return unicode.upper(value)
@@ -55,7 +55,8 @@ class MemberTable(Table):
       return ''
 
   def render_meetings(self, record):
-    return '{} / {}'.format(Meeting_Attendance.objects.filter(member=record,present=True).count(),Meeting_Attendance.objects.filter(member=record,present=False).count())
+    MA = Meeting_Attendance.objects.filter(member=record)
+    return '{} / {}'.format(MA.filter(present=True).count(),MA.filter(present=False).count())
 
   def render_modify(self, record):
     link = '<a class="btn btn-danger btn-sm" href="/members/modify/{}/"><span class="glyphicon glyphicon-pencil"></span></a>'.format(escape(record.pk))

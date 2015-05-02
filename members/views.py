@@ -74,8 +74,10 @@ def add(r):
 ##########
 
 #modify helper functions
-def show_role_form(wizard):
+def show_mod_role_form(wizard):
   return show_form(wizard,'member','mod_role',True)
+def show_add_role_form(wizard):
+  return show_form(wizard,'member','add_role',True)
 
 #modify formwizard
 class ModifyMemberWizard(SessionWizardView):
@@ -114,14 +116,17 @@ class ModifyMemberWizard(SessionWizardView):
       form.instance = Member.objects.get(pk=M.pk)
       try:
         role = Role.objects.get(member__pk=M.pk)
+        del form.fields['add_role']
       except:
         del form.fields['role']
         del form.fields['mod_role']
 
-    if step == 'role':
+    if step == 'mod_role':
       role = Role.objects.get(member=M.pk)
       form.initial = gen_role_initial(role)
       form.instance = role
+    if step == 'add_role':
+      form.fields['member'].initial = M
 
     return form
 
@@ -133,18 +138,24 @@ class ModifyMemberWizard(SessionWizardView):
 
     template = settings.TEMPLATE_CONTENT['members']['modify']['done']['template']
 
-    M = R = rf = None
+    M = R = mrf = arf = None
     mf = form_dict['member']
     try:
-      rf = form_dict['role']
+      mrf = form_dict['mod_role']
+    except: pass
+    try:
+      arf = form_dict['add_role']
     except: pass
 
     if mf.is_valid():
       M = mf.save()
 
-    if rf: 
-      if rf.is_valid():
-        R = rf.save()
+    if mrf: 
+      if mrf.is_valid():
+        R = mrf.save()
+    if arf: 
+      if arf.is_valid():
+        R = arf.save()
 
     title = settings.TEMPLATE_CONTENT['members']['modify']['done']['title'] % M
 
