@@ -10,6 +10,13 @@ from .models import Location
 
 #table for visualisation via django_tables2
 class LocationTable(Table):
+
+  class Meta:
+    model = Location
+    fields = ( 'name', 'address', 'tel', 'email', 'website', 'contact', )
+    attrs = {"class": "table table-striped"}
+
+class MgmtLocationTable(Table):
   modify	= Column(verbose_name='Modifier',empty_values=())
 
   def render_modify(self, record):

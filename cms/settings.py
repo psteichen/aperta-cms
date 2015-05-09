@@ -256,7 +256,7 @@ ACTIONS = (
         'icon'     	: 'home',
         'desc'         	: u'Gérer (ajouter/modifier) les lieux de rencontre.', 
         'url'          	: '/locations/', 
-        'has_perms'    	: 'cms.COMM',
+        'has_perms'    	: 'cms.MEMBER',
       },
 #     {         
 #       'label'         : 'Site web', 

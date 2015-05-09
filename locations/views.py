@@ -13,7 +13,7 @@ from django_tables2  import RequestConfig
 from .functions import gen_location_initial
 from .models import Location
 from .forms import LocationForm
-from .tables  import LocationTable
+from .tables  import LocationTable, MgmtLocationTable
 
 #########
 # VIEWS #
@@ -21,7 +21,7 @@ from .tables  import LocationTable
 
 # list #
 ########
-@permission_required('cms.COMM',raise_exception=True)
+@permission_required('cms.MEMBER',raise_exception=True)
 def list(r):
   r.breadcrumbs( ( 
 			('home','/'),
@@ -29,6 +29,8 @@ def list(r):
                ) )
 
   table = LocationTable(Location.objects.all().order_by('-id'))
+  if r.user.has_perm('cms.COMM'):
+    table = MgmtLocationTable(Location.objects.all().order_by('-id'))
   RequestConfig(r, paginate={"per_page": 75}).configure(table)
 
   return render(r, settings.TEMPLATE_CONTENT['locations']['template'], {
