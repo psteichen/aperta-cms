@@ -21,6 +21,7 @@ ACTIONS = {
 MEETINGS_TMPL_CONTENT = {
   'title'       	: u'Réunions Statutaires',
   'template'    	: 'list.html',
+  'desc'       		: u'De manière générale les Réunions Statutaires se tiennent tous les deuxièmes mardis de chaque mois à midi, ainsi que tous les quatrièmes mardis de chaque mois le soir.',
   'actions'     	: ACTIONS['main'],
   'add': {
     'template'		: 'form.html',

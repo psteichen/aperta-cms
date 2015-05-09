@@ -44,6 +44,7 @@ def list(r):
 
   return render(r, settings.TEMPLATE_CONTENT['meetings']['template'], {
                    'title': settings.TEMPLATE_CONTENT['meetings']['title'],
+                   'desc': settings.TEMPLATE_CONTENT['meetings']['desc'],
                    'actions': settings.TEMPLATE_CONTENT['meetings']['actions'],
                    'table': table,
                 })

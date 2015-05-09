@@ -19,7 +19,7 @@ Heure : %(time)s<br/>
       'yes'	: u'''
 Par la présente ta participation à l\'événement "%(event)s" est confirmé(e)!''',
       'no'  	: u'''
-Merci de nous avoir notifier ton désistement, pour l\'événement "%(event)s". 
+Merci de nous avoir notifié ton désistement pour l\'événement "%(event)s". 
 
 Tu sera excusé(e).''',
     },
@@ -30,7 +30,7 @@ Tu sera excusé(e).''',
       'yes'	: u'''
 Par la présente ta participation à la %(meeting)s est confirmé(e)!''',
       'no'  	: u'''
-Merci de nous avoir notifier ton désistement, pour la %(meeting)s. 
+Merci de nous avoir notifié ton désistement pour la %(meeting)s. 
 
 Tu sera excusé(e).''',
     },
