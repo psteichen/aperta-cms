@@ -5,7 +5,7 @@
 {% if title %}<h2>{{ title }}</h2>{% endif %}
   {% for part in actions %}
   {% if part.has_perms in perms or not part.has_perms %}
-  <div class="col-xs-6">
+  <div class="col-sm-6">
     <div class="panel panel-primary">
      {% if part.heading %}
       <div class="panel-heading">
