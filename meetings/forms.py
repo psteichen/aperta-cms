@@ -41,3 +41,16 @@ class ModifyMeetingForm(ModelForm):
       'time'	: TextInput(attrs={'type': 'time', }),
     }
 
+
+#report form
+class MeetingReportForm(ModelForm):
+
+  class Meta:
+    model = Meeting
+    fields = ( 'num', 'title', 'report', )
+    widgets = {
+      'num'	: HiddenInput(),
+      'title'	: TextInput(attrs={'readonly': 'readonly', }),
+    }
+
+

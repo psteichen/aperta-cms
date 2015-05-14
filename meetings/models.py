@@ -1,9 +1,17 @@
 # coding=utf-8
 
-from django.db.models import Model, CharField, DateField, ForeignKey, TimeField, DateTimeField, IntegerField
+from django.db.models import Model, CharField, DateField, ForeignKey, TimeField, DateTimeField, IntegerField, FileField
+
+from cms.functions import rmf
 
 from members.models import Member
 from locations.models import Location
+
+def rename_report(i, f):
+  fn = rmf(i, i.num, f)
+
+  from os import sep
+  return 'MEETINGS' + sep + fn['name'] + fn['ext']
 
 class Meeting(Model):
   num		= IntegerField(verbose_name='Numéro',primary_key=True)
@@ -12,6 +20,8 @@ class Meeting(Model):
   time		= TimeField(verbose_name='Heure de début')
   location	= ForeignKey(Location,verbose_name='Lieu de Rencontre')
   deadline	= DateTimeField(verbose_name='Deadline')
+  report        = FileField(verbose_name='Compte rendu', upload_to=rename_report,blank=True,null=True)
+
   
   def __unicode__(self):
     return unicode(self.title) + ' du ' + unicode(self.when)
@@ -19,7 +29,7 @@ class Meeting(Model):
 
 class Invitation(Model):
   meeting	= ForeignKey(Meeting)
-  message	= CharField(max_length=5000)
+  message	= CharField(max_length=5000,blank=True,null=True)
   sent		= DateTimeField(blank=True,null=True)
 
   def __unicode__(self):

@@ -27,12 +27,12 @@ class MeetingTable(Table):
     return '{} / {}'.format(Meeting_Attendance.objects.filter(meeting=record,present=True).count(),Meeting_Attendance.objects.filter(meeting=record,present=False).count())
 
   def render_details(self, record):
-    link = '<a class="btn btn-info btn-sm" href="/meetings/list/{}/"><span class="glyphicon glyphicon-list"></span></a>'.format(escape(record.num))
+    link = '<center><a class="btn btn-info btn-sm" href="/meetings/list/{}/"><span class="glyphicon glyphicon-list"></span></a></center>'.format(escape(record.num))
     return mark_safe(link)
 
   class Meta:
     model = Meeting
-    fields = ( 'title', 'when', 'location', 'totals', )
+    fields = ( 'title', 'when', 'location', 'totals', 'details', )
     attrs = {"class": "table table-striped"}
 
 class MgmtMeetingTable(Table):
@@ -41,6 +41,7 @@ class MgmtMeetingTable(Table):
   details	= Column(verbose_name='Détails',empty_values=())
   send		= Column(verbose_name='Invitations',empty_values=())
   modify	= Column(verbose_name='Modifier',empty_values=())
+  report	= Column(verbose_name='Compte rendu',empty_values=())
 
   def render_row_class(self, record):
     if record.when < date.today():
@@ -50,18 +51,23 @@ class MgmtMeetingTable(Table):
     return '{} / {}'.format(Meeting_Attendance.objects.filter(meeting=record,present=True).count(),Meeting_Attendance.objects.filter(meeting=record,present=False).count())
 
   def render_details(self, record):
-    link = '<a class="btn btn-info btn-sm" href="/meetings/list/{}/"><span class="glyphicon glyphicon-list"></span></a>'.format(escape(record.num))
+    link = '<center><a class="btn btn-info btn-sm" href="/meetings/list/{}/"><span class="glyphicon glyphicon-list"></span></a></center>'.format(escape(record.num))
     return mark_safe(link)
 
   def render_send(self, record):
-    link = '<a class="btn btn-danger btn-sm" href="/meetings/send/{}/"><span class="glyphicon glyphicon-envelope"></span></a>'.format(escape(record.num))
+    link = '<center><a class="btn btn-danger btn-sm" href="/meetings/send/{}/"><span class="glyphicon glyphicon-envelope"></span></a></center>'.format(escape(record.num))
     return mark_safe(link)
 
   def render_modify(self, record):
-    link = '<a class="btn btn-danger btn-sm" href="/meetings/modify/{}/"><span class="glyphicon glyphicon-pencil"></span></a>'.format(escape(record.num))
+    link = '<center><a class="btn btn-danger btn-sm" href="/meetings/modify/{}/"><span class="glyphicon glyphicon-pencil"></span></a></center>'.format(escape(record.num))
+    return mark_safe(link)
+
+  def render_report(self, record):
+    link = '<center><a class="btn btn-danger btn-sm" href="/meetings/report/{}/"><span class="glyphicon glyphicon-file"></span></a></center>'.format(escape(record.num))
     return mark_safe(link)
 
   class Meta:
     model = Meeting
-    fields = ( 'title', 'when', 'location', 'totals', 'details', 'modify', )
+    fields = ( 'title', 'when', 'location', 'totals', 'details', 'send', 'modify', 'report', )
     attrs = {"class": "table table-striped"}
+

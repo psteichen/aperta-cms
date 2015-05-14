@@ -26,4 +26,4 @@ class Event(Model):
 class Invitation(Model):
   event		= ForeignKey(Event)
   message	= CharField(max_length=5000)
-  sent		= DateTimeField()
+  sent		= DateTimeField(blank=True,null=True)

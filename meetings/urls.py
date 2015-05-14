@@ -5,7 +5,7 @@ from attendance.forms import ModifyAttendanceForm
 
 from .forms import ListMeetingsForm, ModifyMeetingForm
 from .views import ModifyMeetingWizard, show_attendance_form
-from .views import list, add, send, details
+from .views import list, add, send, details, report
 
 # modify meeting wizard #
 #forms
@@ -28,6 +28,6 @@ urlpatterns = patterns('',
 
   url(r'^add/$', add, name='add'),
   url(r'^send/(?P<meeting_num>.+?)/$', send, name='send'),
-
   url(r'^modify/(?P<meeting_num>.+?)/$', modify_meeting_wrapper, name='modify'),
+  url(r'^report/(?P<meeting_num>.+?)/$', report, name='report'),
 )
