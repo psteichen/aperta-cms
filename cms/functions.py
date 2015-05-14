@@ -29,7 +29,7 @@ def notify_by_email(sender,to,subject,message_content,attachment=None,template='
           )
   message_content['FOOTER'] = settings.EMAILS['footer']
   email.body = render_to_string(template,message_content)
-  if attachment: email.attach(attachment)
+  if attachment: email.attach_file(attachment)
   try:
     email.send()
     return True

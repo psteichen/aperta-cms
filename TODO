@@ -1,6 +1,5 @@
-- members: in tables: row_class issue ! -> to be fixed
+- members: in tables: row_class issue
 - modify events: refactor selon new meetings way of doing
-- test cms.MEMBER login functionnalities
 - webcontent: full implementation
 - finance: full implementation
 - selling: partly implemented

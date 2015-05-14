@@ -22,8 +22,7 @@ def gen_meeting_overview(template,meeting):
   content['time'] = visualiseDateTime(meeting.time)
   content['location'] = meeting.location.name
   content['address'] = meeting.location.address
-  try: content['report'] = settings.MEDIA_URL + unicode(meeting.report)
-  except: pass
+  if meeting.report:  content['report'] = settings.MEDIA_URL + unicode(meeting.report)
   content['attendance'] = Meeting_Attendance.objects.filter(meeting=meeting,present=True).only('member')
   content['excused'] = Meeting_Attendance.objects.filter(meeting=meeting,present=False).only('member')
 

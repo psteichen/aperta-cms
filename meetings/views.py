@@ -328,8 +328,9 @@ def report(r, meeting_num):
             'FULLNAME'    : gen_member_fullname(m),
             'MESSAGE'     : gen_report_message(e_template,Mt,m),
           }
+          attachement = settings.MEDIA_ROOT + unicode(Mt.report)
           #send email
-          ok=notify_by_email(r.user.email,m.email,subject,message_content,Mt.report)
+          ok=notify_by_email(r.user.email,m.email,subject,message_content,attachement)
           if not ok: 
             email_error['ok']=False
             email_error['who'].add(m.email)

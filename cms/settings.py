@@ -139,8 +139,7 @@ EMAILS = {
   'sender' : {
     'default'	: 'board@aperta.lu',
   },
-  'footer' 	: '''
-Amicalement,
+  'footer' 	: '''Amicalement,
 Le comité APERTA
 ''',
 }

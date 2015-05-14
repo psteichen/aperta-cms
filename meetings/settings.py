@@ -101,7 +101,7 @@ Destinataires:
   'report': {
     'template'		: 'form.html',
     'title'         	: u'Compte rendu de la Réunion Statutaire n°',
-    'desc'          	: u'Enregistre le compte rendu de la réunion statutaire choisie. Il sera envoyé automatiquement à tous le membres après téléchargement.',
+    'desc'          	: u'Enregistre le compte rendu de la réunion statutaire choisie et si voulu, envoi ce dernier à tous le membres après téléchargement.',
     'submit'   		: u'Enregistrer',
     'done': {
       'template'	: 'done.html',
@@ -111,7 +111,7 @@ Destinataires:
       'message_send'   	: u'Destinataires : ',
       'email': {
 	'template'	: 'meeting_report.txt',
-	'subject'	: u'[51 aperta] %(title)s',
+	'subject'	: u'[51 aperta] Compte rendu de la %(title)s',
       },
     },
   },
