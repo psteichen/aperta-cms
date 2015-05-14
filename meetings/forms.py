@@ -3,7 +3,7 @@
 from datetime import date
 
 from django.conf import settings
-from django.forms import Form, ModelForm, TextInput, Textarea, HiddenInput, CharField, ModelChoiceField, BooleanField, DateField, ModelMultipleChoiceField, CheckboxSelectMultiple
+from django.forms import Form, ModelForm, TextInput, Textarea, HiddenInput, CharField, ModelChoiceField, BooleanField, DateField, ModelMultipleChoiceField, CheckboxSelectMultiple, FileField, IntegerField
 
 from members.functions import get_active_members
 
@@ -43,14 +43,9 @@ class ModifyMeetingForm(ModelForm):
 
 
 #report form
-class MeetingReportForm(ModelForm):
-
-  class Meta:
-    model = Meeting
-    fields = ( 'num', 'title', 'report', )
-    widgets = {
-      'num'	: HiddenInput(),
-      'title'	: TextInput(attrs={'readonly': 'readonly', }),
-    }
-
+class MeetingReportForm(Form):
+  num		= IntegerField(widget=HiddenInput())
+  title		= CharField(label=u'Titre',widget=TextInput(attrs={'readonly': 'readonly', }))
+  report	= FileField(label='Compte rendu')
+  send 		= BooleanField(label='Envoi du compte rendu aux membres',required=False)
 

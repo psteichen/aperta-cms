@@ -18,7 +18,7 @@ from members.functions import get_active_members, gen_member_fullname
 from attendance.functions import gen_invitation_message
 from attendance.models import Meeting_Attendance
 
-from .functions import gen_meeting_overview, gen_meeting_initial, gen_current_attendance
+from .functions import gen_meeting_overview, gen_meeting_initial, gen_current_attendance, gen_report_message
 from .models import Meeting, Invitation
 from .forms import  MeetingForm, ListMeetingsForm, MeetingReportForm
 from .tables  import MeetingTable, MgmtMeetingTable
@@ -83,7 +83,7 @@ def add(r):
           }
           #send email
           ok=notify_by_email(r.user.email,m.email,subject,message_content)
-          if not ok: 
+          if not ok:
             email_error['ok']=False
             email_error['who'].add(m.email)
 
@@ -305,66 +305,63 @@ def report(r, meeting_num):
   r.breadcrumbs( ( 	
 			('home','/'),
                    	('meetings','/meetings/'),
-                   	('meeting report','/meetings/report/'),
                ) )
 
-  M = Meeting.objects.get(num=meeting_num)
+  Mt = Meeting.objects.get(num=meeting_num)
 
   if r.POST:
-#HERE
-    e_template =  settings.TEMPLATE_CONTENT['meetings']['add']['done']['email']['template']
+    e_template =  settings.TEMPLATE_CONTENT['meetings']['report']['done']['email']['template']
 
-    mf = MeetingForm(r.POST)
-    if mf.is_valid():
-      Mt = mf.save(commit=False)
+    mrf = MeetingReportForm(r.POST, r.FILES)
+    if mrf.is_valid():
+      Mt.report = mrf.cleaned_data['report']
       Mt.save()
-      
-      I = Invitation(meeting=Mt,message=mf.cleaned_data['additional_message'])
-      send = mf.cleaned_data['send']
+
+      send = mrf.cleaned_data['send']
       if send:
         email_error = { 'ok': True, 'who': (), }
         for m in get_active_members():
    
-          #invitation email with "YES/NO button"
-          subject = settings.TEMPLATE_CONTENT['meetings']['add']['done']['email']['subject'] % { 'title': unicode(Mt.title) }
-          invitation_message = gen_invitation_message(e_template,Mt,Event.MEET,m) + mf.cleaned_data['additional_message']
+          #notifiation per email for new report
+          subject = settings.TEMPLATE_CONTENT['meetings']['report']['done']['email']['subject'] % { 'title': unicode(Mt.title) }
           message_content = {
             'FULLNAME'    : gen_member_fullname(m),
-            'MESSAGE'     : invitation_message,
+            'MESSAGE'     : gen_report_message(e_template,Mt,m),
           }
           #send email
-          ok=notify_by_email(r.user.email,m.email,subject,message_content)
+          ok=notify_by_email(r.user.email,m.email,subject,message_content,Mt.report)
           if not ok: 
             email_error['ok']=False
             email_error['who'].add(m.email)
 
         # error in email -> show error messages
         if not email_error['ok']:
-          I.sent = datetime.now()
-          I.save()
-          return render(r, settings.TEMPLATE_CONTENT['meetings']['add']['done']['template'], {
-                'title': settings.TEMPLATE_CONTENT['meetings']['add']['done']['title'], 
+          return render(r, settings.TEMPLATE_CONTENT['meetings']['report']['done']['template'], {
+                'title': settings.TEMPLATE_CONTENT['meetings']['report']['done']['title'], 
                 'error_message': settings.TEMPLATE_CONTENT['error']['email'] + ' ; '.join([e for e in email_error['who']]),
                 })
-
-      # all fine -> done
-      I.save()
-      invitation_message = gen_invitation_message(e_template,Mt,Event.MEET,Member(user=r.user)) + mf.cleaned_data['additional_message']
-      return render(r, settings.TEMPLATE_CONTENT['meetings']['add']['done']['template'], {
-                'title': settings.TEMPLATE_CONTENT['meetings']['add']['done']['title'], 
-                'message': settings.TEMPLATE_CONTENT['meetings']['add']['done']['message'] % { 'email': invitation_message, 'list': ' ; '.join([gen_member_fullname(m) for m in get_active_members()]), },
+        else:
+          # done -> with sending
+          return render(r, settings.TEMPLATE_CONTENT['meetings']['report']['done']['template'], {
+				'title': settings.TEMPLATE_CONTENT['meetings']['report']['done']['title_send'], 
+                		'message': settings.TEMPLATE_CONTENT['meetings']['report']['done']['message_send'] + ' ; '.join([gen_member_fullname(m) for m in get_active_members()]),
+                })
+      else:
+        # done -> no sending
+        return render(r, settings.TEMPLATE_CONTENT['meetings']['report']['done']['template'], {
+			'title': settings.TEMPLATE_CONTENT['meetings']['report']['done']['title'], 
+                	'message': settings.TEMPLATE_CONTENT['meetings']['report']['done']['message'],
                 })
 
     # form not valid -> error
     else:
-      return render(r, settings.TEMPLATE_CONTENT['meetings']['add']['done']['template'], {
-                'title': settings.TEMPLATE_CONTENT['meetings']['add']['done']['title'], 
-                'error_message': settings.TEMPLATE_CONTENT['error']['gen'] + ' ; '.join([e for e in mf.errors]),
+      return render(r, settings.TEMPLATE_CONTENT['meetings']['report']['done']['template'], {
+                'title': settings.TEMPLATE_CONTENT['meetings']['report']['done']['title'], 
+                'error_message': settings.TEMPLATE_CONTENT['error']['gen'] + ' ; '.join([e for e in mrf.errors]),
                 })
   # no post yet -> empty form
   else:
-#this part done !
-    form = MeetingReportForm(initial={ 'num': meeting_num, 'title': M.title, })
+    form = MeetingReportForm(initial={ 'num': Mt.num, 'title': Mt.title, })
     return render(r, settings.TEMPLATE_CONTENT['meetings']['report']['template'], {
                 'title': settings.TEMPLATE_CONTENT['meetings']['report']['title'],
                 'desc': settings.TEMPLATE_CONTENT['meetings']['report']['desc'],

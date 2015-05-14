@@ -93,6 +93,7 @@ Destinataires:
       'modify'		: u'Modifier',
       'date'		: u'Date et heure',
       'location'	: u'Lieu de rencontre',
+      'report'		: u'Compte rendu',
       'attendance'	: u'Présent(s)',
       'excused'		: u'Excusé(s)',
     },
@@ -104,7 +105,10 @@ Destinataires:
     'submit'   		: u'Enregistrer',
     'done': {
       'template'	: 'done.html',
-      'title'     	: u'Compte rendu enregistré et envoyé aux membres.',
+      'title'     	: u'Compte rendu enregistré.',
+      'title_send'     	: u'Compte rendu enregistré et envoyé aux membres.',
+      'message'     	: u'',
+      'message_send'   	: u'Destinataires : ',
       'email': {
 	'template'	: 'meeting_report.txt',
 	'subject'	: u'[51 aperta] %(title)s',

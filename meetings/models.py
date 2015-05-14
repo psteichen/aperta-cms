@@ -8,10 +8,10 @@ from members.models import Member
 from locations.models import Location
 
 def rename_report(i, f):
-  fn = rmf(i, i.num, f)
+  fn = rmf(i, 'meetings', f)
 
   from os import sep
-  return 'MEETINGS' + sep + fn['name'] + fn['ext']
+  return fn['name'] + fn['ext']
 
 class Meeting(Model):
   num		= IntegerField(verbose_name='Numéro',primary_key=True)

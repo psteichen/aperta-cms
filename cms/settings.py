@@ -121,6 +121,9 @@ STATICFILES_FINDERS = (
 
 APP_ENV='DEV'
 
+MEDIA_ROOT = '/var/www/aperta.lu/dev.cms/media/'
+MEDIA_URL = '/media/'
+
 #login/auth (used by the login_required decorator)
 LOGIN_URL="/login/"
 LOGIN_REDIRECT_URL="/"

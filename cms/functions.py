@@ -2,6 +2,9 @@
 # coding=utf-8
 #
 import datetime
+from os import sep
+from os.path import splitext
+from unicodedata import normalize
 
 from django.conf import settings
 from django.template.loader import render_to_string
@@ -15,7 +18,7 @@ def debug(app,message):
     from sys import stderr as errlog
     print >>errlog, 'DEBUG ['+unicode(app)+']: '+unicode(message)
 
-def notify_by_email(sender,to,subject,message_content,template='default.txt',attachment=None):
+def notify_by_email(sender,to,subject,message_content,attachment=None,template='default.txt'):
 
   if not sender: sender = settings.EMAILS['sender']['default']
   email = EmailMessage(
@@ -66,7 +69,9 @@ def rmf(instance, dir, filename=None):
   except:
     orig_ext = ''
 
-  fn=dir.upper() + '_' + unicode(instance).replace(' ','') #remove whitespaces
+  fn=unicode(instance).replace(' ','-') #remove whitespaces
+  fn=unicode(fn).replace('.','') #remove dots
+  fn=dir.upper() + sep + fn #add dir
 
   return {'name': normalize('NFKD', fn).encode('ascii','ignore'),'ext': orig_ext}
 
