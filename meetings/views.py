@@ -10,7 +10,7 @@ from django.conf import settings
 
 from django_tables2  import RequestConfig
 
-from cms.functions import notify_by_email, show_form
+from cms.functions import notify_by_email, show_form, visualiseDateTime
 
 from events.models import Event
 from members.models import Member
@@ -362,9 +362,10 @@ def report(r, meeting_num):
                 })
   # no post yet -> empty form
   else:
-    form = MeetingReportForm(initial={ 'num': Mt.num, 'title': Mt.title, })
+    form = MeetingReportForm(initial={ 'num': Mt.num, 'title': Mt.title, 'when': visualiseDateTime(Mt.when), })
+    title = settings.TEMPLATE_CONTENT['meetings']['report']['title'].format(unicode(Mt.num))
     return render(r, settings.TEMPLATE_CONTENT['meetings']['report']['template'], {
-                'title': settings.TEMPLATE_CONTENT['meetings']['report']['title'],
+                'title': title,
                 'desc': settings.TEMPLATE_CONTENT['meetings']['report']['desc'],
                 'submit': settings.TEMPLATE_CONTENT['meetings']['report']['submit'],
                 'form': form,

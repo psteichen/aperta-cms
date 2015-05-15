@@ -100,7 +100,7 @@ Destinataires:
   },
   'report': {
     'template'		: 'form.html',
-    'title'         	: u'Compte rendu de la Réunion Statutaire n°',
+    'title'         	: u'Compte rendu de la Réunion Statutaire n° {0}',
     'desc'          	: u'Enregistre le compte rendu de la réunion statutaire choisie et si voulu, envoi ce dernier à tous le membres après téléchargement.',
     'submit'   		: u'Enregistrer',
     'done': {

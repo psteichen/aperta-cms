@@ -46,6 +46,7 @@ class ModifyMeetingForm(ModelForm):
 class MeetingReportForm(Form):
   num		= IntegerField(widget=HiddenInput())
   title		= CharField(label=u'Titre',widget=TextInput(attrs={'readonly': 'readonly', }))
+  when		= CharField(label=u'Date',widget=TextInput(attrs={'readonly': 'readonly', }))
   report	= FileField(label='Compte rendu')
   send 		= BooleanField(label='Envoi du compte rendu aux membres',required=False)
 
