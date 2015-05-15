@@ -22,6 +22,7 @@ def gen_meeting_overview(template,meeting):
   content['time'] = visualiseDateTime(meeting.time)
   content['location'] = meeting.location.name
   content['address'] = meeting.location.address
+  if meeting.report:  content['report'] = settings.MEDIA_URL + unicode(meeting.report)
   content['attendance'] = Meeting_Attendance.objects.filter(meeting=meeting,present=True).only('member')
   content['excused'] = Meeting_Attendance.objects.filter(meeting=meeting,present=False).only('member')
 
@@ -43,4 +44,14 @@ def gen_current_attendance(m):
   initial_data['excused'] = Member.objects.filter(meeting_attendance__meeting=m,meeting_attendance__present=False)
 
   return initial_data
+
+def gen_report_message(template,meeting,member):
+  content = {}
+
+  content['title'] = meeting.title
+  content['when'] = meeting.when
+  content['time'] = meeting.time
+  content['location'] = meeting.location
+
+  return render_to_string(template,content)
 

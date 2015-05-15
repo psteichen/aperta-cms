@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = 'i7_hpg!p406zhnei*v6(v+bm@rav4(r!)090re3df52o9b71c1'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = [ 'cms.aperta.lu', ]
@@ -117,9 +117,10 @@ STATICFILES_FINDERS = (
 )
 
 
-# LOCAL settings
+MEDIA_URL = '/media/'
 
-#APP_ENV='DEV'
+# LOCAL settings
+from local_settings import *
 
 #login/auth (used by the login_required decorator)
 LOGIN_URL="/login/"
@@ -136,8 +137,7 @@ EMAILS = {
   'sender' : {
     'default'	: 'board@aperta.lu',
   },
-  'footer' 	: '''
-Amicalement,
+  'footer' 	: '''Amicalement,
 Le comité APERTA
 ''',
 }

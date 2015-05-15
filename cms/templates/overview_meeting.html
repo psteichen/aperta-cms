@@ -6,6 +6,7 @@
         {{ overview.date }}<p class="lead">{{ when }} à {{ time }}</p>
       </div>
       <div class="col-sm-6">
+        {% if report %}<a class="btn btn-info pull-right" href="{{ report }}" target="_blank" role="button"><span class="glyphicon glyphicon-open-file"></span>&nbsp;&nbsp;{{ overview.report }}&nbsp;</a>{% endif %}
         {{ overview.location }}<address class="lead">{{ location }}<br/>{{ address }}</address>
       </div>
     </div>

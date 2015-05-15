@@ -93,8 +93,26 @@ Destinataires:
       'modify'		: u'Modifier',
       'date'		: u'Date et heure',
       'location'	: u'Lieu de rencontre',
+      'report'		: u'Compte rendu',
       'attendance'	: u'Présent(s)',
       'excused'		: u'Excusé(s)',
+    },
+  },
+  'report': {
+    'template'		: 'form.html',
+    'title'         	: u'Compte rendu de la Réunion Statutaire n°',
+    'desc'          	: u'Enregistre le compte rendu de la réunion statutaire choisie et si voulu, envoi ce dernier à tous le membres après téléchargement.',
+    'submit'   		: u'Enregistrer',
+    'done': {
+      'template'	: 'done.html',
+      'title'     	: u'Compte rendu enregistré.',
+      'title_send'     	: u'Compte rendu enregistré et envoyé aux membres.',
+      'message'     	: u'',
+      'message_send'   	: u'Destinataires : ',
+      'email': {
+	'template'	: 'meeting_report.txt',
+	'subject'	: u'[51 aperta] Compte rendu de la %(title)s',
+      },
     },
   },
 }

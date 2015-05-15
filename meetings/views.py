@@ -18,9 +18,9 @@ from members.functions import get_active_members, gen_member_fullname
 from attendance.functions import gen_invitation_message
 from attendance.models import Meeting_Attendance
 
-from .functions import gen_meeting_overview, gen_meeting_initial, gen_current_attendance
+from .functions import gen_meeting_overview, gen_meeting_initial, gen_current_attendance, gen_report_message
 from .models import Meeting, Invitation
-from .forms import  MeetingForm, ListMeetingsForm
+from .forms import  MeetingForm, ListMeetingsForm, MeetingReportForm
 from .tables  import MeetingTable, MgmtMeetingTable
 
 
@@ -83,7 +83,7 @@ def add(r):
           }
           #send email
           ok=notify_by_email(r.user.email,m.email,subject,message_content)
-          if not ok: 
+          if not ok:
             email_error['ok']=False
             email_error['who'].add(m.email)
 
@@ -296,4 +296,78 @@ class ModifyMeetingWizard(SessionWizardView):
     return render(self.request, template, {
                         'title': title,
                  })
+
+
+# report #
+#######
+@permission_required('cms.BOARD',raise_exception=True)
+def report(r, meeting_num):
+  r.breadcrumbs( ( 	
+			('home','/'),
+                   	('meetings','/meetings/'),
+               ) )
+
+  Mt = Meeting.objects.get(num=meeting_num)
+
+  if r.POST:
+    e_template =  settings.TEMPLATE_CONTENT['meetings']['report']['done']['email']['template']
+
+    mrf = MeetingReportForm(r.POST, r.FILES)
+    if mrf.is_valid():
+      Mt.report = mrf.cleaned_data['report']
+      Mt.save()
+
+      send = mrf.cleaned_data['send']
+      if send:
+        email_error = { 'ok': True, 'who': (), }
+        for m in get_active_members():
+   
+          #notifiation per email for new report
+          subject = settings.TEMPLATE_CONTENT['meetings']['report']['done']['email']['subject'] % { 'title': unicode(Mt.title) }
+          message_content = {
+            'FULLNAME'    : gen_member_fullname(m),
+            'MESSAGE'     : gen_report_message(e_template,Mt,m),
+          }
+          attachement = settings.MEDIA_ROOT + unicode(Mt.report)
+          #send email
+          ok=notify_by_email(r.user.email,m.email,subject,message_content,attachement)
+          if not ok: 
+            email_error['ok']=False
+            email_error['who'].add(m.email)
+
+        # error in email -> show error messages
+        if not email_error['ok']:
+          return render(r, settings.TEMPLATE_CONTENT['meetings']['report']['done']['template'], {
+                'title': settings.TEMPLATE_CONTENT['meetings']['report']['done']['title'], 
+                'error_message': settings.TEMPLATE_CONTENT['error']['email'] + ' ; '.join([e for e in email_error['who']]),
+                })
+        else:
+          # done -> with sending
+          return render(r, settings.TEMPLATE_CONTENT['meetings']['report']['done']['template'], {
+				'title': settings.TEMPLATE_CONTENT['meetings']['report']['done']['title_send'], 
+                		'message': settings.TEMPLATE_CONTENT['meetings']['report']['done']['message_send'] + ' ; '.join([gen_member_fullname(m) for m in get_active_members()]),
+                })
+      else:
+        # done -> no sending
+        return render(r, settings.TEMPLATE_CONTENT['meetings']['report']['done']['template'], {
+			'title': settings.TEMPLATE_CONTENT['meetings']['report']['done']['title'], 
+                	'message': settings.TEMPLATE_CONTENT['meetings']['report']['done']['message'],
+                })
+
+    # form not valid -> error
+    else:
+      return render(r, settings.TEMPLATE_CONTENT['meetings']['report']['done']['template'], {
+                'title': settings.TEMPLATE_CONTENT['meetings']['report']['done']['title'], 
+                'error_message': settings.TEMPLATE_CONTENT['error']['gen'] + ' ; '.join([e for e in mrf.errors]),
+                })
+  # no post yet -> empty form
+  else:
+    form = MeetingReportForm(initial={ 'num': Mt.num, 'title': Mt.title, })
+    return render(r, settings.TEMPLATE_CONTENT['meetings']['report']['template'], {
+                'title': settings.TEMPLATE_CONTENT['meetings']['report']['title'],
+                'desc': settings.TEMPLATE_CONTENT['meetings']['report']['desc'],
+                'submit': settings.TEMPLATE_CONTENT['meetings']['report']['submit'],
+                'form': form,
+                })
+
 
