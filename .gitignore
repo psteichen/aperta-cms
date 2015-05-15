@@ -57,7 +57,7 @@ target/
 .env
 */migrations/
 cms/db.sqlite
-cms/settings.py
+cms/local_settings.py
 cms/wsgi.py
 HERE
 TODO
