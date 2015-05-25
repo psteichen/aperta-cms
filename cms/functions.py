@@ -63,13 +63,14 @@ def visualiseDateTime(dtIn):
   if type(dtIn) is datetime.datetime: return dtIn.strftime('%a le ') + dtIn.strftime('%d %b %Y').lstrip('0') + u' à ' + dtIn.strftime('%Hh%M').lstrip('0')
 
 # rename uploaded files
-def rmf(instance, dir, filename=None):
-  try:
-    orig_name, orig_ext = splitext(filename)
-  except:
-    orig_ext = ''
+def rmf(dir, old, new=None):
+  orig_name, orig_ext = splitext(old)
 
-  fn=unicode(instance).replace(' ','-') #remove whitespaces
+  if new:
+    fn=unicode(new).replace(' ','-') #remove whitespaces
+  else:
+    fn=unicode(orig_name).replace(' ','-') #remove whitespaces
+
   fn=unicode(fn).replace('.','') #remove dots
   fn=dir.upper() + sep + fn #add dir
 

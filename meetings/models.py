@@ -8,7 +8,7 @@ from members.models import Member
 from locations.models import Location
 
 def rename_report(i, f):
-  fn = rmf(i, 'meetings', f)
+  fn = rmf('meetings', f, i.title)
 
   from os import sep
   return fn['name'] + fn['ext']
@@ -26,10 +26,16 @@ class Meeting(Model):
   def __unicode__(self):
     return unicode(self.title) + ' du ' + unicode(self.when)
 
+def rename_attach(i, f):
+  fn = rmf('meetings', f, i.meeting.num + '-attachement')
+
+  from os import sep
+  return fn['name'] + fn['ext']
 
 class Invitation(Model):
   meeting	= ForeignKey(Meeting)
   message	= CharField(max_length=5000,blank=True,null=True)
+  attachement   = FileField(verbose_name='Annexe(s)', upload_to=rename_attach,blank=True,null=True)
   sent		= DateTimeField(blank=True,null=True)
 
   def __unicode__(self):
@@ -37,3 +43,5 @@ class Invitation(Model):
       return u'Invitations pour: ' + unicode(self.meeting) + u' envoyées à: ' + self.sent.strftime('%Y-%m-%d %H:%M')
     else:
       return u'Invitations pour: ' + unicode(self.meeting) + u' non encore envoyées.'
+
+

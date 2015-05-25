@@ -12,16 +12,17 @@ from .models import Meeting
 #meeting form
 class MeetingForm(ModelForm):
   additional_message 	= CharField(label='Message supplémentaire',widget=Textarea(attrs={'placeholder': "Message à transmettre dans l'invitation.",}),required=False)
+  attachement 		= FileField(label='Annexe(s)',required=False)
   send 			= BooleanField(label='Envoi direct des invitations',required=False)
 
   class Meta:
     model = Meeting
-    fields = ( 'title', 'when', 'time', 'location', 'num', 'deadline', 'additional_message', 'send', )
+    fields = ( 'title', 'when', 'time', 'location', 'num', 'deadline', 'additional_message', 'attachement', 'send', )
     widgets = {
 #      'title'	: TextInput(attrs={'readonly': 'readonly', }),
-      'when'	: TextInput(attrs={'type': 'date', }),
-#      'time'	: TextInput(attrs={'type': 'time', }),
-      'deadline': TextInput(attrs={'type': 'datetime', }),
+      'when'	: TextInput(attrs={'type': 'date', 'id': 'dpicker', }),
+      'time'	: TextInput(attrs={'type': 'time', 'id': 'tpicker', }),
+      'deadline': TextInput(attrs={'type': 'date', 'id': 'dtpicker', }),
       'num'	: HiddenInput(),
     }
 
