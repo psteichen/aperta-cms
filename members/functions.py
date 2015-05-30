@@ -48,6 +48,8 @@ def gen_member_overview(template,member):
   content['name'] = gen_member_fullname(member)
   content['username'] = member.user.username
   content['email'] = member.email
-  content['role'] = Role.objects.get(member=member).title
+  try:
+    content['role'] = Role.objects.get(member=member).title
+  except: pass
 
   return render_to_string(template,content)

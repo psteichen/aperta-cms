@@ -18,7 +18,7 @@ urlpatterns = patterns('',
   url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'auth.html'}, name='login'),
   url(r'^logout/$', 'django.contrib.auth.views.logout_then_login', name='logout'),
   url(r'^chgpwd/$', 'django.contrib.auth.views.password_change', {'template_name': 'chgpwd.html', 'post_change_redirect': '/chgpwd-done/'}, name='chgpwd'),
-  url(r'^chgpwd-done/$', 'django.contrib.auth.views.password_change_done', {'template_name': 'done/chgpwd.html'}, name='chgpwd-done'),
+  url(r'^chgpwd-done/$', 'django.contrib.auth.views.password_change_done', {'template_name': 'done.html'}, name='chgpwd-done'),
 
   url(r'^attendance/', include('attendance.urls')),
   url(r'^locations/', include('locations.urls')),
