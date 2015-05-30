@@ -92,6 +92,7 @@ Destinataires:
       'template'	: 'overview_meeting.html',
       'modify'		: u'Modifier',
       'date'		: u'Date et heure',
+      'attach'		: u'Informations supplémentaires',
       'location'	: u'Lieu de rencontre',
       'report'		: u'Compte rendu',
       'attendance'	: u'Présent(s)',

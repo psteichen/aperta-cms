@@ -5,6 +5,9 @@ from django.conf import settings
 from django.template.loader import render_to_string
 
 from cms.functions import visualiseDateTime
+
+from .models import Invitation
+
 from attendance.models import Meeting_Attendance
 from members.models import Member
 from members.functions import get_active_members
@@ -23,6 +26,8 @@ def gen_meeting_overview(template,meeting):
   content['location'] = meeting.location.name
   content['address'] = meeting.location.address
   if meeting.report:  content['report'] = settings.MEDIA_URL + unicode(meeting.report)
+  invitation = Invitation.objects.get(meeting=meeting)
+  if invitation.attachement:  content['attach'] = settings.MEDIA_URL + unicode(invitation.attachement)
   content['attendance'] = Meeting_Attendance.objects.filter(meeting=meeting,present=True).only('member')
   content['excused'] = Meeting_Attendance.objects.filter(meeting=meeting,present=False).only('member')
 

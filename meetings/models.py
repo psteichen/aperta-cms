@@ -21,13 +21,13 @@ class Meeting(Model):
   location	= ForeignKey(Location,verbose_name='Lieu de Rencontre')
   deadline	= DateTimeField(verbose_name='Deadline')
   report        = FileField(verbose_name='Compte rendu', upload_to=rename_report,blank=True,null=True)
-
   
   def __unicode__(self):
     return unicode(self.title) + ' du ' + unicode(self.when)
 
+
 def rename_attach(i, f):
-  fn = rmf('meetings', f, i.meeting.num + '-attachement')
+  fn = rmf('meetings', f, str(i.meeting.num) + '-attachement')
 
   from os import sep
   return fn['name'] + fn['ext']

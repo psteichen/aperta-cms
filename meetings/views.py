@@ -63,12 +63,13 @@ def add(r):
   if r.POST:
     e_template =  settings.TEMPLATE_CONTENT['meetings']['add']['done']['email']['template']
 
-    mf = MeetingForm(r.POST)
+    mf = MeetingForm(r.POST,r.FILES)
     if mf.is_valid():
       Mt = mf.save(commit=False)
       Mt.save()
       
-      I = Invitation(meeting=Mt,message=mf.cleaned_data['additional_message'])
+      I = Invitation(meeting=Mt,message=mf.cleaned_data['additional_message'],attachement=r.FILES['attachement'])
+      I.save()
       send = mf.cleaned_data['send']
       if send:
         email_error = { 'ok': True, 'who': (), }
@@ -82,7 +83,7 @@ def add(r):
             'MESSAGE'     : invitation_message,
           }
           #send email
-          ok=notify_by_email(r.user.email,m.email,subject,message_content)
+          ok=notify_by_email(r.user.email,m.email,subject,message_content,settings.MEDIA_ROOT + unicode(I.attachement))
           if not ok:
             email_error['ok']=False
             email_error['who'].add(m.email)
@@ -101,7 +102,7 @@ def add(r):
       invitation_message = gen_invitation_message(e_template,Mt,Event.MEET,Member(user=r.user)) + mf.cleaned_data['additional_message']
       return render(r, settings.TEMPLATE_CONTENT['meetings']['add']['done']['template'], {
                 'title': settings.TEMPLATE_CONTENT['meetings']['add']['done']['title'], 
-                'message': settings.TEMPLATE_CONTENT['meetings']['add']['done']['message'] % { 'email': invitation_message, 'list': ' ; '.join([gen_member_fullname(m) for m in get_active_members()]), },
+                'message': settings.TEMPLATE_CONTENT['meetings']['add']['done']['message'] % { 'email': invitation_message, 'attachement': r.FILES['attachement'], 'list': ' ; '.join([gen_member_fullname(m) for m in get_active_members()]), },
                 })
 
     # form not valid -> error
@@ -153,7 +154,11 @@ def send(r, meeting_num):
         'MESSAGE'     : invitation_message + I.message,
     }
     #send email
-    ok=notify_by_email(r.user.email,m.email,subject,message_content)
+    try: #with attachement
+      ok=notify_by_email(r.user.email,m.email,subject,message_content,settings.MEDIA_ROOT + unicode(I.attachement))
+    except: #no attachement
+      ok=notify_by_email(r.user.email,m.email,subject,message_content)
+     
     if not ok: 
       email_error['ok']=False
       email_error['who'].add(m.email)
