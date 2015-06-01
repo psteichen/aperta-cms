@@ -26,7 +26,7 @@ from .models import Meeting_Attendance, Event_Attendance
 # attendance #
 ##############
 def attendance(r, event_type, event_id, attendance_hash):
-  E = M = title = deadline = e_yes = e_no = message = None
+  E = M = title = deadline = e_yes = e_no = message = member = actions = None
 
   if event_type == 'meetings':
     M = Meeting.objects.get(num=event_id)
@@ -60,9 +60,11 @@ def attendance(r, event_type, event_id, attendance_hash):
           A.timestamp = datetime.now()
           A.save()
           notify=True
+          member=m
           message = settings.TEMPLATE_CONTENT['attendance']['yes'] % { 'name': gen_member_fullname(m), }
           #add meeting information to the confirmation message
-          message += settings.TEMPLATE_CONTENT['attendance']['details'] % { 'when': M.when, 'time': M.time, 'location': M.location, }
+          message += settings.TEMPLATE_CONTENT['attendance']['details'] % { 'when': M.when, 'time': M.time, 'location': M.location, 'address': M.location.address, }
+          actions = settings.TEMPLATE_CONTENT['attendance']['actions']
           e_message = e_yes
   
         if gen_hash(M,m.email,False) == attendance_hash:
@@ -87,7 +89,9 @@ def attendance(r, event_type, event_id, attendance_hash):
           A.timestamp = datetime.now()
           A.save()
           notify=True
+          member=m
           message = settings.TEMPLATE_CONTENT['attendance']['yes'] % { 'name': gen_member_fullname(m), }
+          actions = settings.TEMPLATE_CONTENT['attendance']['actions']
           e_message = e_yes
   
         if gen_hash(E,m.email,False) == attendance_hash:
@@ -109,8 +113,14 @@ def attendance(r, event_type, event_id, attendance_hash):
         #send email
         ok=notify_by_email(False,m.email,title,message_content)
 
+
+  #set meeting:num and member_id for invitee link
+  if actions:
+    actions[0]['url'] += str(M.num)+'/'+str(member.id)
+
   return render(r, settings.TEMPLATE_CONTENT['attendance']['template'], {
                    'title': title,
+                   'actions' : actions,
                    'message': message,
                })
 

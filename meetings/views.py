@@ -18,9 +18,9 @@ from members.functions import get_active_members, gen_member_fullname
 from attendance.functions import gen_invitation_message
 from attendance.models import Meeting_Attendance
 
-from .functions import gen_meeting_overview, gen_meeting_initial, gen_current_attendance, gen_report_message
+from .functions import gen_meeting_overview, gen_meeting_initial, gen_current_attendance, gen_report_message, gen_invitee_message
 from .models import Meeting, Invitation
-from .forms import  MeetingForm, ListMeetingsForm, MeetingReportForm
+from .forms import  MeetingForm, ListMeetingsForm, MeetingReportForm, InviteeFormSet
 from .tables  import MeetingTable, MgmtMeetingTable
 
 
@@ -40,6 +40,7 @@ def list(r):
   table = MeetingTable(Meeting.objects.all().order_by('-num'))
   if r.user.has_perm('cms.BOARD'):
     table = MgmtMeetingTable(Meeting.objects.all().order_by('-num'))
+
   RequestConfig(r, paginate={"per_page": 75}).configure(table)
 
   return render(r, settings.TEMPLATE_CONTENT['meetings']['template'], {
@@ -68,11 +69,14 @@ def add(r):
       Mt = mf.save(commit=False)
       Mt.save()
       
-      I = Invitation(meeting=Mt,message=mf.cleaned_data['additional_message'],attachement=r.FILES['attachement'])
+      if r.FILES:
+        I = Invitation(meeting=Mt,message=mf.cleaned_data['additional_message'],attachement=r.FILES['attachement'])
+      else:
+        I = Invitation(meeting=Mt,message=mf.cleaned_data['additional_message'])
       I.save()
       send = mf.cleaned_data['send']
       if send:
-        email_error = { 'ok': True, 'who': (), }
+        email_error = { 'ok': True, 'who': [], }
         for m in get_active_members():
    
           #invitation email with "YES/NO button"
@@ -83,10 +87,13 @@ def add(r):
             'MESSAGE'     : invitation_message,
           }
           #send email
-          ok=notify_by_email(r.user.email,m.email,subject,message_content,settings.MEDIA_ROOT + unicode(I.attachement))
+          if I.attachement:
+            ok=notify_by_email(r.user.email,m.email,subject,message_content,settings.MEDIA_ROOT + unicode(I.attachement))
+          else:
+            ok=notify_by_email(r.user.email,m.email,subject,message_content)
           if not ok:
             email_error['ok']=False
-            email_error['who'].add(m.email)
+            email_error['who'].append(m.email)
 
         # error in email -> show error messages
         if not email_error['ok']:
@@ -102,7 +109,7 @@ def add(r):
       invitation_message = gen_invitation_message(e_template,Mt,Event.MEET,Member(user=r.user)) + mf.cleaned_data['additional_message']
       return render(r, settings.TEMPLATE_CONTENT['meetings']['add']['done']['template'], {
                 'title': settings.TEMPLATE_CONTENT['meetings']['add']['done']['title'], 
-                'message': settings.TEMPLATE_CONTENT['meetings']['add']['done']['message'] % { 'email': invitation_message, 'attachement': r.FILES['attachement'], 'list': ' ; '.join([gen_member_fullname(m) for m in get_active_members()]), },
+                'message': settings.TEMPLATE_CONTENT['meetings']['add']['done']['message'] % { 'email': invitation_message, 'attachement': I.attachement, 'list': ' ; '.join([gen_member_fullname(m) for m in get_active_members()]), },
                 })
 
     # form not valid -> error
@@ -127,6 +134,7 @@ def add(r):
                 'form': form,
                 })
 
+
 # send #
 ########
 @permission_required('cms.BOARD',raise_exception=True)
@@ -144,7 +152,7 @@ def send(r, meeting_num):
 
   title = settings.TEMPLATE_CONTENT['meetings']['send']['done']['title'] % unicode(Mt.title)
       
-  email_error = { 'ok': True, 'who': (), }
+  email_error = { 'ok': True, 'who': [], }
   for m in get_active_members():
     #invitation email with "YES/NO button"
     subject = settings.TEMPLATE_CONTENT['meetings']['send']['done']['email']['subject'] % { 'title': unicode(Mt.title) }
@@ -161,7 +169,7 @@ def send(r, meeting_num):
      
     if not ok: 
       email_error['ok']=False
-      email_error['who'].add(m.email)
+      email_error['who'].append(m.email)
 
   # error in email -> show error messages
   if not email_error['ok']:
@@ -178,6 +186,95 @@ def send(r, meeting_num):
 	                'title': title, 
         	        'message': settings.TEMPLATE_CONTENT['meetings']['send']['done']['message'] + ' ; '.join([gen_member_fullname(m) for m in get_active_members()]),
                   })
+
+
+# invite #
+##########
+@permission_required('cms.MEMBER',raise_exception=True)
+def invite(r, meeting_num, member_id):
+  r.breadcrumbs( ( 	
+			('home','/'),
+                   	('meetings','/meetings/'),
+                   	('invite','/meetings/invite/'),
+               ) )
+
+  Mt = M = None
+  if meeting_num:
+    Mt = Meeting.objects.get(pk=meeting_num)
+    if member_id:
+      M = Member.objects.get(pk=member_id)
+  else:
+    return render(r, settings.TEMPLATE_CONTENT['meetings']['invite']['done']['template'], {
+                'title': settings.TEMPLATE_CONTENT['meetings']['invite']['done']['title'], 
+                'error_message': settings.TEMPLATE_CONTENT['error']['gen'],
+                })
+
+  if r.POST:
+    e_template =  settings.TEMPLATE_CONTENT['meetings']['invite']['done']['email']['template']
+
+    ifs = InviteeFormSet(r.POST)
+    if ifs.is_valid():
+      invitees = []
+
+      I = Invitation.objects.get(meeting=Mt)
+      invitation_message = gen_invitee_message(e_template,Mt,M)
+      try: invitation_message += I.additional_message
+      except: pass
+      email_error = { 'ok': True, 'who': [], }
+      for i in ifs:
+        Iv = i.save(commit=False)
+        Iv.meeting = Mt
+        Iv.member = M
+        Iv.save()
+      
+        #invitation email for invitee(s)
+        subject = settings.TEMPLATE_CONTENT['meetings']['invite']['done']['email']['subject'] % { 'title': unicode(Mt.title) }
+        message_content = {
+          'FULLNAME'    : gen_member_fullname(Iv),
+          'MESSAGE'     : invitation_message,
+        }
+        #send email
+        try:
+          ok=notify_by_email(settings.EMAILS['sender']['default'],Iv.email,subject,message_content,settings.MEDIA_ROOT + unicode(I.attachement))
+        except:
+          ok=notify_by_email(settings.EMAILS['sender']['default'],Iv.email,subject,message_content)
+        if not ok:
+          email_error['ok']=False
+          email_error['who'].append(Iv.email)
+
+        # all fine -> save Invitee
+        invitees.append(Iv)
+
+      # error in email -> show error messages
+      if not email_error['ok']:
+        I.sent = datetime.now()
+        I.save()
+        return render(r, settings.TEMPLATE_CONTENT['meetings']['invite']['done']['template'], {
+              'title': settings.TEMPLATE_CONTENT['meetings']['invite']['done']['title'], 
+              'error_message': settings.TEMPLATE_CONTENT['error']['email'] + ' ; '.join([e for e in email_error['who']]),
+              })
+
+
+      # all fine -> done
+      return render(r, settings.TEMPLATE_CONTENT['meetings']['invite']['done']['template'], {
+                'title': settings.TEMPLATE_CONTENT['meetings']['invite']['done']['title'], 
+                'message': settings.TEMPLATE_CONTENT['meetings']['invite']['done']['message'] % { 'email': invitation_message, 'attachement': I.attachement, 'list': ' ; '.join([gen_member_fullname(i) for i in invitees]), },
+                })
+
+    # form not valid -> error
+    else:
+      return render(r, settings.TEMPLATE_CONTENT['meetings']['invite']['done']['template'], {
+                'title': settings.TEMPLATE_CONTENT['meetings']['invite']['done']['title'], 
+                'error_message': settings.TEMPLATE_CONTENT['error']['gen'] + ' ; '.join([e for e in ifs.errors]),
+                })
+  # no post yet -> empty form
+  else:
+    return render(r, settings.TEMPLATE_CONTENT['meetings']['invite']['template'], {
+                'title': settings.TEMPLATE_CONTENT['meetings']['invite']['title'] + unicode(Mt),
+                'desc': settings.TEMPLATE_CONTENT['meetings']['invite']['desc'],
+                'submit': settings.TEMPLATE_CONTENT['meetings']['invite']['submit'],
+                'form': InviteeFormSet(),
+                })
 
 
 # details #
@@ -198,6 +295,7 @@ def details(r, meeting_num):
                    'title': title,
                    'message': message,
                 })
+
 
 
 # modify #
@@ -304,7 +402,7 @@ class ModifyMeetingWizard(SessionWizardView):
 
 
 # report #
-#######
+##########
 @permission_required('cms.BOARD',raise_exception=True)
 def report(r, meeting_num):
   r.breadcrumbs( ( 	
@@ -324,7 +422,7 @@ def report(r, meeting_num):
 
       send = mrf.cleaned_data['send']
       if send:
-        email_error = { 'ok': True, 'who': (), }
+        email_error = { 'ok': True, 'who': [], }
         for m in get_active_members():
    
           #notifiation per email for new report
@@ -338,7 +436,7 @@ def report(r, meeting_num):
           ok=notify_by_email(r.user.email,m.email,subject,message_content,attachement)
           if not ok: 
             email_error['ok']=False
-            email_error['who'].add(m.email)
+            email_error['who'].append(m.email)
 
         # error in email -> show error messages
         if not email_error['ok']:
@@ -374,5 +472,6 @@ def report(r, meeting_num):
                 'submit': settings.TEMPLATE_CONTENT['meetings']['report']['submit'],
                 'form': form,
                 })
+
 
 

@@ -63,6 +63,31 @@ Destinataires:
       },
     },
   },
+  'invite': {
+    'template'		: 'form.html',
+    'title'     	: u'Invité(s) pour la ',
+    'desc'          	: u'Chaque membre peu inviter jusqu\'à 3 personnes par réunion statutaire :',
+    'submit'   		: u'Inviter',
+    'done': {
+      'template'	: 'done.html',
+      'title'     	: u'Invité(s) enregistré(s)',
+      'message'     	: u'''
+<pre>
+Message d'invitation: 
+--------------------------------------
+%(email)s
+--------------------------------------
+
+Destinataires: 
+%(list)s
+</pre>
+''',
+      'email': {
+	'template'	: 'meeting_invitation_invitee.txt',
+	'subject'	: u'[51 aperta] %(title)s',
+      },
+    },
+  },
   'modify' : {
     'title'         	: u'Modifier une Réunion Statutaire',
     'desc'		: u'Modifier les détails et les présences d\'une réunion statutaire.',
@@ -96,6 +121,7 @@ Destinataires:
       'location'	: u'Lieu de rencontre',
       'report'		: u'Compte rendu',
       'attendance'	: u'Présent(s)',
+      'invitee'		: u'Invité(s)',
       'excused'		: u'Excusé(s)',
     },
   },

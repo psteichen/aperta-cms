@@ -23,6 +23,15 @@
          </tr>
          {% endfor %}
         </table>
+        {{ overview.invitee }} ({{ invitee|length }})
+        <table class="table table-condensed">
+         {% for i in invitee %}
+         <tr>
+          <td class="lead">{{ i.first_name }}</td>
+          <td class="lead">{{ i.last_name|upper }}</td>
+         </tr>
+         {% endfor %}
+        </table>
       </div>
       <div class="col-sm-6">
         {{ overview.excused }} ({{ excused|length }})

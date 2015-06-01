@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from django.db.models import Model, CharField, DateField, ForeignKey, TimeField, DateTimeField, IntegerField, FileField
+from django.db.models import Model, CharField, DateField, ForeignKey, TimeField, DateTimeField, IntegerField, FileField, EmailField
 
 from cms.functions import rmf
 
@@ -44,4 +44,26 @@ class Invitation(Model):
     else:
       return u'Invitations pour: ' + unicode(self.meeting) + u' non encore envoyées.'
 
+
+class Invitee(Model):
+  I=0
+  M=1
+  C=2
+  W=3
+  TYPES = (
+    (I,u'Invité'),
+    (M,u'Membre d\'un autre club'),
+    (C,u'Conférencier'),
+    (W,u'Would-Be'),
+  )
+
+  meeting	= ForeignKey(Meeting)
+  member	= ForeignKey(Member)
+  first_name    = CharField(verbose_name=u'Prénom',max_length=100)
+  last_name	= CharField(verbose_name=u'Nom',max_length=100)
+  email		= EmailField()
+  type		= IntegerField(choices=TYPES,default=I)
+  
+  def __unicode__(self):
+    return self.first_name + ' ' + unicode.upper(self.last_name) + u' invité par ' + unicode(self.member) + u' pour la ' + unicode(self.meeting)
 
