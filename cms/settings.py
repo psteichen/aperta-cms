@@ -29,6 +29,8 @@ ALLOWED_HOSTS = [ 'cms.aperta.lu', ]
 # Application definition
 
 INSTALLED_APPS = (
+# global bootstrap3 integration
+  'bootstrap3',
 # django core apps
   'django.contrib.admin',
   'django.contrib.auth',
