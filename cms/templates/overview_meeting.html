@@ -4,6 +4,7 @@
     <div class="row">
       <div class="col-sm-6">
         {{ overview.date }}<p class="lead">{{ when }} à {{ time }}</p>
+        {% if attach %}<a class="btn btn-info pull-left" href="{{ attach }}" target="_blank" role="button"><span class="glyphicon glyphicon-open-file"></span>&nbsp;&nbsp;{{ overview.attach }}&nbsp;</a>{% endif %}
       </div>
       <div class="col-sm-6">
         {% if report %}<a class="btn btn-info pull-right" href="{{ report }}" target="_blank" role="button"><span class="glyphicon glyphicon-open-file"></span>&nbsp;&nbsp;{{ overview.report }}&nbsp;</a>{% endif %}
@@ -19,6 +20,15 @@
          <tr>
           <td class="lead">{{ a.member.first_name }}</td>
           <td class="lead">{{ a.member.last_name|upper }}</td>
+         </tr>
+         {% endfor %}
+        </table>
+        {{ overview.invitee }} ({{ invitee|length }})
+        <table class="table table-condensed">
+         {% for i in invitee %}
+         <tr>
+          <td class="lead">{{ i.first_name }}</td>
+          <td class="lead">{{ i.last_name|upper }}</td>
          </tr>
          {% endfor %}
         </table>

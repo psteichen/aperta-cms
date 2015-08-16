@@ -5,9 +5,12 @@ from django.conf import settings
 from django.template.loader import render_to_string
 
 from cms.functions import visualiseDateTime
+
 from attendance.models import Meeting_Attendance
 from members.models import Member
-from members.functions import get_active_members
+from members.functions import get_active_members, gen_member_fullname
+
+from .models import Invitation, Invitee
 
 ################################
 # MEETINGS SUPPORTING FUNCTIONS #
@@ -23,7 +26,10 @@ def gen_meeting_overview(template,meeting):
   content['location'] = meeting.location.name
   content['address'] = meeting.location.address
   if meeting.report:  content['report'] = settings.MEDIA_URL + unicode(meeting.report)
+  invitation = Invitation.objects.get(meeting=meeting)
+  if invitation.attachement:  content['attach'] = settings.MEDIA_URL + unicode(invitation.attachement)
   content['attendance'] = Meeting_Attendance.objects.filter(meeting=meeting,present=True).only('member')
+  content['invitee'] = Invitee.objects.filter(meeting=meeting)
   content['excused'] = Meeting_Attendance.objects.filter(meeting=meeting,present=False).only('member')
 
   return render_to_string(template,content)
@@ -36,6 +42,19 @@ def gen_meeting_initial(m):
   initial_data['location'] = m.location
 
   return initial_data
+
+def gen_invitee_message(template,event,member):
+  content = {}
+
+  content['title'] = event.title
+  content['member'] = gen_member_fullname(member)
+  content['when'] = event.when
+  content['time'] = event.time
+  content['location'] = event.location
+  content['address'] = event.location.address
+
+  return render_to_string(template,content)
+
 
 def gen_current_attendance(m):
 

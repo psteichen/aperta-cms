@@ -6,7 +6,7 @@ A web application to manage a service club (members, meetings, events, activitie
 
 requirements
 ============
-python >=2.7
+python >=2.7<3
 django >=1.7
 django-tables2
 django-breadcrumbs
