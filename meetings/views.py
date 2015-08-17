@@ -88,9 +88,9 @@ def add(r):
           }
           #send email
           if I.attachement:
-            ok=notify_by_email(r.user.email,m.email,subject,message_content,settings.MEDIA_ROOT + unicode(I.attachement))
+            ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,subject,message_content,cc=None.settings.MEDIA_ROOT + unicode(I.attachement))
           else:
-            ok=notify_by_email(r.user.email,m.email,subject,message_content)
+            ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,subject,message_content)
           if not ok:
             email_error['ok']=False
             email_error['who'].append(m.email)
@@ -163,9 +163,9 @@ def send(r, meeting_num):
     }
     #send email
     try: #with attachement
-      ok=notify_by_email(r.user.email,m.email,subject,message_content,settings.MEDIA_ROOT + unicode(I.attachement))
+      ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,subject,message_content,settings.MEDIA_ROOT + unicode(I.attachement))
     except: #no attachement
-      ok=notify_by_email(r.user.email,m.email,subject,message_content)
+      ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,subject,message_content)
      
     if not ok: 
       email_error['ok']=False
@@ -190,7 +190,7 @@ def send(r, meeting_num):
 
 # invite #
 ##########
-@permission_required('cms.MEMBER',raise_exception=True)
+#@permission_required('cms.MEMBER',raise_exception=True)
 def invite(r, meeting_num, member_id):
   r.breadcrumbs( ( 	
 			('home','/'),
@@ -234,10 +234,11 @@ def invite(r, meeting_num, member_id):
           'MESSAGE'     : invitation_message,
         }
         #send email
-        try:
-          ok=notify_by_email(settings.EMAILS['sender']['default'],Iv.email,subject,message_content,settings.MEDIA_ROOT + unicode(I.attachement))
-        except:
-          ok=notify_by_email(settings.EMAILS['sender']['default'],Iv.email,subject,message_content)
+#no need to add attachement for invitees
+#        try:
+#          ok=notify_by_email(settings.EMAILS['sender']['default'],Iv.email,subject,message_content,settings.MEDIA_ROOT + unicode(I.attachement))
+#        except:
+        ok=notify_by_email(settings.EMAILS['sender']['default'],Iv.email,subject,message_content,cc=M.email)
         if not ok:
           email_error['ok']=False
           email_error['who'].append(Iv.email)
@@ -247,15 +248,14 @@ def invite(r, meeting_num, member_id):
 
       # error in email -> show error messages
       if not email_error['ok']:
-        I.sent = datetime.now()
-        I.save()
         return render(r, settings.TEMPLATE_CONTENT['meetings']['invite']['done']['template'], {
               'title': settings.TEMPLATE_CONTENT['meetings']['invite']['done']['title'], 
               'error_message': settings.TEMPLATE_CONTENT['error']['email'] + ' ; '.join([e for e in email_error['who']]),
               })
 
-
       # all fine -> done
+      I.sent = datetime.now()
+      I.save()
       return render(r, settings.TEMPLATE_CONTENT['meetings']['invite']['done']['template'], {
                 'title': settings.TEMPLATE_CONTENT['meetings']['invite']['done']['title'], 
                 'message': settings.TEMPLATE_CONTENT['meetings']['invite']['done']['message'] % { 'email': invitation_message, 'attachement': I.attachement, 'list': ' ; '.join([gen_member_fullname(i) for i in invitees]), },
@@ -433,7 +433,7 @@ def report(r, meeting_num):
           }
           attachement = settings.MEDIA_ROOT + unicode(Mt.report)
           #send email
-          ok=notify_by_email(r.user.email,m.email,subject,message_content,attachement)
+          ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,subject,message_content,attachement)
           if not ok: 
             email_error['ok']=False
             email_error['who'].append(m.email)
