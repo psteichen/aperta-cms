@@ -27,7 +27,8 @@ def gen_meeting_overview(template,meeting):
   content['address'] = meeting.location.address
   if meeting.report:  content['report'] = settings.MEDIA_URL + unicode(meeting.report)
   invitation = Invitation.objects.get(meeting=meeting)
-  if invitation.attachement:  content['attach'] = settings.MEDIA_URL + unicode(invitation.attachement)
+  try  content['attach'] = settings.MEDIA_URL + unicode(invitation.attachement)
+  except: pass
   content['attendance'] = Meeting_Attendance.objects.filter(meeting=meeting,present=True).only('member')
   content['invitee'] = Invitee.objects.filter(meeting=meeting)
   content['excused'] = Meeting_Attendance.objects.filter(meeting=meeting,present=False).only('member')
