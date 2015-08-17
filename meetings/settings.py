@@ -64,7 +64,7 @@ Destinataires:
     },
   },
   'invite': {
-    'template'		: 'form.html',
+    'template'		: 'multiform.html',
     'title'     	: u'Invité(s) pour la ',
     'desc'          	: u'Chaque membre peu inviter jusqu\'à 3 personnes par réunion statutaire :',
     'submit'   		: u'Inviter',

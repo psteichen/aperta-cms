@@ -77,7 +77,7 @@ def attendance(r, event_type, event_id, attendance_hash):
           e_message = e_no
 
 
-      if event_type == 'events':
+      elif event_type == 'events':
         try:
           A = Event_Attendance.objects.get(event=E,member=m)
         except:

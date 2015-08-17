@@ -7,6 +7,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.formtools.wizard.views import SessionWizardView
 from django.conf import settings
+from django.utils import timezone
 
 from django_tables2  import RequestConfig
 
@@ -97,7 +98,6 @@ def add(r):
 
         # error in email -> show error messages
         if not email_error['ok']:
-          I.sent = datetime.now()
           I.save()
           return render(r, settings.TEMPLATE_CONTENT['meetings']['add']['done']['template'], {
                 'title': settings.TEMPLATE_CONTENT['meetings']['add']['done']['title'], 
@@ -105,6 +105,7 @@ def add(r):
                 })
 
       # all fine -> done
+      I.sent = timezone.now()
       I.save()
       invitation_message = gen_invitation_message(e_template,Mt,Event.MEET,Member(user=r.user)) + mf.cleaned_data['additional_message']
       return render(r, settings.TEMPLATE_CONTENT['meetings']['add']['done']['template'], {
@@ -192,11 +193,6 @@ def send(r, meeting_num):
 ##########
 #@permission_required('cms.MEMBER',raise_exception=True)
 def invite(r, meeting_num, member_id):
-  r.breadcrumbs( ( 	
-			('home','/'),
-                   	('meetings','/meetings/'),
-                   	('invite','/meetings/invite/'),
-               ) )
 
   Mt = M = None
   if meeting_num:
@@ -238,7 +234,7 @@ def invite(r, meeting_num, member_id):
 #        try:
 #          ok=notify_by_email(settings.EMAILS['sender']['default'],Iv.email,subject,message_content,settings.MEDIA_ROOT + unicode(I.attachement))
 #        except:
-        ok=notify_by_email(settings.EMAILS['sender']['default'],Iv.email,subject,message_content,cc=M.email)
+        ok=notify_by_email(settings.EMAILS['sender']['default'],Iv.email,subject,message_content)
         if not ok:
           email_error['ok']=False
           email_error['who'].append(Iv.email)
@@ -248,13 +244,14 @@ def invite(r, meeting_num, member_id):
 
       # error in email -> show error messages
       if not email_error['ok']:
+        I.save()
         return render(r, settings.TEMPLATE_CONTENT['meetings']['invite']['done']['template'], {
               'title': settings.TEMPLATE_CONTENT['meetings']['invite']['done']['title'], 
               'error_message': settings.TEMPLATE_CONTENT['error']['email'] + ' ; '.join([e for e in email_error['who']]),
               })
 
       # all fine -> done
-      I.sent = datetime.now()
+      I.sent = timezone.now()
       I.save()
       return render(r, settings.TEMPLATE_CONTENT['meetings']['invite']['done']['template'], {
                 'title': settings.TEMPLATE_CONTENT['meetings']['invite']['done']['title'], 
