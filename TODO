@@ -1,3 +1,4 @@
+- meetings: invitee doesn't show when not logged in
 - members: in tables: row_class issue
 - modify events: refactor selon new meetings way of doing
 - webcontent: full implementation
