@@ -11,29 +11,43 @@
     </div>
     <br/>
     <div class="row">
-      <div class="col-sm-6">
-        <table class="table table-condensed">
-         {% for h in listing.headers %}
-         <tr>
-          <th>{{ h }}</td>
-         </tr>
+      {{ content.members }}
+      <table class="table table-striped table-condensed">
+       <tr>
+       {% for h in listing.header %}
+        <th>{{ h }}</td>
+       {% endfor %}
+       </tr>
+       {% for m in listing.members %}
+       <tr>
+         {% for e in m %}
+          <td class="lead">{{ e }}</td>
          {% endfor %}
-         {% for m in listing.members %}
-         <tr>
-           {% for e in m %}
-            <td class="lead">{{ e }}</td>
-           {% endfor %}
-         </tr>
+       </tr>
+       {% endfor %}
+      </table>
+
+      {{ content.invitee }}
+      <table class="table table-striped table-condensed">
+       {% for i in listing.invitees %}
+       <tr>
+         {% for e in i %}
+          <td class="lead"><em>{{ e }}</em></td>
          {% endfor %}
-         {% for f in listing.footers %}
-         <tr>
-           {% for e in f %}
-            <td>{{ f }}</td>
-           {% endfor %}
-         </tr>
+       </tr>
+       {% endfor %}
+      </table>
+
+      {{ content.resume }}
+      <table class="table table-bordered table-condensed">
+       {% for r in listing.resume %}
+       <tr>
+         {% for e in r %}
+          <th>{{ e|safe }}</td>
          {% endfor %}
-        </table>
-      </div>
+       </tr>
+       {% endfor %}
+      </table>
     </div>
   </div>
 </div>

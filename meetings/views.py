@@ -310,7 +310,6 @@ def listing(r, meeting_num):
 
   return render(r, settings.TEMPLATE_CONTENT['meetings']['listing']['template'], {
                    'title': title,
-                   'desc': settings.TEMPLATE_CONTENT['meetings']['listing']['desc'],
                    'message': message,
                 })
 

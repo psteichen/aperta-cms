@@ -156,6 +156,9 @@ Destinataires:
       'template'	: 'listing_meeting.html',
       'date'		: u'Date et heure',
       'location'	: u'Lieu de rencontre',
+      'members'		: u'',
+      'invitee'		: u'Invités',
+      'resume'		: u'',
     },
   },
 }

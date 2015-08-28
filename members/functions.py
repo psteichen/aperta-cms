@@ -11,6 +11,13 @@ def get_active_members():
 def gen_member_fullname(member):
   return unicode(member.first_name) + u' ' + unicode.upper(member.last_name)
 
+def gen_member_fullname_n_role(member):
+  role = ''
+  try:
+    role = ' (' + unicode(Role.objects.get(member=member).title) + ')'
+  except: pass
+  return unicode(member.first_name) + u' ' + unicode.upper(member.last_name) + role
+
 def gen_member_initial(m):
   initial_data = {}
 
