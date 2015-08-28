@@ -1,0 +1,40 @@
+<div class="overview">
+<div class="panel panel-primary">
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-sm-6">
+        {{ overview.date }}<p class="lead">{{ when }} à {{ time }}</p>
+      </div>
+      <div class="col-sm-6">
+        {{ overview.location }}<address class="lead">{{ location }}<br/>{{ address }}</address>
+      </div>
+    </div>
+    <br/>
+    <div class="row">
+      <div class="col-sm-6">
+        <table class="table table-condensed">
+         {% for h in listing.headers %}
+         <tr>
+          <th>{{ h }}</td>
+         </tr>
+         {% endfor %}
+         {% for m in listing.members %}
+         <tr>
+           {% for e in m %}
+            <td class="lead">{{ e }}</td>
+           {% endfor %}
+         </tr>
+         {% endfor %}
+         {% for f in listing.footers %}
+         <tr>
+           {% for e in f %}
+            <td>{{ f }}</td>
+           {% endfor %}
+         </tr>
+         {% endfor %}
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

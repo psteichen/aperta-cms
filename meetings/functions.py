@@ -1,3 +1,4 @@
+# coding=utf-8
 import hashlib
 from os import path
 
@@ -26,9 +27,11 @@ def gen_meeting_overview(template,meeting):
   content['location'] = meeting.location.name
   content['address'] = meeting.location.address
   if meeting.report:  content['report'] = settings.MEDIA_URL + unicode(meeting.report)
-  invitation = Invitation.objects.get(meeting=meeting)
-  try: content['attach'] = settings.MEDIA_URL + unicode(invitation.attachement)
+  try:   
+    invitation = Invitation.objects.get(meeting=meeting)
+    content['attach'] = settings.MEDIA_URL + unicode(invitation.attachement)
   except: pass
+  content['listing'] = '/meetings/listing/' + unicode(meeting.num)
   content['attendance'] = Meeting_Attendance.objects.filter(meeting=meeting,present=True).only('member')
   content['invitee'] = Invitee.objects.filter(meeting=meeting)
   content['excused'] = Meeting_Attendance.objects.filter(meeting=meeting,present=False).only('member')
@@ -74,4 +77,64 @@ def gen_report_message(template,meeting,member):
   content['location'] = meeting.location
 
   return render_to_string(template,content)
+
+def gen_meeting_listing(template,meeting):
+  content = { 'overview' : settings.TEMPLATE_CONTENT['meetings']['listing']['content'] }
+
+  content['title'] = meeting.title
+  content['when'] = visualiseDateTime(meeting.when)
+  content['time'] = visualiseDateTime(meeting.time)
+  content['location'] = meeting.location.name
+  content['address'] = meeting.location.address
+
+  #get attendance / excused / invited
+  present = Meeting_Attendance.objects.filter(meeting=meeting,present=True).only('member')
+  excused = Meeting_Attendance.objects.filter(meeting=meeting,present=False).only('member')
+  invited = Invitee.objects.filter(meeting=meeting)
+
+  #header row
+  # name (role) / present / excuse / non-excuse / rep / email
+  content['listing']['header'] = [
+    u'Nom (rôle)', u'présent', u'excusé', u'non excusé', u'Visite hors club', u'E-mail',
+  ]
+
+  #records table (alphabetical order on last_name)
+  members = Members.objects.all().orderby('last_name')
+  content['listing']['members'] = []
+  for m in members:
+    p = e = n = ''
+    if m in present: p='X'
+    if m in excused: e='X'
+    if m not in present and m not in excused: n='X'
+    
+    content['listing']['members'].append([
+      	gen_member_fullname_n_role(m), 
+	p, 
+	e, 
+	n,
+	'?', 
+	m.email,
+    ])
+
+  #footer row
+  content['listing']['footer'] = []
+  # presents / invités  / total
+  P = present.count()
+  M = members.all().count()
+  E = excused.count()
+  I = invited.count()
+  N = M-P-E
+  content['listing']['footer'].append([
+  	'Présents : ' + P + '/' + M + ' ' + (P/M)*100 + '%',
+  	'Invités : ' + I,
+  	'Total : ' + P+I,
+  ])
+  # excusés  / non exc. /
+  content['listing']['footer'].append([
+  	'Excusés : ' + E + '/' + M + ' ' + (E/M)*100 + '%',
+  	'Non-excusés : ' + N + '/' + M + ' ' + (N/M)*100 + '%',
+  ])
+
+  return render_to_string(template,content)
+
 

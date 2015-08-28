@@ -19,10 +19,10 @@ from members.functions import get_active_members, gen_member_fullname
 from attendance.functions import gen_invitation_message
 from attendance.models import Meeting_Attendance
 
-from .functions import gen_meeting_overview, gen_meeting_initial, gen_current_attendance, gen_report_message, gen_invitee_message
+from .functions import gen_meeting_overview, gen_meeting_initial, gen_current_attendance, gen_report_message, gen_invitee_message, gen_meeting_listing
 from .models import Meeting, Invitation
 from .forms import  MeetingForm, ListMeetingsForm, MeetingReportForm, InviteeFormSet
-from .tables  import MeetingTable, MgmtMeetingTable
+from .tables  import MeetingTable, MgmtMeetingTable, MeetingMixin, MeetingListingTable
 
 
 #################
@@ -293,6 +293,26 @@ def details(r, meeting_num):
                    'message': message,
                 })
 
+
+# listing #
+###########
+@login_required
+def listing(r, meeting_num):
+  r.breadcrumbs( (
+                        ('home','/'),
+                        ('meetings','/meetings/'),
+                        ('listing for meeting n. '+meeting_num,'/meetings/listing/'+meeting_num+'/'),
+               ) )
+
+  meeting = Meeting.objects.get(num=meeting_num)
+  title = settings.TEMPLATE_CONTENT['meetings']['listing']['title'] % { 'meeting' : meeting.title, }
+  message = gen_meeting_listing(settings.TEMPLATE_CONTENT['meetings']['listing']['content']['template'],meeting)
+
+  return render(r, settings.TEMPLATE_CONTENT['meetings']['listing']['template'], {
+                   'title': title,
+                   'desc': settings.TEMPLATE_CONTENT['meetings']['listing']['desc'],
+                   'message': message,
+                })
 
 
 # modify #
