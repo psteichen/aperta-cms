@@ -10,6 +10,7 @@ from django_tables2 import Column
 
 from members.functions import gen_member_fullname
 from attendance.models import Meeting_Attendance
+from members.models import Member
 
 from .models import Meeting
 
@@ -69,5 +70,51 @@ class MgmtMeetingTable(Table):
   class Meta:
     model = Meeting
     fields = ( 'title', 'when', 'location', 'totals', 'details', 'send', 'modify', 'report', )
+    attrs = {"class": "table table-striped"}
+
+
+class MeetingMixin(Table):
+  present	= Column(verbose_name=u'Présent',empty_values=())
+  excused	= Column(verbose_name=u'Excusé',empty_values=())
+  nonexcused	= Column(verbose_name=u'Non-excusé',empty_values=())
+  outside	= Column(verbose_name=u'Visite hors club',empty_values=())
+
+  class Meta:
+    model = Meeting
+    fields = ( 'present', 'excused', 'oustide', 'non-excused', )
+
+class MeetingListingTable(MeetingMixin, Table):
+  row_class	= Column(visible=False, empty_values=()) #used to highlight some rows
+  name		= Column(verbose_name=u'Nom (rôle)',empty_values=())
+  email		= Column(verbose_name=u'E-mail',empty_values=())
+
+  def render_row_class(self, record):
+    if record.when < date.today():
+      return 'danger'
+
+  def render_name(self, record):
+    return record.last_name + ' ' + record.first_name + '( ' + record.role.title + ')'
+
+  def render_present(self, record):
+    try:
+      if Meeting_Attendance.objects.filter(meeting=record.meeting_num,member=record).only(present):
+        return 'X'
+    except: pass
+
+  def render_excused(self, record):
+    try:
+      if not Meeting_Attendance.objects.filter(meeting=record.meeting_num,member=record).only(present):
+        return 'X'
+    except: pass
+
+  def render_nonexcused(self, record):
+    try:
+      Meeting_Attendance.objects.filter(meeting=record.meeting_num,member=record).only(present)
+    except:
+      return 'X'
+
+  class Meta:
+    model = Member
+    fields = ( 'name', 'present', 'excused', 'non-excused', 'outside', 'email', )
     attrs = {"class": "table table-striped"}
 

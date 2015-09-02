@@ -18,13 +18,13 @@ def debug(app,message):
     from sys import stderr as errlog
     print >>errlog, 'DEBUG ['+unicode(app)+']: '+unicode(message)
 
-def notify_by_email(sender,to,subject,message_content,cc=None,attachment=None,template='default.txt'):
+def notify_by_email(sender,to,subject,message_content,cc=False,attachment=False,template='default.txt'):
 
   if not sender: sender = settings.EMAILS['sender']['default']
   email = EmailMessage(
                 subject=subject,
                 from_email=sender,
-                to=[to],
+                to=[to]
           )
   message_content['FOOTER'] = settings.EMAILS['footer']
   email.body = render_to_string(template,message_content)

@@ -18,7 +18,10 @@
        <form role="form" class="form-horizontal" action="." method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.management_form }}
-        {% bootstrap_form form %}
+        {% for f in form %} 
+         {% bootstrap_form f %}
+         <hr class="divider" />
+        {% endfor %}
         <div class="btn-toolbar">
          <div class="btn-group">
           <button class="btn btn-success" type="submit" value="{{ submit }}">{{ submit }}&nbsp;&nbsp;<span class="glyphicon glyphicon-play"></span></button>

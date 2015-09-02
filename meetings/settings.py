@@ -21,7 +21,13 @@ ACTIONS = {
 MEETINGS_TMPL_CONTENT = {
   'title'       	: u'Réunions Statutaires',
   'template'    	: 'list.html',
-  'desc'       		: u'De manière générale les Réunions Statutaires se tiennent tous les deuxièmes mardis de chaque mois à midi, ainsi que tous les quatrièmes mardis de chaque mois le soir.',
+  'desc'       		: u'''De manière générale les Réunions Statutaires se tiennent :
+<ul>
+ <li>tous les deuxièmes mardis des mois <b>pairs</b> chez ATP (Ellange) à midi,
+ <li>tous les deuxièmes mardis des mois <b>impairs</b> uax Espaces Réunions (Leudelange) à midi,
+ <li>tous les quatrièmes mardis de chaque mois au Jardin Gourmand (Hesperange) le soir.
+</ul>
+''',
   'actions'     	: ACTIONS['main'],
   'add': {
     'template'		: 'form.html',
@@ -64,7 +70,7 @@ Destinataires:
     },
   },
   'invite': {
-    'template'		: 'form.html',
+    'template'		: 'multiform.html',
     'title'     	: u'Invité(s) pour la ',
     'desc'          	: u'Chaque membre peu inviter jusqu\'à 3 personnes par réunion statutaire :',
     'submit'   		: u'Inviter',
@@ -120,6 +126,7 @@ Destinataires:
       'attach'		: u'Informations supplémentaires',
       'location'	: u'Lieu de rencontre',
       'report'		: u'Compte rendu',
+      'listing'		: u'Listing pour PV',
       'attendance'	: u'Présent(s)',
       'invitee'		: u'Invité(s)',
       'excused'		: u'Excusé(s)',
@@ -140,6 +147,18 @@ Destinataires:
 	'template'	: 'meeting_report.txt',
 	'subject'	: u'[51 aperta] Compte rendu de la %(title)s',
       },
+    },
+  },
+  'listing': {
+    'template'  	: 'done.html',
+    'title'     	: u'Listing (district) de la %(meeting)s',
+    'content' : {
+      'template'	: 'listing_meeting.html',
+      'date'		: u'Date et heure',
+      'location'	: u'Lieu de rencontre',
+      'members'		: u'',
+      'invitee'		: u'Invités',
+      'resume'		: u'',
     },
   },
 }

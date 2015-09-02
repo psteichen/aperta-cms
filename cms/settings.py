@@ -171,7 +171,7 @@ TEMPLATE_DIRS = (
 #emails
 EMAILS = {
   'sender' : {
-    'default'	: 'board@aperta.lu',
+    'default'	: "'FIFTY-ONE Aperta' <board@aperta.lu>",
   },
   'footer' 	: '''Amicalement,
 Le comité APERTA
