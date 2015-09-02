@@ -24,7 +24,7 @@ MEETINGS_TMPL_CONTENT = {
   'desc'       		: u'''De manière générale les Réunions Statutaires se tiennent :
 <ul>
  <li>tous les deuxièmes mardis des mois <b>pairs</b> chez ATP (Ellange) à midi,
- <li>tous les deuxièmes mardis des mois <b>impairs</b> uax Espaces Réunions (Leudelange) à midi,
+ <li>tous les deuxièmes mardis des mois <b>impairs</b> aux Espaces Réunions (Leudelange) à midi,
  <li>tous les quatrièmes mardis de chaque mois au Jardin Gourmand (Hesperange) le soir.
 </ul>
 ''',
