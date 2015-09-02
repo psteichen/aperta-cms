@@ -48,7 +48,7 @@ INSTALLED_APPS = (
   'attendance',
   'meetings',
   'events',
-  'webcontent',
+  'finance',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -264,13 +264,13 @@ ACTIONS = (
         'url'           : '/members/',
     	'has_perms' 	: 'cms.MEMBER',
       },
-#      {         
-#        'label'         : u'Trésorerie', 
-#       'icon'     	: 'euro',
-#       'desc'          : 'Gérer les comptes et autres aspects financiers.',
-#       'url'           : '/finance/',
-#   	'has_perms' 	: 'cms.BOARD',
-#     },
+      {         
+        'label'         : u'Trésorerie', 
+        'icon'     	: 'euro',
+        'desc'          : 'Gérer les comptes et autres aspects financiers.',
+        'url'           : '/finance/',
+   	'has_perms' 	: 'cms.BOARD',
+     },
 
     ),
   },
@@ -332,7 +332,7 @@ from events.settings import *
 TEMPLATE_CONTENT['events'] = EVENTS_TMPL_CONTENT
 EVENTS_ATTENDANCE_URL = ATTENDANCE_BASE_URL + 'events/'
 
-#webcontent
-#from webcontent.settings import *
-#TEMPLATE_CONTENT['webcontent'] = WEBCONTENT_TMPL_CONTENT
+#finance
+from finance.settings import *
+TEMPLATE_CONTENT['finance'] = FINANCE_TMPL_CONTENT
 

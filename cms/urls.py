@@ -25,7 +25,7 @@ urlpatterns = patterns('',
 
   url(r'^meetings/', include('meetings.urls')),
   url(r'^members/', include('members.urls')),
-#  url(r'^finance/', include('finance.urls')),
+  url(r'^finance/', include('finance.urls')),
 
   url(r'^events/', include('events.urls')),
 #  url(r'^selling/', include('selling.urls')),
