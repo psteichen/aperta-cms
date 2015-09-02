@@ -23,7 +23,7 @@ class MeetingForm(ModelForm):
 #      'title'	: TextInput(attrs={'readonly': 'readonly', }),
       'when'	: TextInput(attrs={'type': 'date', 'id': 'dpicker', }),
       'time'	: TextInput(attrs={'type': 'time', 'id': 'tpicker', }),
-      'deadline': TextInput(attrs={'type': 'date', 'id': 'dtpicker', }),
+      'deadline': TextInput(attrs={'type': 'datetime', 'id': 'dtpicker', }),
       'num'	: HiddenInput(),
     }
 
