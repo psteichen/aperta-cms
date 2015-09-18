@@ -20,10 +20,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = 'i7_hpg!p406zhnei*v6(v+bm@rav4(r!)090re3df52o9b71c1'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-TEMPLATE_DEBUG = False
+DEBUG = True
+TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = [ 'cms.aperta.lu', ]
+ALLOWED_HOSTS = [ 'dev.cms.aperta.lu', ]
 
 
 # Application definition
@@ -49,6 +49,7 @@ INSTALLED_APPS = (
   'meetings',
   'events',
   'finance',
+  'web',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -292,13 +293,13 @@ ACTIONS = (
         'url'          	: '/locations/', 
         'has_perms'    	: 'cms.MEMBER',
       },
-#     {         
-#       'label'         : 'Site web', 
-#       'icon'     	: 'cloud',
-#       'desc'          : 'Gestion et mise-à-jour du contenu du site web public.',
-#       'url'           : '/webcontent/',
-#   	'has_perms' 	: 'cms.COMM',
-#     },
+      {         
+	'label'		: 'Site web', 
+	'icon'		: 'cloud',
+	'desc'		: 'Gestion et mise-à-jour du contenu du site web public.',
+	'url'		: '/web/',
+	'has_perms'	: 'cms.COMM',
+      },
     ),
   },
 )
@@ -335,4 +336,8 @@ EVENTS_ATTENDANCE_URL = ATTENDANCE_BASE_URL + 'events/'
 #finance
 from finance.settings import *
 TEMPLATE_CONTENT['finance'] = FINANCE_TMPL_CONTENT
+
+#web
+from web.settings import *
+TEMPLATE_CONTENT['web'] = WEB_TMPL_CONTENT
 
