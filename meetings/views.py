@@ -449,7 +449,7 @@ def report(r, meeting_num):
           }
           attachement = settings.MEDIA_ROOT + unicode(Mt.report)
           #send email
-          ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,subject,message_content,attachement)
+          ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,subject,message_content,False,attachement)
           if not ok: 
             email_error['ok']=False
             email_error['who'].append(m.email)
