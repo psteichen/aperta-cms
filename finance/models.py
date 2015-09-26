@@ -1,6 +1,6 @@
 #coding=utf-8
 
-from django.db.models import Model, DateTimeField, IntegerField, DecimalField, ForeignKey, CharField, FileField
+from django.db.models import Model, DateTimeField, IntegerField, DecimalField, ForeignKey, CharField, FileField, DateField
 
 from cms.functions import rmf
 
@@ -45,6 +45,7 @@ def rename_scan(i, f):
 class BankExtract(Model):
   year		= CharField(max_length=4)
   num		= IntegerField()
+  date		= DateField(verbose_name='état du')
   scan  	= FileField(upload_to=rename_scan)
 
   def __unicode__(self):
