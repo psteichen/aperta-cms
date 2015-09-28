@@ -9,8 +9,8 @@ class BankExtractForm(ModelForm):
 
   class Meta:
     model = BankExtract
-    fields = ( 'year', 'num', 'scan', ) 
+    fields = ( 'year', 'num', 'date', 'scan', ) 
     widgets = {
-      'start_date'	: TextInput(attrs={'type': 'date', 'id': 'ypicker', }),
+      'date'	: TextInput(attrs={'type': 'date', 'id': 'dpicker', }),
     }
 

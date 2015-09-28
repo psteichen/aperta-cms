@@ -49,5 +49,5 @@ class BankExtract(Model):
   scan  	= FileField(upload_to=rename_scan)
 
   def __unicode__(self):
-    return self.year+'-'+str(self.num)
+    return self.year+'-'+str(self.num) + u' (état du ' + unicode(self.date) +')'
 
