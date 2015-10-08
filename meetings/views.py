@@ -89,7 +89,7 @@ def add(r):
           }
           #send email
           if I.attachement:
-            ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,subject,message_content,cc=None.settings.MEDIA_ROOT + unicode(I.attachement))
+            ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,subject,message_content,cc=None,settings.MEDIA_ROOT + unicode(I.attachement))
           else:
             ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,subject,message_content)
           if not ok:
