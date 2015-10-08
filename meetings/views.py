@@ -218,10 +218,10 @@ def invite(r, meeting_num, member_id):
       except: pass
       email_error = { 'ok': True, 'who': [], }
       for i in ifs:
-        if i.is_valid():
-          Iv = i.save(commit=False)
-          Iv.meeting = Mt
-          Iv.member = M
+        Iv = i.save(commit=False)
+        Iv.meeting = Mt
+        Iv.member = M
+        if Iv.email:
           Iv.save()
       
           #invitation email for invitee(s)
@@ -245,7 +245,6 @@ def invite(r, meeting_num, member_id):
 
       # error in email -> show error messages
       if not email_error['ok']:
-        I.save()
         return render(r, settings.TEMPLATE_CONTENT['meetings']['invite']['done']['template'], {
               'title': settings.TEMPLATE_CONTENT['meetings']['invite']['done']['title'], 
               'error_message': settings.TEMPLATE_CONTENT['error']['email'] + ' ; '.join([e for e in email_error['who']]),
