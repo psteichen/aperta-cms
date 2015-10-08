@@ -89,7 +89,7 @@ def add(r):
           }
           #send email
           if I.attachement:
-            ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,subject,message_content,cc=None,settings.MEDIA_ROOT + unicode(I.attachement))
+            ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,subject,message_content,False,settings.MEDIA_ROOT + unicode(I.attachement))
           else:
             ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,subject,message_content)
           if not ok:
@@ -218,29 +218,30 @@ def invite(r, meeting_num, member_id):
       except: pass
       email_error = { 'ok': True, 'who': [], }
       for i in ifs:
-        Iv = i.save(commit=False)
-        Iv.meeting = Mt
-        Iv.member = M
-        Iv.save()
+        if i.is_valid():
+          Iv = i.save(commit=False)
+          Iv.meeting = Mt
+          Iv.member = M
+          Iv.save()
       
-        #invitation email for invitee(s)
-        subject = settings.TEMPLATE_CONTENT['meetings']['invite']['done']['email']['subject'] % { 'title': unicode(Mt.title) }
-        message_content = {
-          'FULLNAME'    : gen_member_fullname(Iv),
-          'MESSAGE'     : invitation_message,
-        }
-        #send email
+          #invitation email for invitee(s)
+          subject = settings.TEMPLATE_CONTENT['meetings']['invite']['done']['email']['subject'] % { 'title': unicode(Mt.title) }
+          message_content = {
+            'FULLNAME'    : gen_member_fullname(Iv),
+            'MESSAGE'     : invitation_message,
+          }
+          #send email
 #no need to add attachement for invitees
-#        try:
-#          ok=notify_by_email(settings.EMAILS['sender']['default'],Iv.email,subject,message_content,settings.MEDIA_ROOT + unicode(I.attachement))
-#        except:
-        ok=notify_by_email(settings.EMAILS['sender']['default'],Iv.email,subject,message_content)
-        if not ok:
-          email_error['ok']=False
-          email_error['who'].append(Iv.email)
+#          try:
+#            ok=notify_by_email(settings.EMAILS['sender']['default'],Iv.email,subject,message_content,settings.MEDIA_ROOT + unicode(I.attachement))
+#          except:
+          ok=notify_by_email(settings.EMAILS['sender']['default'],Iv.email,subject,message_content)
+          if not ok:
+            email_error['ok']=False
+            email_error['who'].append(Iv.email)
 
-        # all fine -> save Invitee
-        invitees.append(Iv)
+          # all fine -> save Invitee
+          invitees.append(Iv)
 
       # error in email -> show error messages
       if not email_error['ok']:
