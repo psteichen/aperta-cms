@@ -28,8 +28,8 @@ urlpatterns = patterns('',
   url(r'^finance/', include('finance.urls')),
 
   url(r'^events/', include('events.urls')),
+  url(r'^web/', include('web.urls')),
 #  url(r'^selling/', include('selling.urls')),
-#  url(r'^webcontent/', include('webcontent.urls')),
  
   url(r'^admin/', include(admin.site.urls)),
 )

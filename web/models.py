@@ -25,18 +25,18 @@ class Element(Model):
     return unicode(self.type) + '[ ' + unicode(self.content) + ' ]'
 
 class Page(Model):
-  title		= CharField(max_length=100)
-  author	= CharField(max_length=100)
-  last_update	= DateField()
-  url		= URLField(unique=True)
+  title		= CharField(verbose_name=u'Titre',max_length=100)
+  author	= CharField(verbose_name=u'Auteur',max_length=100)
+  last_update	= DateField(verbose_name=u'Dernière mise à jour',)
+  url		= URLField(verbose_name=u'URL',unique=True)
   elements	= ManyToManyField(Element)
   
   def __unicode__(self):
     return unicode(self.title) + ' - ' + unicode(self.url)
 
 class Category(Model):
-  title		= CharField(max_length=100)
-  index		= ForeignKey(Page)
+  title		= CharField(verbose_name=u'Catégorie',max_length=100)
+  index		= ForeignKey(Page,verbose_name=u'Page d\'index')
   pages		= ManyToManyField(Page,related_name='+')
 
   def __unicode__(self):
