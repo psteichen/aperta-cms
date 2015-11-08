@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from django.db.models import Model, ForeignKey, BooleanField, DateTimeField
+from django.db.models import Model, ForeignKey, BooleanField, DateTimeField, CharField
 
 from meetings.models import Meeting
 from members.models import Member
@@ -23,6 +23,16 @@ class Meeting_Attendance(Model):
   class Meta:
     unique_together = ( 'member', 'meeting', )
 
+class MtoM(Model):
+  meeting	= ForeignKey(Meeting)
+  member	= ForeignKey(Member)
+  yes_hash   	= CharField(max_length=250)
+  no_hash   	= CharField(max_length=250)
+
+  def __unicode__(self):
+    return unicode(self.meeting) + ' - ' + unicode(self.member)
+
+
 class Event_Attendance(Model):
   event		= ForeignKey(Event)
   member	= ForeignKey(Member)
@@ -39,4 +49,15 @@ class Event_Attendance(Model):
 
   class Meta:
     unique_together = ( 'member', 'event', )
+
+class EtoM(Model):
+  event		= ForeignKey(Event)
+  member	= ForeignKey(Member)
+  yes_hash   	= CharField(max_length=250)
+  no_hash   	= CharField(max_length=250)
+
+  def __unicode__(self):
+    return unicode(self.event) + ' - ' + unicode(self.member)
+
+
 

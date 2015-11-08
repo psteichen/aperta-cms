@@ -49,14 +49,15 @@ class ListMeetingsForm(Form):
   meetings = ModelChoiceField(queryset=Meeting.objects.all().order_by('-num'))
 
 class ModifyMeetingForm(ModelForm):
-  attendance = BooleanField(label='Inscrire/excuser un membre')
+  attendance = BooleanField(label='Inscrire/excuser un membre',required=False)
 
   class Meta:
     model = Meeting
-    fields = ( 'title', 'when', 'time', 'location', 'attendance', )
+    fields = ( 'title', 'when', 'time', 'location', 'deadline', 'attendance', )
     widgets = {
-      'when'	: TextInput(attrs={'type': 'date', }),
-      'time'	: TextInput(attrs={'type': 'time', }),
+      'when'	: TextInput(attrs={'type': 'date', 'id': 'dpicker', }),
+      'time'	: TextInput(attrs={'type': 'time', 'id': 'tpicker', }),
+      'deadline': TextInput(attrs={'type': 'datetime', 'id': 'dtpicker', }),
     }
 
 

@@ -32,6 +32,7 @@ def rename_attach(i, f):
   from os import sep
   return fn['name'] + fn['ext']
 
+
 class Invitation(Model):
   meeting	= ForeignKey(Meeting)
   message	= CharField(max_length=5000,blank=True,null=True)

@@ -16,7 +16,7 @@ from meetings.models import Meeting
 from events.models import Event
 
 from .functions import gen_hash
-from .models import Meeting_Attendance, Event_Attendance
+from .models import Meeting_Attendance, MtoM, Event_Attendance, EtoM
 
 
 ####################
@@ -54,7 +54,8 @@ def attendance(r, event_type, event_id, attendance_hash):
         except:
           A = Meeting_Attendance(meeting=M,member=m)
 
-        if gen_hash(M,m.email) == attendance_hash:
+        mTm = MtoM.objects.get(meeting=M,member=m)
+        if attendance_hash == mTm.yes_hash:
           # it's a YES
           A.present = True
           A.timestamp = datetime.now()
@@ -67,7 +68,7 @@ def attendance(r, event_type, event_id, attendance_hash):
           actions = settings.TEMPLATE_CONTENT['attendance']['actions']
           e_message = e_yes
   
-        if gen_hash(M,m.email,False) == attendance_hash:
+        if attendance_hash == mTm.no_hash:
           # it's a NO
           A.present = False
           A.timestamp = datetime.now()
@@ -83,7 +84,8 @@ def attendance(r, event_type, event_id, attendance_hash):
         except:
           A = Event_Attendance(event=E,member=m)
 
-        if gen_hash(E,m.email) == attendance_hash:
+        eTm = EtoM.objects.get(event=E,member=m)
+        if attendance_hash == eTm.yes_hash:
           # it's a YES
           A.present = True
           A.timestamp = datetime.now()
@@ -94,7 +96,7 @@ def attendance(r, event_type, event_id, attendance_hash):
           actions = settings.TEMPLATE_CONTENT['attendance']['actions']
           e_message = e_yes
   
-        if gen_hash(E,m.email,False) == attendance_hash:
+        if attendance_hash == eTm.no_hash:
           # it's a NO
           A.present = False
           A.timestamp = datetime.now()

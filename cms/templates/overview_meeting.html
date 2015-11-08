@@ -17,7 +17,7 @@
     </div>
     <div class="row">
       <div class="col-sm-6">
-        {{ overview.attendance }} ({{ attendance|length }})
+        {{ overview.attendance }} : {{ attendance|length }}
         <table class="table table-condensed">
          {% for a in attendance %}
          <tr>
@@ -26,7 +26,7 @@
          </tr>
          {% endfor %}
         </table>
-        {{ overview.excused }} ({{ excused|length }})
+        {{ overview.excused }} : {{ excused|length }}
         <table class="table table-condensed">
          {% for e in excused %}
          <tr>
@@ -37,7 +37,7 @@
         </table>
       </div>
       <div class="col-sm-6">
-        {{ overview.invitee }} ({{ invitee|length }})
+        {{ overview.invitee }} : {{ invitee|length }}
         <table class="table table-condensed">
          {% for i in invitee %}
          <tr>

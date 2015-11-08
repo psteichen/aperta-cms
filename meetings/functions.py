@@ -44,6 +44,7 @@ def gen_meeting_initial(m):
   initial_data['when'] = m.when
   initial_data['time'] = m.time
   initial_data['location'] = m.location
+  initial_data['deadline'] = m.deadline
 
   return initial_data
 

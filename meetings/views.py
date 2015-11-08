@@ -107,7 +107,8 @@ def add(r):
       # all fine -> done
       I.sent = timezone.now()
       I.save()
-      invitation_message = gen_invitation_message(e_template,Mt,Event.MEET,Member(user=r.user)) + mf.cleaned_data['additional_message']
+#      invitation_message = gen_invitation_message(e_template,Mt,Event.MEET,Member(user=r.user)) + mf.cleaned_data['additional_message']
+      invitation_message = gen_invitation_message(e_template,Mt,Event.MEET,m) + mf.cleaned_data['additional_message']
       return render(r, settings.TEMPLATE_CONTENT['meetings']['add']['done']['template'], {
                 'title': settings.TEMPLATE_CONTENT['meetings']['add']['done']['title'], 
                 'message': settings.TEMPLATE_CONTENT['meetings']['add']['done']['message'] % { 'email': invitation_message, 'attachement': I.attachement, 'list': ' ; '.join([gen_member_fullname(m) for m in get_active_members()]), },
