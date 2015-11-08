@@ -164,7 +164,7 @@ def send(r, meeting_num):
     }
     #send email
     try: #with attachement
-      ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,subject,message_content,settings.MEDIA_ROOT + unicode(I.attachement))
+      ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,subject,message_content,False,settings.MEDIA_ROOT + unicode(I.attachement))
     except: #no attachement
       ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,subject,message_content)
      
@@ -233,7 +233,7 @@ def invite(r, meeting_num, member_id):
           #send email
 #no need to add attachement for invitees
 #          try:
-#            ok=notify_by_email(settings.EMAILS['sender']['default'],Iv.email,subject,message_content,settings.MEDIA_ROOT + unicode(I.attachement))
+#            ok=notify_by_email(settings.EMAILS['sender']['default'],Iv.email,subject,message_content,False,settings.MEDIA_ROOT + unicode(I.attachement))
 #          except:
           ok=notify_by_email(settings.EMAILS['sender']['default'],Iv.email,subject,message_content)
           if not ok:
