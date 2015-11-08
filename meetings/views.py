@@ -64,6 +64,7 @@ def add(r):
 
   if r.POST:
     e_template =  settings.TEMPLATE_CONTENT['meetings']['add']['done']['email']['template']
+    done_message = ''
 
     mf = MeetingForm(r.POST,r.FILES)
     if mf.is_valid():
@@ -77,12 +78,15 @@ def add(r):
       I.save()
       send = mf.cleaned_data['send']
       if send:
+        I.sent = timezone.now()
         email_error = { 'ok': True, 'who': [], }
         for m in get_active_members():
    
           #invitation email with "YES/NO button"
           subject = settings.TEMPLATE_CONTENT['meetings']['add']['done']['email']['subject'] % { 'title': unicode(Mt.title) }
           invitation_message = gen_invitation_message(e_template,Mt,Event.MEET,m) + mf.cleaned_data['additional_message']
+          if m == Member(user=r.user): done_message = invitation_message
+
           message_content = {
             'FULLNAME'    : gen_member_fullname(m),
             'MESSAGE'     : invitation_message,
@@ -105,13 +109,10 @@ def add(r):
                 })
 
       # all fine -> done
-      I.sent = timezone.now()
       I.save()
-#      invitation_message = gen_invitation_message(e_template,Mt,Event.MEET,Member(user=r.user)) + mf.cleaned_data['additional_message']
-      invitation_message = gen_invitation_message(e_template,Mt,Event.MEET,m) + mf.cleaned_data['additional_message']
       return render(r, settings.TEMPLATE_CONTENT['meetings']['add']['done']['template'], {
                 'title': settings.TEMPLATE_CONTENT['meetings']['add']['done']['title'], 
-                'message': settings.TEMPLATE_CONTENT['meetings']['add']['done']['message'] % { 'email': invitation_message, 'attachement': I.attachement, 'list': ' ; '.join([gen_member_fullname(m) for m in get_active_members()]), },
+                'message': settings.TEMPLATE_CONTENT['meetings']['add']['done']['message'] % { 'email': done_message, 'attachement': I.attachement, 'list': ' ; '.join([gen_member_fullname(m) for m in get_active_members()]), },
                 })
 
     # form not valid -> error
