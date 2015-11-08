@@ -23,24 +23,39 @@ def gen_hash(event,email,yes=True):
   h.update(unicode(event.pk) + unicode(event.when)) #message
   return unicode(h.hexdigest())
 
-def gen_attendance_links(event,event_type,member):
-  attendance_url = ''
+def gen_attendance_hashes(event,event_type,member):
   yes_hash = gen_hash(event,member.email)
   no_hash = gen_hash(event,member.email,False)
-
   if event_type == Event.MEET:
-    attendance_url = path.join(settings.MEETINGS_ATTENDANCE_URL, unicode(event.pk))
     mm = MtoM(meeting=event,member=member,yes_hash=yes_hash,no_hash=no_hash)
     mm.save()
-    
   if event_type == Event.OTH:
-    attendance_url = path.join(settings.EVENTS_ATTENDANCE_URL, unicode(event.pk))
     em = EtoM(event=event,member=member,yes_hash=yes_hash,no_hash=no_hash)
     em.save()
 
+def get_attendance_hash(e,t,m,yes):
+  if t == Event.MEET:
+    mm = MtoM.objects.get(meeting=e,member=m)
+    if yes: return mm.yes_hash
+    else: return mm.no_hash
+    
+  if t == Event.OTH:
+    em = EtoM.objects.get(event=e,member=m)
+    if yes: return em.yes_hash
+    else: return em.no_hash
+
+def gen_attendance_links(event,event_type,member):
+  attendance_url = ''
+
+  if event_type == Event.MEET:
+    attendance_url = path.join(settings.MEETINGS_ATTENDANCE_URL, unicode(event.pk))
+    
+  if event_type == Event.OTH:
+    attendance_url = path.join(settings.EVENTS_ATTENDANCE_URL, unicode(event.pk))
+
   links = {
-    'YES' : path.join(attendance_url, yes_hash),
-    'NO'  : path.join(attendance_url, no_hash),
+    'YES' : path.join(attendance_url, get_attendance_hash(event,event_type,member,True)),
+    'NO'  : path.join(attendance_url, get_attendance_hash(event,event_type,member,False)),
   }
 
   return links

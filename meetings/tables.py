@@ -12,7 +12,7 @@ from members.functions import gen_member_fullname
 from attendance.models import Meeting_Attendance
 from members.models import Member
 
-from .models import Meeting
+from .models import Meeting, Invitation
 
 #table for visualisation via django_tables2
 class MeetingTable(Table):
@@ -56,7 +56,16 @@ class MgmtMeetingTable(Table):
     return mark_safe(link)
 
   def render_send(self, record):
-    link = '<center><a class="btn btn-danger btn-sm" href="/meetings/send/{}/"><span class="glyphicon glyphicon-envelope"></span></a></center>'.format(escape(record.num))
+    sent = None
+    try:
+      I = Invitation.objects.get(meeting=record)
+      sent = I.sent
+    except: pass
+    if sent: #already sent, resend?
+      link = '<center><a class="btn btn-success btn-sm" href="/meetings/send/{}/" title="Renvoyer"><span class="glyphicon glyphicon-envelope"></span></a></center>'.format(escape(record.num))
+    else: #not yet sent
+      link = '<center><a class="btn btn-danger btn-sm" href="/meetings/send/{}/" title="Envoyer"><span class="glyphicon glyphicon-envelope"></span></a></center>'.format(escape(record.num))
+
     return mark_safe(link)
 
   def render_modify(self, record):
@@ -64,7 +73,10 @@ class MgmtMeetingTable(Table):
     return mark_safe(link)
 
   def render_report(self, record):
-    link = '<center><a class="btn btn-danger btn-sm" href="/meetings/report/{}/"><span class="glyphicon glyphicon-file"></span></a></center>'.format(escape(record.num))
+    if record.report: #report exists, resubmit?
+      link = '<center><a class="btn btn-success btn-sm" href="/meetings/report/{}/" title="Resoumettre"><span class="glyphicon glyphicon-file"></span></a></center>'.format(escape(record.num))
+    else: #submit report
+      link = '<center><a class="btn btn-danger btn-sm" href="/meetings/report/{}/" title="Soumettre"><span class="glyphicon glyphicon-file"></span></a></center>'.format(escape(record.num))
     return mark_safe(link)
 
   class Meta:
