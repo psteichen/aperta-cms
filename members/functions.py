@@ -2,6 +2,7 @@
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.db.models import Q
+from django.contrib.auth.models import User
 
 from .models import Member, Role
 
@@ -60,3 +61,29 @@ def gen_member_overview(template,member):
   except: pass
 
   return render_to_string(template,content)
+
+def login_exists(username):
+  try:
+    User.objects.get(username=username)
+    return  True
+  except User.DoesNotExist:
+    return False
+
+def gen_username(fn, ln, pad=0):
+  username = ''
+  i=0
+  j=1
+  while i<=pad:
+    try:
+      username += fn[i]
+    except:
+      username += unicode(j)
+      j += 1
+
+    i += 1
+  username = unicode.lower(username + ln)
+  if login_exists(username): return gen_username(fn, ln, pad+1)
+  else: return username
+
+def gen_random_password():
+  return User.objects.make_random_password(length=10)
