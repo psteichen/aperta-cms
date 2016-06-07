@@ -56,8 +56,11 @@ target/
 #project specific
 .env
 */migrations/
+db.sqlite
 cms/db.sqlite
+local_settings.py
 cms/local_settings.py
+wsgi.py
 cms/wsgi.py
 HERE
 TODO

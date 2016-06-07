@@ -12,7 +12,7 @@
   {% endblock %}
 
   {% if title %}<h2>{{ title }}</h2>{% endif %}
-  <p class="error">{{ error_message }}</p>
+  <p class="text-danger">{{ error_message|safe }}</p>
   {% if message %}<p>{{ message|safe }}</p>{% endif %}
   {% if list %}<p>{{ list|join:"<br/>" }}</p>{% endif %}
 {% endblock %}
