@@ -21,11 +21,10 @@ ACTIONS = {
 MEETINGS_TMPL_CONTENT = {
   'title'       	: u'Réunions Statutaires',
   'template'    	: 'list.html',
-  'desc'       		: u'''De manière générale les Réunions Statutaires se tiennent :
+  'desc'       		: u'''Changement dans la tenue des Réunions Statutaires, depuis la dernière AGO :
 <ul>
- <li>tous les deuxièmes mardis des mois <b>pairs</b> chez ATP (Ellange) à midi,
- <li>tous les deuxièmes mardis des mois <b>impairs</b> aux Espaces Réunions (Leudelange) à midi,
- <li>tous les quatrièmes mardis de chaque mois au Jardin Gourmand (Hesperange) le soir.
+ <li>tous les quatrièmes mardis des mois <b>pairs</b> au Jardin Gourmand (Hesperange) le soir,</li>
+ <li>tous les mois <b>impairs</b> une réunion commune avec un autre club est organisé.</li>
 </ul>
 ''',
   'actions'     	: ACTIONS['main'],
