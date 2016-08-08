@@ -2,12 +2,18 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.formtools.wizard.views import SessionWizardView
 from django.conf import settings
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import User
 
 from django_tables2  import RequestConfig
 
 from cms.functions import show_form
 
-from .functions import gen_member_initial, gen_role_initial, gen_member_overview, gen_member_fullname
+from meetings.models import Meeting
+from events.models import Event
+from attendance.functions import gen_attendance_hashes
+
+from .functions import gen_member_initial, gen_role_initial, gen_member_overview, gen_member_fullname, gen_username, gen_random_password
 from .models import Member, Role
 from .forms import MemberForm, RoleForm
 from .tables  import MemberTable, MgmtMemberTable
@@ -48,6 +54,13 @@ def add(r):
     if mf.is_valid():
       Me = mf.save(commit=False)
       Me.save()
+
+      # create user
+      user = User.objects.create_user(gen_username(Me.first_name,Me.last_name), Me.email, make_password(gen_random_password()))
+
+      #gen attendance hashes
+      for meeting in Meeting.objects.all():
+        gen_attendance_hashes(meeting,Event.MEET,Me)
       
       # all fine -> done
       return render(r, settings.TEMPLATE_CONTENT['members']['add']['done']['template'], {

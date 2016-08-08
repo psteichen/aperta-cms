@@ -268,8 +268,7 @@ def invite(r, meeting_num, member_id):
     # form not valid -> error
     else:
       return render(r, settings.TEMPLATE_CONTENT['meetings']['invite']['done']['template'], {
-                'title': settings.TEMPLATE_CONTENT['meetings']['invite']['done']['title'], 
-                'error_message': settings.TEMPLATE_CONTENT['error']['gen'] + ' ; '.join([e for e in ifs.errors]),
+                'error_message': settings.TEMPLATE_CONTENT['error']['gen'] + ' ; '.join([str(e) for e in ifs.errors]),
                 })
   # no post yet -> empty form
   else:
