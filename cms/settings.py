@@ -17,7 +17,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'i7_hpg!p406zhnei*v6(v+bm@rav4(r!)090re3df52o9b71c1'
+SECRET_KEY = '!Gz9A*nj7qL8PNGuD&cgaA8ricCkZULzE*C3ZPr2'
 
 # Application definition
 
@@ -177,11 +177,11 @@ TEMPLATE_CONTENT = {
   #basic/generic content for all templates/views:
   'meta' : {
     'author'            : 'Pascal Steichen - pst@aperta.lu',
-    'copyright'         : 'FIFTY-ONE Luxembourg APERTA a.s.b.l.',
+    'copyright'         : 'FIFTY-ONE Luxembourg Eisleck a.s.b.l.',
     'title'             : 'Club Management System',
     'logo' : {
-      'title'		: 'FIFTY-ONE<br/><strong><em>APERTA</em></strong>',
-      'img'		: 'https://aperta.lu/pics/logo-51-aperta_picto.png',
+      'title'		: 'FIFTY-ONE<br/><strong><em>Eisleck</em></strong>',
+      'img'		: 'http://www.51e.lu/images/fiftyone/logo-51e.svg',
     },
     'description'       : '',
     'keywords'          : '',

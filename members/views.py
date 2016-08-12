@@ -7,7 +7,8 @@ from django.contrib.auth.models import User
 
 from django_tables2  import RequestConfig
 
-from cms.functions import show_form
+from cms.forms import ImportData
+from cms.functions import show_form, import_data
 
 from meetings.models import Meeting
 from events.models import Event
@@ -82,6 +83,65 @@ def add(r):
                 'desc': settings.TEMPLATE_CONTENT['members']['add']['desc'],
                 'submit': settings.TEMPLATE_CONTENT['members']['add']['submit'],
                 'form': form,
+                })
+
+
+# upload #
+##########
+@permission_required('cms.BOARD')
+def upload(r):
+  r.breadcrumbs( ( 	
+			('home','/'),
+                   	('members','/members/'),
+                   	('import data','/meetings/import/'),
+               ) )
+
+  template  = settings.TEMPLATE_CONTENT['members']['import']['template']
+  title     = settings.TEMPLATE_CONTENT['members']['import']'title']
+  desc      = settings.TEMPLATE_CONTENT['members']['import']['desc']
+  submit    = settings.TEMPLATE_CONTENT['members']['import']['submit']
+
+  done_template  = settings.TEMPLATE_CONTENT['members']['import']['done']['template']
+  done_title     = settings.TEMPLATE_CONTENT['members']['import']['done']['title']
+  done_message   = settings.TEMPLATE_CONTENT['members']['import']['done']['message']
+
+  if r.POST:
+    idf = ImportData(r.POST, r.FILES)
+    if idf.is_valid():
+      ty    	= idf.cleaned_data['type']
+      data      = idf.cleaned_data['data']
+
+      # handle uploaded file
+      errors = import_data(ty,data)
+
+      if errors:
+        # issue with import -> error
+        return render(r, done_template, {
+                               'title'          : done_title,
+                               'error_message'  : settings.TEMPLATE_CONTENT['error']['gen'] + str(errors),
+                    })
+
+      # all fine -> done
+      return render(r, done_template, {
+                               'title'    : done_title,
+                               'message'  : done_message,
+                  })
+
+    else:
+      # form not valid -> error
+      return render(r, done_template, {
+                               'title'          : done_title,
+                               'error_message'  : settings.TEMPLATE_CONTENT['error']['gen'] + ' ; '.join([e for e in idf.errors]),
+                  })
+
+  else:
+    # no post yet -> empty form
+    form = ImportData()
+    return render(r, template, {
+                             'title'    : title,
+                             'desc'     : desc,
+                             'submit'   : submit,
+                             'form'     : form,
                 })
 
 
