@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 
 from django_tables2  import RequestConfig
 
+from .functions import import_data
 from .forms import ImportData
 
 
