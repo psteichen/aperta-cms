@@ -6,12 +6,21 @@ ACTIONS = {
     {
       'label'		: u'Nouveau Membre',
       'icon'     	: 'plus',
+      'grade'     	: 'danger',
       'url'           	: '/members/add/',
+      'has_perms'	: 'cms.BOARD',
+    },
+    { 
+      'label'         	: u'Importer des Membres', 
+      'icon'     	: 'file',
+      'grade'     	: 'warning',
+      'url'           	: '/upload/members/', 
       'has_perms'	: 'cms.BOARD',
     },
     { 
       'label'         	: u'Gestion des Rôles', 
       'icon'     	: 'user',
+      'grade'     	: 'info',
       'url'           	: '/members/role/', 
       'has_perms'	: 'cms.BOARD',
     },
@@ -38,6 +47,17 @@ MEMBERS_TMPL_CONTENT = {
     'done': {
       'template'	: 'done.html',
       'title'     	: u'Un nouveau Membre a été rajouté.',
+      'message'     	: u'Détails : ',
+    },
+  },
+  'import': {
+    'template'		: 'form.html',
+    'title'     	: u'Importer des Membres',
+    'desc'     		: u"L'import peut se faire à partir d'un fichier excel ou csv.",
+    'submit'   		: u'Importer',
+    'done': {
+      'template'	: 'done.html',
+      'title'     	: u"{nb} nouveaux membres ont été importés.",
       'message'     	: u'Détails : ',
     },
   },

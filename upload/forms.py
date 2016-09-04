@@ -10,5 +10,4 @@ TYPES = (
 
 #form to import data
 class ImportData(Form):
-  ty  	= ChoiceField(choices=TYPES)
-  data 	= FileField()
+  data 	= FileField(label=u'Fichier avec les données')

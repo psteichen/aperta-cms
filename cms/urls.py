@@ -22,6 +22,7 @@ urlpatterns = patterns('',
 
   url(r'^attendance/', include('attendance.urls')),
   url(r'^locations/', include('locations.urls')),
+  url(r'^upload/', include('upload.urls')),
 
   url(r'^meetings/', include('meetings.urls')),
   url(r'^members/', include('members.urls')),

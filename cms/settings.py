@@ -306,7 +306,6 @@ TEMPLATE_CONTENT['home'] = {
 from members.settings import *
 TEMPLATE_CONTENT['members'] = MEMBERS_TMPL_CONTENT
 
-
 #attendance
 from attendance.settings import *
 TEMPLATE_CONTENT['attendance'] = ATTENDANCE_TMPL_CONTENT
@@ -315,6 +314,10 @@ ATTENDANCE_BASE_URL = 'https://' + ALLOWED_HOSTS[0] + '/attendance/'
 #locations
 from locations.settings import *
 TEMPLATE_CONTENT['locations'] = LOCATIONS_TMPL_CONTENT
+
+#upload
+from upload.settings import *
+TEMPLATE_CONTENT['upload'] = UPLOAD_TMPL_CONTENT
 
 #meetings
 from meetings.settings import *

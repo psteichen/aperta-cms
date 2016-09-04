@@ -11,8 +11,7 @@ from django.utils import timezone
 
 from django_tables2  import RequestConfig
 
-from cms.forms import ImportData
-from cms.functions import notify_by_email, show_form, visualiseDateTime, import_data
+from cms.functions import notify_by_email, show_form, visualiseDateTime
 
 from events.models import Event
 from members.models import Member
