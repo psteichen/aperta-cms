@@ -34,19 +34,18 @@ def upload(r,ty):
       data      = idf.cleaned_data['data']
 
       # handle uploaded file
-      errors = import_data(ty,data)
+      ok = import_data(ty,data)
 
-      if errors:
+      if ok == False:
         # issue with import -> error
         return render(r, done_template, {
-                               'title'          : done_title,
-                               'error_message'  : settings.TEMPLATE_CONTENT['error']['gen'] + str(errors),
+                               'error_message'  : settings.TEMPLATE_CONTENT['error']['gen'] + ' ' + str(ok),
                     })
-
-      # all fine -> done
-      return render(r, done_template, {
-                               'title'    : done_title,
-                  })
+      else:
+        # all fine -> done
+        return render(r, done_template, {
+                               'title'    : done_title.format(ok),
+                    })
 
     else:
       # form not valid -> error

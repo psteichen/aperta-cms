@@ -17,7 +17,9 @@ from meetings.models import Meeting
 
 def import_data(ty,data):
  
-  error = False
+  nb=0
+  ok = True
+  errors = False
   for l in csv.DictReader(data.read().splitlines(),delimiter=';',quoting=csv.QUOTE_NONE):
 #  for line in c_data:
 #    l = findall(r'\"(.+?)\"',str(line))
@@ -46,6 +48,9 @@ def import_data(ty,data):
 		)
         # create user
         U = User.objects.create_user(gen_username(Model.first_name,Model.last_name), Model.email, make_password(gen_random_password()))
+        U.first_name = Model.first_name
+        U.last_name = Model.last_name
+        U.save()
         U.user_permissions.add(Permission.objects.get(codename='MEMBER'))
 	Model.user = U
       if ty == "calendar": 
@@ -65,5 +70,7 @@ def import_data(ty,data):
 	Model.location = location
 
       Model.save()
+      nb+=1
 
-  return error
+  if not ok: return errors
+  else: return nb
