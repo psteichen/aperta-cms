@@ -31,8 +31,7 @@ UPLOAD_TMPL_CONTENT = {
     'submit'   		: u'Importer',
     'done': {
       'template'	: 'done.html',
-      'title'     	: u'{nb} nouveau(x) Membre(s) importé(s).',
-      'message'     	: u'Détails : ',
+      'title'     	: u'Membre(s) importé(s).',
     },
   },
 }

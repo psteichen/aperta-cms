@@ -4,7 +4,7 @@ from django.db import models
 #
 #  - cms.BOARD       (member of the Management Board)
 #  - cms.COMM        (communication manager)
-#  - cms.MEMBER      (APERTA member)
+#  - cms.MEMBER      (Member FIFTY-ONE)
 #  - cms.ADMIN       (django superuser)
 #
 # including a little hack so that we can use these sepcific
@@ -25,7 +25,7 @@ class User(models.Model):
     permissions = (
       ('BOARD'  , 'Member of the Board'),
       ('COMM'   , 'Communication manager'),
-      ('MEMBER' , 'APERTA member'),
+      ('MEMBER' , 'Member FIFTY-ONE'),
     )
 
 

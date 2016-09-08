@@ -21,13 +21,7 @@ ACTIONS = {
 MEETINGS_TMPL_CONTENT = {
   'title'       	: u'Réunions Statutaires',
   'template'    	: 'list.html',
-  'desc'       		: u'''De manière générale les Réunions Statutaires se tiennent :
-<ul>
- <li>tous les deuxièmes mardis des mois <b>pairs</b> chez ATP (Ellange) à midi,
- <li>tous les deuxièmes mardis des mois <b>impairs</b> aux Espaces Réunions (Leudelange) à midi,
- <li>tous les quatrièmes mardis de chaque mois au Jardin Gourmand (Hesperange) le soir.
-</ul>
-''',
+  'desc'       		: u'De manière générale les Réunions Statutaires se tiennent tous les deuxièmes et quatrièmes mardis de chaque mois au Sporthotel Leweck.',
   'actions'     	: ACTIONS['main'],
   'add': {
     'template'		: 'form.html',
@@ -50,7 +44,7 @@ Destinataires:
 ''',
       'email': {
 	'template'	: 'meeting_invitation.txt',
-	'subject'	: u'[51 aperta] %(title)s',
+	'subject'	: u'[51 eisleck] %(title)s',
       },
     },
   },
@@ -65,7 +59,7 @@ Destinataires:
       'message'     	: u'Destinataires : ',
       'email': {
 	'template'	: 'meeting_invitation.txt',
-	'subject'	: u'[51 aperta] %(title)s',
+	'subject'	: u'[51 eisleck] %(title)s',
       },
     },
   },
@@ -90,7 +84,7 @@ Destinataires:
 ''',
       'email': {
 	'template'	: 'meeting_invitation_invitee.txt',
-	'subject'	: u'[51 aperta] %(title)s',
+	'subject'	: u'[51 eisleck] %(title)s',
       },
     },
   },
@@ -145,7 +139,7 @@ Destinataires:
       'message_send'   	: u'Destinataires : ',
       'email': {
 	'template'	: 'meeting_report.txt',
-	'subject'	: u'[51 aperta] Compte rendu de la %(title)s',
+	'subject'	: u'[51 eisleck] Compte rendu de la %(title)s',
       },
     },
   },

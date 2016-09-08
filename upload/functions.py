@@ -18,7 +18,6 @@ from meetings.models import Meeting
 def import_data(ty,data):
  
   error = False
-#  for line in csv.DictReader(data,delimiter='\t',quoting=csv.QUOTE_NONE):
   for l in csv.DictReader(data.read().splitlines(),delimiter=';',quoting=csv.QUOTE_NONE):
 #  for line in c_data:
 #    l = findall(r'\"(.+?)\"',str(line))

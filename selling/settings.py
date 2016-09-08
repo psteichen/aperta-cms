@@ -81,7 +81,7 @@ Destinataires :
 ''',
     'email': {
       'template'	: 'selling_notify.txt',
-      'subject'     	: '[51 aperta] Vente de bienfaisance',
+      'subject'     	: '[51 eisleck] Vente de bienfaisance',
     },
   },
   'modify': {
@@ -123,7 +123,7 @@ Destinataires :
       'title'           : u'Détail de votre Commande du %(date)s.',
       'email' : {
         'template'	: 'receipt.txt',
-        'subject'	: '[51 aperta] Commande du %(date)s.',
+        'subject'	: '[51 eisleck] Commande du %(date)s.',
       },
     },
   },

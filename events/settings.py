@@ -43,7 +43,7 @@ Destinataires :
 ''',
       'email': {
 	'template'	: 'event_invitation.txt',
-	'subject'	: u'[51 aperta] %(title)s',
+	'subject'	: u'[51 eisleck] %(title)s',
       },
     },
   },
@@ -58,7 +58,7 @@ Destinataires :
       'message'         : u'Destinataires : ',
       'email': {
 	'template'	: 'event_invitation.txt',
-	'subject'	: u'[51 aperta] %(title)s',
+	'subject'	: u'[51 eisleck] %(title)s',
       },
     },
   },

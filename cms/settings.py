@@ -115,7 +115,7 @@ STATICFILES_FINDERS = (
 MEDIA_URL = '/media/'
 
 # Email settings
-SERVER_EMAIL = 'admin@aperta.lu'
+SERVER_EMAIL = 'admin@eisleck.fifty-one.club'
 DEFAULT_FROM_EMAIL = SERVER_EMAIL
 
 ADMINS = (
@@ -165,7 +165,7 @@ TEMPLATE_DIRS = (
 #emails
 EMAILS = {
   'sender' : {
-    'default'	: "'FIFTY-ONE Aperta' <board@aperta.lu>",
+    'default'	: "'FIFTY-ONE Eisleck' <board@eisleck.fifty-one.club>",
   },
   'footer' 	: '''Amicalement,
 Le comité APERTA

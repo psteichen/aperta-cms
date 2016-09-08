@@ -27,7 +27,6 @@ def upload(r,ty):
 
   done_template  = settings.TEMPLATE_CONTENT['upload'][ty]['done']['template']
   done_title     = settings.TEMPLATE_CONTENT['upload'][ty]['done']['title']
-  done_message   = settings.TEMPLATE_CONTENT['upload'][ty]['done']['message']
 
   if r.POST:
     idf = ImportData(r.POST, r.FILES)
@@ -47,7 +46,6 @@ def upload(r,ty):
       # all fine -> done
       return render(r, done_template, {
                                'title'    : done_title,
-                               'message'  : done_message,
                   })
 
     else:
