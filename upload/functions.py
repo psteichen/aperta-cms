@@ -9,7 +9,7 @@ from re import search, findall
 import csv
 
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission
 
 from members.functions import gen_username, gen_random_password
 from members.models import Member, Address
@@ -45,8 +45,9 @@ def import_data(ty,data):
 			email		= unicode(l['EMAIL'])
 		)
         # create user
-        user = User.objects.create_user(gen_username(Model.first_name,Model.last_name), Model.email, make_password(gen_random_password()))
-	Model.user = user
+        U = User.objects.create_user(gen_username(Model.first_name,Model.last_name), Model.email, make_password(gen_random_password()))
+        U.user_permissions.add(Permission.objects.get(codename='MEMBER'))
+	Model.user = U
       if ty == "calendar": 
 	Model = Meeting (
 			title  		= unicode(l[0]),

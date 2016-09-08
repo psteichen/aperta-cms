@@ -24,7 +24,7 @@ class User(models.Model):
   class Meta:
     permissions = (
       ('BOARD'  , 'Member of the Board'),
-      ('COMM'   , 'Communication manager'),
+     ('COMM'   , 'Communication manager'),
       ('MEMBER' , 'Member FIFTY-ONE'),
     )
 

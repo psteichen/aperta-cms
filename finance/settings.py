@@ -29,7 +29,8 @@ ACTIONS = {
   'bank' : (
     {
       'label'		: u'Nouvel Extrait',
-      'icon'     	: 'bank',
+      'icon'     	: 'file',
+      'grade'     	: 'warning',
       'url'           	: '/finance/bank/upload/',
       'has_perms'	: 'cms.BOARD',
     },

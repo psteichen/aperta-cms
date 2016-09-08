@@ -6,12 +6,14 @@ ACTIONS = {
     {
       'label'         	: u'Prochaine RS',
       'icon'     	: 'plus',
+      'grade'     	: 'danger',
       'url'           	: '/meetings/add/',
       'has_perms'     	: 'cms.BOARD',
     },
     { 
       'label'         	: u'Gestion des Lieux de Rencontre', 
       'icon'     	: 'home',
+      'grade'     	: 'info',
       'url'           	: '/locations/', 
       'has_perms'     	: 'cms.COMM',
     },
@@ -21,7 +23,7 @@ ACTIONS = {
 MEETINGS_TMPL_CONTENT = {
   'title'       	: u'Réunions Statutaires',
   'template'    	: 'list.html',
-  'desc'       		: u'De manière générale les Réunions Statutaires se tiennent tous les deuxièmes et quatrièmes mardis de chaque mois au Sporthotel Leweck.',
+  'desc'       		: u'De manière générale les Réunions Statutaires se tiennent tous les deuxièmes et quatrièmes mardis de chaque mois au Sporthotel Leweck (Lipperscheid).',
   'actions'     	: ACTIONS['main'],
   'add': {
     'template'		: 'form.html',

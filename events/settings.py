@@ -6,12 +6,14 @@ ACTIONS = {
     {
       'label'           : u'Ajouter un évènement',
       'icon'            : 'plus',
+      'grade'		: 'danger',
       'url'             : '/events/add/',
       'has_perms'       : 'cms.COMM',
     },
     {
       'label'           : u'Gestion des Lieux de Rencontre',
       'icon'            : 'home',
+      'grade'		: 'info',
       'url'             : '/locations/',
       'has_perms'       : 'cms.COMM',
     },

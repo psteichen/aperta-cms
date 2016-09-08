@@ -286,13 +286,13 @@ ACTIONS = (
         'url'          	: '/locations/', 
         'has_perms'    	: 'cms.MEMBER',
       },
-      {         
-	'label'		: 'Site web', 
-	'icon'		: 'cloud',
-	'desc'		: 'Gestion et mise-à-jour du contenu du site web public.',
-	'url'		: '/web/',
-	'has_perms'	: 'cms.COMM',
-      },
+#      {         
+#	'label'		: 'Site web', 
+#	'icon'		: 'cloud',
+#	'desc'		: 'Gestion et mise-à-jour du contenu du site web public.',
+#	'url'		: '/web/',
+#	'has_perms'	: 'cms.COMM',
+#      },
     ),
   },
 )
