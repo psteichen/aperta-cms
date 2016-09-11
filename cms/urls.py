@@ -1,7 +1,8 @@
 from django.conf.urls import patterns, include, url
-
 from django.contrib import admin
 admin.autodiscover()
+
+from password_reset.views import recover, recover_done, reset, reset_done
 
 from .views import home
 
@@ -17,8 +18,14 @@ urlpatterns = patterns('',
   #login stuff
   url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'auth.html'}, name='login'),
   url(r'^logout/$', 'django.contrib.auth.views.logout_then_login', name='logout'),
-  url(r'^chgpwd/$', 'django.contrib.auth.views.password_change', {'template_name': 'chgpwd.html', 'post_change_redirect': '/chgpwd-done/'}, name='chgpwd'),
-  url(r'^chgpwd-done/$', 'django.contrib.auth.views.password_change_done', {'template_name': 'done.html'}, name='chgpwd-done'),
+#  url(r'^chgpwd/$', 'django.contrib.auth.views.password_change', {'template_name': 'chgpwd.html', 'post_change_redirect': '/chgpwd-done/'}, name='chgpwd'),
+#  url(r'^chgpwd-done/$', 'django.contrib.auth.views.password_change_done', {'template_name': 'done.html'}, name='chgpwd-done'),
+  url(r'^pwd/change/', 'django.contrib.auth.views.password_change', {'template_name': 'pwd/change.html', 'post_change_redirect': '/pwd/change/done/'}, name='password_change'),
+  url(r'^pwd/change/done/$', 'django.contrib.auth.views.password_change_done', {'template_name': 'done.html'}, name='password_change_done'),
+  url(r'^pwd/recover/$', recover, name='password_reset_recover'),
+  url(r'^pwd/recover/(?P<signature>.+)/$', recover_done, name='password_reset_sent'),
+  url(r'^pwd/reset/done/$', reset_done, name='password_reset_done'),
+  url(r'^pwd/reset/(?P<token>[\w:-]+)/$', reset, name='password_reset_reset'),
 
   url(r'^attendance/', include('attendance.urls')),
   url(r'^locations/', include('locations.urls')),

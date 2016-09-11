@@ -22,6 +22,7 @@
    {% endfor %}
    <button class="btn btn-danger" type="submit">{{ auth.submit }}</button>
    <input type="hidden" name="next" value="{{ next }}" />
+   <br/><br/><a class="text-muted" href="{% url 'password_reset_recover' %}"><em>{{ auth.pwd_lost }}</em></a>
   </div>
  </div>
 </form>

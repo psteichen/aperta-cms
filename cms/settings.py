@@ -34,6 +34,7 @@ INSTALLED_APPS = (
 # specific supporting apps
   'django_tables2',
   'breadcrumbs',
+  'password_reset',
 # my apps
   'cms',
   'members',
@@ -218,16 +219,25 @@ TEMPLATE_CONTENT = {
     'duplicate'         : u'Doublon, vérifiez votre saisie!',
   },
   'auth' : {
-    'title': u'Authentification',
-    'submit': u'Se connecter',
+    'title'		: u'Authentification',
+    'pwd_lost'		: u'Mot de passe oublié?',
+    'submit'		: u'Se connecter',
     'chgpwd' : {
-      'title': u'Changer le mot de passe pour: ',
-      'submit': u'Changer',
+      'title'		: u'Changer le mot de passe pour: ',
+      'submit'		: u'Changer',
       'done' : {
-        'title': u'Changement du mot de passe réussi.',
-        'message': u'Ton mot de passe a été changé avec succès. Merci de te reconnecter avec le nouveau mot de passe.',
-        'backurl': '/',
-        'backurl_txt': u'Retour vers l\'applicaion.',
+        'title'		: u'Changement du mot de passe réussi.',
+        'message'	: u'Ton mot de passe a été changé avec succès. Merci de te reconnecter avec le nouveau mot de passe.',
+        'backurl'	: '/',
+        'backurl_txt'	: u'Retour vers l\'applicaion.',
+      },
+    },
+    'recover' : {
+      'title'		: u'Recouvrir un mot de passe',
+      'submit'		: u'Recouvrir',
+      'done' : {
+        'title'		: u'Récupération d\'un mot de passe réussie.',
+        'message'	: u'Ton mot de passe a été changé avec succès. Merci de te reconnecter avec le nouveau mot de passe.',
       },
     },
   },
