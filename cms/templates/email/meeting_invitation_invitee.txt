@@ -1,3 +1,3 @@
 {% autoescape off %}
-De la part de {{ member }}, j'ai le plaisir de t'inviter à la {{ title }} du club FIFTY-ONE APERTA, pour le {{ when }} à {{ time }} au restaurant "{{ location }}" ({{ address }}).
+De la part de {{ member }}, j'ai le plaisir de t'inviter à la {{ title }} du club FIFTY-ONE Eisleck, pour le {{ when }} à {{ time }} au restaurant "{{ location }}" ({{ address }}).
 {% endautoescape %}
