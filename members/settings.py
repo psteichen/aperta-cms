@@ -17,6 +17,13 @@ ACTIONS = {
       'url'           	: '/upload/members/', 
       'has_perms'	: 'cms.BOARD',
     },
+#    { 
+#      'label'         	: u'Configuration', 
+#      'icon'     	: 'cog',
+#      'grade'     	: 'default',
+#      'url'           	: '/members/config/', 
+#      'has_perms'	: 'cms.BOARD',
+#    },
     { 
       'label'         	: u'Gestion des Rôles', 
       'icon'     	: 'user',

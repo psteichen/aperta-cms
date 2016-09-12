@@ -238,3 +238,69 @@ def profile(r, username):
                    'message': message,
                 })
 
+
+# config #
+##########
+@permission_required('cms.BOARD')
+def config(r):
+  r.breadcrumbs( ( 
+			('home','/'),
+                   	('members','/members/'),
+                   	('config','/members/config/'),
+                ) )
+
+  template	= settings.TEMPLATE_CONTENT['members']['config']['template']
+  title		= settings.TEMPLATE_CONTENT['members']['config']['title']
+  actions	= settings.TEMPLATE_CONTENT['members']['config']['actions']
+
+  return render(r, template, {
+                	'title'		: title,
+                	'actions'	: actions,
+                })
+
+
+# config_invitation #
+#####################
+@permission_required('cms.BOARD')
+def config_invitation(r):
+  r.breadcrumbs( ( 
+			('home','/'),
+                   	('members','/members/'),
+                   	('config','/members/config/'),
+                   	('config invitation','/members/config/invitation/'),
+                ) )
+
+  template	= settings.TEMPLATE_CONTENT['members']['config']['invitation']['template']
+  title		= settings.TEMPLATE_CONTENT['members']['config']['invitation']['title']
+  desc 		= settings.TEMPLATE_CONTENT['members']['config']['invitation']['desc']
+  submit 	= settings.TEMPLATE_CONTENT['members']['config']['invitation']['submit']
+ 
+  if r.POST:
+    cif = ConfigInvitationForm(r.POST)
+    if cif.is_valid():
+      invit_text = cif
+      
+      # all fine -> done
+      return render(r, settings.TEMPLATE_CONTENT['members']['role']['add']['done']['template'], {
+                'title': settings.TEMPLATE_CONTENT['members']['role']['add']['done']['title'], 
+                'message': settings.TEMPLATE_CONTENT['members']['role']['add']['done']['message'] + unicode(Rl),
+                })
+
+    # form not valid -> error
+    else:
+      return render(r, settings.TEMPLATE_CONTENT['members']['role']['add']['done']['template'], {
+                'title': settings.TEMPLATE_CONTENT['members']['role']['add']['done']['title'], 
+                'error_message': settings.TEMPLATE_CONTENT['error']['gen'] + ' ; '.join([e for e in rf.errors]),
+                })
+
+  # no post yet -> empty form
+  else:
+    form = ConfigInvitationForm()
+    return render(r, template, {
+                	'title'		: title,
+                	'desc'		: desc,
+                	'submit'	: submit,
+                	'form'		: form,
+                })
+
+
