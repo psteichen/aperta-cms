@@ -118,8 +118,9 @@ def attendance(r, event_type, event_id, attendance_hash):
 
   #set meeting:num and member_id for invitee link
   if actions:
-    url = actions[0]['url'] + str(M.num)+'/'+str(member.id)
-    actions[0]['url'] = url
+#    url = actions[0]['url'] + str(M.num)+'/'+str(member.id)
+    for a in actions:
+      a['url'] = a['url'].format(str(M.num),str(member.id))
 
   return render(r, settings.TEMPLATE_CONTENT['attendance']['template'], {
                    'title': title,

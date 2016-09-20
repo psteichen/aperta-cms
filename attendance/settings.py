@@ -6,7 +6,7 @@ ACTIONS = {
     {
       'label' 		: u'Inviter un(des) ami(s), conférencier(s) ou would-be(s).',
       'icon'     	: 'plus',
-      'url'           	: '/meetings/invite/',
+      'url'           	: '/meetings/invite/{}/{}/',
     },
   ),
 }
