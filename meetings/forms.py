@@ -18,6 +18,7 @@ class MeetingForm(ModelForm):
 
   class Meta:
     model = Meeting
+#    fields = ( 'title', 'when', 'time', 'location', 'num', 'deadline', 'additional_message', 'attachement', 'generic', 'send', )
     fields = ( 'title', 'when', 'time', 'location', 'num', 'deadline', 'additional_message', 'attachement', 'send', )
     widgets = {
 #      'title'	: TextInput(attrs={'readonly': 'readonly', }),
