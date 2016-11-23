@@ -14,7 +14,7 @@ from cms.functions import notify_by_email
 
 from members.models import Member
 from members.functions import get_active_members, gen_member_fullname
-from attendance.functions import gen_invitation_message, gen_hash
+from attendance.functions import gen_invitation_message, gen_hash, gen_attendance_hashes
 
 from .functions import gen_event_overview, gen_event_initial
 from .models import Event, Invitation
@@ -64,41 +64,54 @@ def add(r):
       Ev = ef.save(commit=False)
       Ev.save()
       
-      I = Invitation(event=Ev,message=ef.cleaned_data['additional_message'])
+      user_member = Member.objects.get(user=r.user)
+      e_subject = settings.TEMPLATE_CONTENT['events']['add']['done']['email']['subject'] % { 'title': unicode(Ev.title) }
 
+      if r.FILES:
+        I = Invitation(event=Ev,message=ef.cleaned_data['additional_message'],attachement=r.FILES['attachement'])
+      else:
+        I = Invitation(event=Ev,message=ef.cleaned_data['additional_message'])
+      I.save()
       send = ef.cleaned_data['send']
       if send:
-        email_error = { 'ok': True, 'who': (), }
-        for m in get_active_members():
-   
-          #invitation email with "YES/NO button"
-          subject = settings.TEMPLATE_CONTENT['events']['add']['done']['email']['subject'] % { 'title': unicode(Ev.title) }
-          invitation_message = gen_invitation_message(e_template,Ev,Event.OTH,m) + ef.cleaned_data['additional_message']
-          message_content = {
-            'FULLNAME'    : gen_member_fullname(m),
-            'MESSAGE'     : invitation_message,
-          }
-          #send email
-          ok=notify_by_email(r.user.email,m.email,subject,message_content)
-          if not ok: 
-            email_error['ok']=False
-            email_error['who'].add(m.email)
+        I.sent = timezone.now()
 
-        # error in email -> show error messages
-        if not email_error['ok']:
-          I.sent = datetime.now()
-          I.save()
-          return render(r, settings.TEMPLATE_CONTENT['events']['add']['done']['template'], {
-                'title': settings.TEMPLATE_CONTENT['events']['add']['done']['title'], 
-                'error_message': settings.TEMPLATE_CONTENT['error']['email'] + ' ; '.join([e for e in email_error['who']]),
-                })
+      email_error = { 'ok': True, 'who': [], }
+      for m in get_active_members():
+   
+        gen_attendance_hashes(Ev,Event.OTH,m)
+        invitation_message = gen_invitation_message(e_template,Ev,Event.OTH,m) + ef.cleaned_data['additional_message']
+        if m == user_member: 
+          done_message = invitation_message
+
+        message_content = {
+          'FULLNAME'    : gen_member_fullname(m),
+          'MESSAGE'     : invitation_message,
+        }
+        #send email
+        if send:
+          if I.attachement:
+            ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,e_subject,message_content,False,settings.MEDIA_ROOT + unicode(I.attachement))
+          else:
+            ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,e_subject,message_content)
+          if not ok:
+            email_error['ok']=False
+            email_error['who'].append(m.email)
+
+          # error in email -> show error messages
+          if not email_error['ok']:
+            I.save()
+            return render(r, settings.TEMPLATE_CONTENT['meetings']['add']['done']['template'], {
+                		'title': settings.TEMPLATE_CONTENT['meetings']['add']['done']['title'], 
+                		'error_message': settings.TEMPLATE_CONTENT['error']['email'] + ' ; '.join([e for e in email_error['who']]),
+			 })
 
       # all fine -> done
-      invitation_message = gen_invitation_message(e_template,Ev,Event.OTH,Member(user=r.user)) + ef.cleaned_data['additional_message']
-      return render(r, settings.TEMPLATE_CONTENT['events']['add']['done']['template'], {
-                'title': settings.TEMPLATE_CONTENT['events']['add']['done']['title'], 
-                'message': settings.TEMPLATE_CONTENT['events']['add']['done']['message'] % { 'email': invitation_message, 'list': ' ; '.join([gen_member_fullname(m) for m in get_active_members()]), },
-                })
+      I.save()
+      return render(r, settings.TEMPLATE_CONTENT['meetings']['add']['done']['template'], {
+                	'title': settings.TEMPLATE_CONTENT['events']['add']['done']['title'], 
+	                'message': settings.TEMPLATE_CONTENT['events']['add']['done']['message'] % { 'email': invitation_message, 'list': ' ; '.join([gen_member_fullname(m) for m in get_active_members()]), },
+		   })
 
     # form not valid -> error
     else:
