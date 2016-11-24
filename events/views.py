@@ -7,6 +7,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.formtools.wizard.views import SessionWizardView
 from django.conf import settings
+from django.utils import timezone
 
 from django_tables2  import RequestConfig
 
@@ -101,14 +102,14 @@ def add(r):
           # error in email -> show error messages
           if not email_error['ok']:
             I.save()
-            return render(r, settings.TEMPLATE_CONTENT['meetings']['add']['done']['template'], {
-                		'title': settings.TEMPLATE_CONTENT['meetings']['add']['done']['title'], 
+            return render(r, settings.TEMPLATE_CONTENT['events']['add']['done']['template'], {
+                		'title': settings.TEMPLATE_CONTENT['events']['add']['done']['title'], 
                 		'error_message': settings.TEMPLATE_CONTENT['error']['email'] + ' ; '.join([e for e in email_error['who']]),
 			 })
 
       # all fine -> done
       I.save()
-      return render(r, settings.TEMPLATE_CONTENT['meetings']['add']['done']['template'], {
+      return render(r, settings.TEMPLATE_CONTENT['events']['add']['done']['template'], {
                 	'title': settings.TEMPLATE_CONTENT['events']['add']['done']['title'], 
 	                'message': settings.TEMPLATE_CONTENT['events']['add']['done']['message'] % { 'email': invitation_message, 'list': ' ; '.join([gen_member_fullname(m) for m in get_active_members()]), },
 		   })
@@ -203,7 +204,7 @@ def details(r, event_id):
 
 #modify helper functions
 def show_attendance_form(wizard):
-  return show_form(wizard,'meeting','attendance',True)
+  return show_form(wizard,'event','attendance',True)
 
 # modify formwizard #
 class ModifyEventWizard(SessionWizardView):
