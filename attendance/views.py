@@ -93,6 +93,8 @@ def attendance(r, event_type, event_id, attendance_hash):
           notify=True
           member=m
           message = settings.TEMPLATE_CONTENT['attendance']['yes'] % { 'name': gen_member_fullname(m), }
+          #add meeting information to the confirmation message
+          message += settings.TEMPLATE_CONTENT['attendance']['details'] % { 'when': E.when, 'time': E.time, 'location': E.location, 'address': E.location.address, }
           actions = settings.TEMPLATE_CONTENT['attendance']['actions']
           e_message = e_yes
   
@@ -116,15 +118,21 @@ def attendance(r, event_type, event_id, attendance_hash):
         ok=notify_by_email(False,m.email,title,message_content)
 
 
-  #set meeting:num and member_id for invitee link
-  if actions:
-#    url = actions[0]['url'] + str(M.num)+'/'+str(member.id)
-    for a in actions:
-      a['url'] = a['url'].format(str(M.num),str(member.id))
+  if event_type == 'meetings':
+    #set meeting:num and member_id for invitee link
+    if actions:
+      for a in actions:
+        a['url'] = a['url'].format(str(M.num),str(member.id))
 
-  return render(r, settings.TEMPLATE_CONTENT['attendance']['template'], {
+    return render(r, settings.TEMPLATE_CONTENT['attendance']['template'], {
                    'title': title,
                    'actions' : actions,
+                   'message': message,
+               })
+
+  if event_type == 'events':
+    return render(r, settings.TEMPLATE_CONTENT['attendance']['template'], {
+                   'title': title,
                    'message': message,
                })
 
