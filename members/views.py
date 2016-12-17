@@ -58,9 +58,11 @@ def add(r):
       # create user
       user = User.objects.create_user(gen_username(Me.first_name,Me.last_name), Me.email, make_password(gen_random_password()))
 
-      #gen attendance hashes
+      #gen attendance hashes (to avoid errors with future events & meetings)
       for meeting in Meeting.objects.all():
         gen_attendance_hashes(meeting,Event.MEET,Me)
+      for event in Event.objects.all():
+        gen_attendance_hashes(event,Event.OTH,Me)
       
       # all fine -> done
       return render(r, settings.TEMPLATE_CONTENT['members']['add']['done']['template'], {

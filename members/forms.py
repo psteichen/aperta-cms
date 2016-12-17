@@ -27,7 +27,7 @@ class MemberForm(ModelForm):
     fields = ( 'first_name', 'last_name', 'email', 'start_date', 'status', ) 
     widgets = {
       'email'		: TextInput(attrs={'type': 'email', }),
-      'start_date'	: TextInput(attrs={'type': 'date', }),
+      'start_date'	: TextInput(attrs={'type': 'date', 'id': 'dpicker',}),
     }
 
 
