@@ -2,7 +2,7 @@ aperta-cms
 ==========
 
 CMS stands for Club Management System: 
-A web application to manage a service club (members, meetings, events, activities, and website content)
+A web application to manage a service club (members, meetings, events & treasury)
 
 requirements
 ============
