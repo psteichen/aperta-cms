@@ -195,7 +195,7 @@ TEMPLATE_CONTENT = {
     'js' : {
         'jq'      	: '//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js',
         'bt'       	: '//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js',
-        'fontawesome'   : '//use.fontawesome.com/42b7f0ba56.js',
+        'fontawesome'   : '//use.fontawesome.com/c8a990aa54.js',
         'momentjs'      : '//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment-with-locales.min.js',
         'dtpicker'      : '//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js',
     },

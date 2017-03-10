@@ -28,7 +28,7 @@ class MeetingTable(Table):
     return '{} / {}'.format(Meeting_Attendance.objects.filter(meeting=record,present=True).count(),Meeting_Attendance.objects.filter(meeting=record,present=False).count())
 
   def render_details(self, record):
-    link = '<center><a class="btn btn-info btn-sm" href="/meetings/list/{}/"><span class="glyphicon glyphicon-list"></span></a></center>'.format(escape(record.num))
+    link = '<center><a class="btn btn-info btn-sm" href="/meetings/list/{}/"><i class="fa fa-list"></i></a></center>'.format(escape(record.num))
     return mark_safe(link)
 
   class Meta:
@@ -52,7 +52,7 @@ class MgmtMeetingTable(Table):
     return '{} / {}'.format(Meeting_Attendance.objects.filter(meeting=record,present=True).count(),Meeting_Attendance.objects.filter(meeting=record,present=False).count())
 
   def render_details(self, record):
-    link = '<center><a class="btn btn-info btn-sm" href="/meetings/list/{}/"><span class="glyphicon glyphicon-list"></span></a></center>'.format(escape(record.num))
+    link = '<center><a class="btn btn-info btn-sm" href="/meetings/list/{}/"><i class="fa fa-list"></i></a></center>'.format(escape(record.num))
     return mark_safe(link)
 
   def render_send(self, record):
@@ -62,21 +62,21 @@ class MgmtMeetingTable(Table):
       sent = I.sent
     except: pass
     if sent: #already sent, resend?
-      link = '<center><a class="btn btn-success btn-sm" href="/meetings/send/{}/" title="Renvoyer"><span class="glyphicon glyphicon-envelope"></span></a></center>'.format(escape(record.num))
+      link = '<center><a class="btn btn-success btn-sm" href="/meetings/send/{}/" title="Renvoyer"><i class="fa fa-envelope"></i></a></center>'.format(escape(record.num))
     else: #not yet sent
-      link = '<center><a class="btn btn-danger btn-sm" href="/meetings/send/{}/" title="Envoyer"><span class="glyphicon glyphicon-envelope"></span></a></center>'.format(escape(record.num))
+      link = '<center><a class="btn btn-danger btn-sm" href="/meetings/send/{}/" title="Envoyer"><i class="fa fa-envelope"></i></a></center>'.format(escape(record.num))
 
     return mark_safe(link)
 
   def render_modify(self, record):
-    link = '<center><a class="btn btn-danger btn-sm" href="/meetings/modify/{}/"><span class="glyphicon glyphicon-pencil"></span></a></center>'.format(escape(record.num))
+    link = '<center><a class="btn btn-danger btn-sm" href="/meetings/modify/{}/"><i class="fa fa-pencil"></i></a></center>'.format(escape(record.num))
     return mark_safe(link)
 
   def render_report(self, record):
     if record.report: #report exists, resubmit?
-      link = '<center><a class="btn btn-success btn-sm" href="/meetings/report/{}/" title="Resoumettre"><span class="glyphicon glyphicon-file"></span></a></center>'.format(escape(record.num))
+      link = '<center><a class="btn btn-success btn-sm" href="/meetings/report/{}/" title="Resoumettre"><i class="fa fa-file"></i></a></center>'.format(escape(record.num))
     else: #submit report
-      link = '<center><a class="btn btn-danger btn-sm" href="/meetings/report/{}/" title="Soumettre"><span class="glyphicon glyphicon-file"></span></a></center>'.format(escape(record.num))
+      link = '<center><a class="btn btn-danger btn-sm" href="/meetings/report/{}/" title="Soumettre"><i class="fa fa-file"></i></a></center>'.format(escape(record.num))
     return mark_safe(link)
 
   class Meta:

@@ -86,7 +86,7 @@ class MgmtMemberTable(Table):
     return '{} / {}'.format(MA.filter(present=True).count(),MA.filter(present=False).count())
 
   def render_modify(self, record):
-    link = '<a class="btn btn-danger btn-sm" href="/members/modify/{}/"><span class="glyphicon glyphicon-pencil"></span></a>'.format(escape(record.pk))
+    link = '<a class="btn btn-danger btn-sm" href="/members/modify/{}/"><i class="fa fa-pencil"></i></a>'.format(escape(record.pk))
     return mark_safe(link)
 
 
