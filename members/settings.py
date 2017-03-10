@@ -9,12 +9,6 @@ ACTIONS = {
       'url'           	: '/members/add/',
       'has_perms'	: 'cms.BOARD',
     },
-    { 
-      'label'         	: u'Gestion des Rôles', 
-      'icon'     	: 'user',
-      'url'           	: '/members/role/', 
-      'has_perms'	: 'cms.BOARD',
-    },
   ),
   'profile' : (
     {

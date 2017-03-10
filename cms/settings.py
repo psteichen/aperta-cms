@@ -176,7 +176,7 @@ Le comité APERTA
 TEMPLATE_CONTENT = {
   #basic/generic content for all templates/views:
   'meta' : {
-    'author'            : 'Pascal Steichen - pst@aperta.lu',
+    'author'            : 'Pascal Steichen - pst@libre.lu',
     'copyright'         : 'FIFTY-ONE Luxembourg APERTA a.s.b.l.',
     'title'             : 'Club Management System',
     'logo' : {
@@ -286,13 +286,13 @@ ACTIONS = (
         'url'          	: '/locations/', 
         'has_perms'    	: 'cms.MEMBER',
       },
-      {         
-	'label'		: 'Site web', 
-	'icon'		: 'cloud',
-	'desc'		: 'Gestion et mise-à-jour du contenu du site web public.',
-	'url'		: '/web/',
-	'has_perms'	: 'cms.COMM',
-      },
+#      {         
+#	'label'		: 'Site web', 
+#	'icon'		: 'cloud',
+#	'desc'		: 'Gestion et mise-à-jour du contenu du site web public.',
+#	'url'		: '/web/',
+#	'has_perms'	: 'cms.COMM',
+#      },
     ),
   },
 )

@@ -180,7 +180,6 @@ class ModifyMemberWizard(SessionWizardView):
 				'title': title,
                  })
 
-
 # role_add #
 ############
 @permission_required('cms.BOARD')

@@ -94,4 +94,3 @@ class MgmtMemberTable(Table):
     model = Member
     fields = ( 'first_name', 'last_name', 'email', 'start_date', 'end_date', 'status', 'role', 'meetings', )
     attrs = {"class": "table table-striped"}
-

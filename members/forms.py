@@ -14,8 +14,8 @@ class RoleForm(ModelForm):
     model = Role
     fields = ( 'title', 'desc', 'start_date', 'end_date', ) 
     widgets = {
-      'start_date'	: TextInput(attrs={'type': 'date', }),
-      'end_date'	: TextInput(attrs={'type': 'date', }),
+      'start_date'	: TextInput(attrs={'type': 'date', 'id': 'dpicker',}),
+      'end_date'	: TextInput(attrs={'type': 'date', 'id': 'dpicker2',}),
     }
 
 
@@ -45,8 +45,8 @@ class ModifyRoleForm(RoleForm):
     model = Role
     fields = ( 'title', 'desc', 'start_date', 'end_date', ) 
     widgets = {
-      'start_date'	: TextInput(attrs={'type': 'date', }),
-      'end_date'	: TextInput(attrs={'type': 'date', }),
+      'start_date'	: TextInput(attrs={'type': 'date', 'id': 'dpicker',}),
+      'end_date'	: TextInput(attrs={'type': 'date', 'id': 'dpicker2',}),
     }
 
 
