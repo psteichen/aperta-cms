@@ -1,7 +1,17 @@
 #coding=utf-8
 
-from django.db.models import Model, EmailField, DateField, IntegerField, CharField, ForeignKey
+from django.db.models import Model, EmailField, DateField, IntegerField, CharField, ForeignKey, ImageField
 from django.contrib.auth.models import User
+
+from cms.functions import rmf
+
+
+def rename_photo(i, f):
+  name = unicode(i.first_name) + '_' + unicode.upper(i.last_name)
+  fn = rmf('members', f, name)
+
+  from os import sep
+  return fn['name'] + fn['ext']
 
 class Member(Model):
   ACT = 0
@@ -15,6 +25,7 @@ class Member(Model):
     (STB, 'inactif (standby)'),
   )
 
+  photo		= ImageField(verbose_name=u'Photo',upload_to=rename_photo,blank=True,null=True)
   first_name    = CharField(verbose_name=u'Prénom',max_length=100)
   last_name	= CharField(verbose_name=u'Nom',max_length=100)
   email		= EmailField()

@@ -24,7 +24,7 @@ class MemberForm(ModelForm):
 
   class Meta:
     model = Member
-    fields = ( 'first_name', 'last_name', 'email', 'start_date', 'status', ) 
+    fields = ( 'photo', 'first_name', 'last_name', 'email', 'start_date', 'status', ) 
     widgets = {
       'email'		: TextInput(attrs={'type': 'email', }),
       'start_date'	: TextInput(attrs={'type': 'date', 'id': 'dpicker',}),

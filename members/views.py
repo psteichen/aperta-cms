@@ -4,6 +4,7 @@ from django.contrib.formtools.wizard.views import SessionWizardView
 from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
+from django.core.files.storage import FileSystemStorage
 
 from django_tables2  import RequestConfig
 
@@ -98,6 +99,8 @@ def show_add_role_form(wizard):
 
 #modify formwizard
 class ModifyMemberWizard(SessionWizardView):
+
+  file_storage = FileSystemStorage()
 
   def get_template_names(self):
     return 'wizard.html'

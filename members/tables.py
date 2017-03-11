@@ -2,6 +2,7 @@
 
 from datetime import date
 
+from django.conf import settings
 from django_tables2.tables import Table
 from django_tables2 import Column
 
@@ -36,7 +37,7 @@ class MemberTable(Table):
 
   class Meta:
     model = Member
-    fields = ( 'first_name', 'last_name', 'email', 'start_date', 'end_date', 'status', 'role', 'meetings', )
+    fields = ( 'photo', 'first_name', 'last_name', 'email', 'start_date', 'end_date', 'status', 'role', 'meetings', )
     attrs = {"class": "table table-striped"}
 
 #management table
@@ -61,6 +62,10 @@ class MgmtMemberTable(Table):
       cl = 'danger'
 
     return cl
+
+  def render_photo(self, value):
+    picture = '<div class="col-xs-3"><a href="{pic}" class="thumbnail" taget="_blank"><img src="{pic}" alt="Photo" class="img-responsive img-circle"></a></div>'.format(pic=settings.MEDIA_URL+unicode(value))
+    return mark_safe(picture)
 
   def render_last_name(self, value):
     return unicode.upper(value)
@@ -92,5 +97,5 @@ class MgmtMemberTable(Table):
 
   class Meta:
     model = Member
-    fields = ( 'first_name', 'last_name', 'email', 'start_date', 'end_date', 'status', 'role', 'meetings', )
+    fields = ( 'photo', 'first_name', 'last_name', 'email', 'start_date', 'end_date', 'status', 'role', 'meetings', )
     attrs = {"class": "table table-striped"}
