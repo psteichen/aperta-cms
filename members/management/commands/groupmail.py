@@ -21,7 +21,7 @@ class Command(BaseCommand):
   def handle(self, *args, **options):
     query = None
     message = None
-    subject = '[aperta groupmailer ' + str.upper(str(options['group'])) + '] '
+    subject = '[FIFTY-ONE APERTA - ' + str.upper(str(options['group'])) + '] '
     emails = ()
 
     # get members based on requested "group"
