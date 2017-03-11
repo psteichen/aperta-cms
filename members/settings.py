@@ -12,6 +12,12 @@ ACTIONS = {
   ),
   'profile' : (
     {
+      'label'		: u'Modifier',
+      'icon'     	: 'pencil',
+      'url'           	: '/members/modify/{}/',
+      'has_perms'	: 'cms.MEMBER',
+    },
+    {
       'label'		: u'Back-office',
       'icon'     	: 'king',
       'url'           	: '/admin/',
@@ -64,6 +70,7 @@ MEMBERS_TMPL_CONTENT = {
     'title'     	: u'Profile utilisateur',
     'overview' : {
       'template'	: 'overview_member.html',
+      'photo'		: u'Photo',
       'name'		: u'Nom',
       'username'	: u'Login',
       'email'		: u'E-mail',

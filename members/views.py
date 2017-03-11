@@ -232,13 +232,14 @@ def profile(r, username):
                    	('user profile','/members/profile/'),
                ) )
 
-  member = Member.objects.get(user=r.user)
-  title = settings.TEMPLATE_CONTENT['members']['profile']['title'] % { 'name' : gen_member_fullname(member), }
-  message = gen_member_overview(settings.TEMPLATE_CONTENT['members']['profile']['overview']['template'],member)
+  member 	= Member.objects.get(user=r.user)
+  title 	= settings.TEMPLATE_CONTENT['members']['profile']['title'] % { 'name' : gen_member_fullname(member), }
+  actions 	= settings.TEMPLATE_CONTENT['members']['profile']['actions']
+  message 	= gen_member_overview(settings.TEMPLATE_CONTENT['members']['profile']['overview']['template'],member)
 
   return render(r, settings.TEMPLATE_CONTENT['members']['profile']['template'], {
-                   'title': title,
-                   'actions':settings.TEMPLATE_CONTENT['members']['profile']['actions'],
-                   'message': message,
+                   'title'	: title,
+                   'actions'	: actions,
+                   'message'	: message,
                 })
 
