@@ -21,11 +21,11 @@ class Command(BaseCommand):
   def handle(self, *args, **options):
     query = None
     message = None
-    subject = '[aperta groupmailer ' + str.upper(options['group']) + '] '
+    subject = '[aperta groupmailer ' + str.upper(str(options['group'])) + '] '
     emails = ()
 
     # get members based on requested "group"
-    self.stdout.write('''Groupmail from <'''+options['from']+'''> to group: <'''+options['group']+'''>''')
+    self.stdout.write('''Groupmail from <'''+str(options['from'])+'''> to group: <'''+str(options['group'])+'''>''')
 
     if options['group'] == 'members':
       query = Member.objects.filter(Q(status=Member.ACT) | Q(status=Member.HON) | Q(status=Member.WBE))
@@ -36,13 +36,13 @@ class Command(BaseCommand):
       query = None
 
     # get email parts from raw source
-    raw_message = email.message_from_string(options['message'])
+    raw_message = email.message_from_string(str(options['message']))
     if raw_message.is_multipart():
       for payload in raw_message.get_payload():
         message = payload.get_payload()
     else:
         message = raw_message.get_payload()
-    subject += raw_message['subject']
+    subject += str(raw_message['subject'])
 
     # send(forward) mail to people of selected group
     if query is not None:
@@ -59,6 +59,5 @@ class Command(BaseCommand):
 
     send_mass_mail(emails)
     self.stdout.write('Emails sent!')
-
 
 

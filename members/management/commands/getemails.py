@@ -10,6 +10,7 @@ class Command(BaseCommand):
 
   def handle(self, *args, **options):
     out=''
+    query = None
 
     # get members based on requested "group"
     for ty in args:
