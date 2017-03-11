@@ -63,8 +63,25 @@ class MgmtMemberTable(Table):
 
     return cl
 
-  def render_photo(self, value):
-    picture = '<div class="col-xs-3"><a href="{pic}" class="thumbnail" taget="_blank"><img src="{pic}" alt="Photo" class="img-responsive img-circle"></a></div>'.format(pic=settings.MEDIA_URL+unicode(value))
+  def render_photo(self, value, record):
+    picture = '''<i class="fa-stack fa-3x"><a href="#{id}Modal" data-toggle="modal"><img src="{pic}" alt="Photo" class="img-responsive img-circle" /></a></i>
+
+<!-- Modal -->
+<div class="modal fade" id="{id}Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">{name}</h4>
+      </div> 
+      <div class="modal-body">
+        <center><img src="{pic}" alt="Photo" class="img-responsive img-rounded" /></center>
+      </div>
+    </div>
+  </div>
+</div>
+'''.format(id=record.pk,name=unicode(record),pic=settings.MEDIA_URL+unicode(value))
+
     return mark_safe(picture)
 
   def render_last_name(self, value):
