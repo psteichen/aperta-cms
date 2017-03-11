@@ -18,6 +18,13 @@ class MemberTable(Table):
   role		= Column(verbose_name=u'Rôle',empty_values=())
   meetings	= Column(verbose_name=u'Réunions statutaires<br/>(présent / excusé)',empty_values=())
 
+  def __init__(self, *args, **kwargs):
+        if kwargs.pop("username", False):
+            for column in self.base_columns.values():
+                if isinstance(column, tables.Column):
+                    column.args.insert(0, "username")
+        super(Table, self).__init__(*args, **kwargs)
+
   def render_photo(self, value, record):
     picture = '''<i class="fa-stack fa-3x"><a href="#{id}Modal" data-toggle="modal"><img src="{pic}" alt="Photo" class="img-responsive img-circle" /></a></i>
 
@@ -54,7 +61,12 @@ class MemberTable(Table):
 
   def render_meetings(self, record):
     MA = Meeting_Attendance.objects.filter(member=record)
-    return '{} / {}'.format(MA.filter(present=True).count(),MA.filter(present=False).count())
+    ma = ' {} / {} '.format(MA.filter(present=True).count(),MA.filter(present=False).count())
+    mod=''
+#    if self.request.user.username == record.user.username: mod = '<a class="btn btn-danger btn-sm pull-right" href="/members/profile/modify/{}/"><i class="fa fa-pencil"></i></a>'.format(record.user.username)
+#NOT WORKING grrr
+    return mark_safe(ma + mod)
+
 
   class Meta:
     model = Member

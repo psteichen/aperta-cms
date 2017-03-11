@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 
 from .forms import ListMembersForm, ModifyMemberForm, ModifyRoleForm, RoleForm
 from .views import ModifyMemberWizard, show_mod_role_form, show_add_role_form
-from .views import list, profile, add
+from .views import list, profile, mod_profile, add
 from .views import role_add
 
 # modify wizard #
@@ -30,5 +30,6 @@ urlpatterns = patterns('',
   url(r'^role/add/', role_add, name='role_add'),
   url(r'^modify/(?P<mem_id>.+?)/$', modify_member_wrapper, name='modify'),
 
-  url(r'^profile/(?P<username>.+?)', profile, name='profile'),
+  url(r'^profile/modify/(?P<username>.+?)/$', mod_profile, name='mod_profile'),
+  url(r'^profile/(?P<username>.+?)/$', profile, name='profile'),
 )

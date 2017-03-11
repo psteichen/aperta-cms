@@ -14,12 +14,14 @@ ACTIONS = {
     {
       'label'		: u'Modifier',
       'icon'     	: 'pencil',
-      'url'           	: '/members/modify/{}/',
+      'grade'     	: 'info',
+      'url'           	: '/members/profile/modify/{}/',
       'has_perms'	: 'cms.MEMBER',
     },
     {
       'label'		: u'Back-office',
       'icon'     	: 'king',
+      'grade'     	: 'warning',
       'url'           	: '/admin/',
       'has_perms'	: 'superuser',
     },
@@ -75,6 +77,17 @@ MEMBERS_TMPL_CONTENT = {
       'username'	: u'Login',
       'email'		: u'E-mail',
       'role'		: u'Rôle',
+    },
+    'modify': {
+      'template'	: 'form.html',
+      'title'     	: u'Modifier votre profile membre',
+      'desc'     	: u'Modifier votre profile membre',
+      'submit'   	: u'Modifier',
+      'done': {
+        'template'	: 'done.html',
+        'title'     	: u'Votre profile membre a été ajusté.',
+        'message'     	: u'Détails : ',
+      },
     },
   },
   'role' : {

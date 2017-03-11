@@ -28,7 +28,7 @@ def list(request):
                          ('members','/members/'),
                      ) )
 
-  table = MemberTable(Member.objects.all().order_by('status', 'last_name'))
+  table = MemberTable(Member.objects.all().order_by('status', 'last_name'),request=request)
   if request.user.has_perm('cms.BOARD'):
     table = MgmtMemberTable(Member.objects.all().order_by('status', 'last_name'))
   RequestConfig(request, paginate={"per_page": 75}).configure(table)
@@ -36,6 +36,7 @@ def list(request):
   return render(request, settings.TEMPLATE_CONTENT['members']['template'], {
                         'title': settings.TEMPLATE_CONTENT['members']['title'],
                         'actions': settings.TEMPLATE_CONTENT['members']['actions'],
+			'username': request.user.username,
                         'table': table,
                         })
 
@@ -229,17 +230,63 @@ def profile(r, username):
   r.breadcrumbs( ( 
 			('home','/'),
                    	('members','/members/'),
-                   	('user profile','/members/profile/'),
+                   	('user profile','/members/profile/'+username),
                ) )
 
   member 	= Member.objects.get(user=r.user)
   title 	= settings.TEMPLATE_CONTENT['members']['profile']['title'] % { 'name' : gen_member_fullname(member), }
   actions 	= settings.TEMPLATE_CONTENT['members']['profile']['actions']
+  for a in actions:
+      a['url'] = a['url'].format(username)
+
   message 	= gen_member_overview(settings.TEMPLATE_CONTENT['members']['profile']['overview']['template'],member)
 
   return render(r, settings.TEMPLATE_CONTENT['members']['profile']['template'], {
                    'title'	: title,
                    'actions'	: actions,
                    'message'	: message,
+                })
+
+
+# modify profile #
+##################
+@login_required
+def mod_profile(r, username):
+  r.breadcrumbs( ( 
+			('home','/'),
+                   	('members','/members/'),
+                   	('user profile','/members/profile/'+username),
+               ) )
+
+  M = Member.objects.get(user=r.user)
+
+  if r.POST:
+    mf = MemberForm(r.POST,r.FILES)
+    if mf.is_valid():
+      Me = mf.save(commit=False)
+      Me.save()
+
+      # all fine -> done
+      return render(r, settings.TEMPLATE_CONTENT['members']['profile']['modify']['done']['template'], {
+                'title': settings.TEMPLATE_CONTENT['members']['profile']['modify']['done']['title'], 
+                'message': '',
+                })
+
+    # form not valid -> error
+    else:
+      return render(r, settings.TEMPLATE_CONTENT['members']['profile']['modify']['done']['template'], {
+                'title': settings.TEMPLATE_CONTENT['members']['profile']['modify']['done']['title'], 
+                'error_message': settings.TEMPLATE_CONTENT['error']['gen'] + ' ; '.join([e for e in mf.errors]),
+                })
+  # no post yet -> empty form
+  else:
+    form = MemberForm()
+    form.initial = gen_member_initial(M)
+    form.instance = M
+    return render(r, settings.TEMPLATE_CONTENT['members']['profile']['modify']['template'], {
+                'title': settings.TEMPLATE_CONTENT['members']['profile']['modify']['title'],
+                'desc': settings.TEMPLATE_CONTENT['members']['profile']['modify']['desc'],
+                'submit': settings.TEMPLATE_CONTENT['members']['profile']['modify']['submit'],
+                'form': form,
                 })
 
