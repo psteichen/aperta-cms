@@ -53,11 +53,19 @@ def gen_role_initial(r):
 def gen_member_overview(template,member):
   content = { 'overview' : settings.TEMPLATE_CONTENT['members']['profile']['overview'] }
 
-  content['name'] = gen_member_fullname(member)
-  content['username'] = member.user.username
-  content['email'] = member.email
+  content['photo'] 	= settings.MEDIA_URL + member.photo.name
+  content['name'] 	= gen_member_fullname(member)
+  content['username'] 	= member.user.username
+  content['address'] 	= member.address
+  content['phone'] 	= member.phone
+  content['mobile'] 	= member.mobile
+  content['email'] 	= member.email
   try:
-    content['role'] = Role.objects.get(member=member).title
+    role = Role.objects.get(member=member)
+    if role.end_date:
+      content['role'] = unicode(role.title) + ' (' + unicode(role.start_date) + ' - ' + unicode(role.end_date) +')'
+    else:
+      content['role'] = unicode(role.title) + ' (depuis ' + unicode(role.start_date) + ')'
   except: pass
 
   return render_to_string(template,content)

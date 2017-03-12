@@ -24,10 +24,25 @@ class Member(Model):
     (WBE, 'aspirant (wouldbe)'),
     (STB, 'inactif (standby)'),
   )
+  LU = 10
+  BE = 11
+  FR = 12
+  DE = 13
+  PREFIXES = (
+    (LU, '+352'),
+    (BE, '+32'),
+    (DE, '+49'),
+    (FR, '+33'),
+  )
+
 
   photo		= ImageField(verbose_name=u'Photo',upload_to=rename_photo,blank=True,null=True)
   first_name    = CharField(verbose_name=u'Prénom',max_length=100)
   last_name	= CharField(verbose_name=u'Nom',max_length=100)
+  address	= CharField(verbose_name=u'Adresse',max_length=250)
+  prefix      	= IntegerField(verbose_name=u'Préfix',choices=PREFIXES,default=LU) 
+  phone		= IntegerField(verbose_name=u'Tél. fixe') 
+  mobile	= IntegerField(verbose_name=u'Tél. mobile') 
   email		= EmailField()
   start_date    = DateField(verbose_name=u'Date de début')
   end_date      = DateField(verbose_name=u'Date de fin',blank=True,null=True) 

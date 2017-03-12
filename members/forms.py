@@ -24,8 +24,10 @@ class MemberForm(ModelForm):
 
   class Meta:
     model = Member
-    fields = ( 'photo', 'first_name', 'last_name', 'email', 'start_date', 'status', ) 
+    fields = ( 'photo', 'first_name', 'last_name', 'address', 'prefix', 'phone', 'mobile', 'email', 'start_date', 'status', ) 
     widgets = {
+      'address'		: Textarea(attrs={'cols': 20, 'rows': 5, }),
+      'phone'		: TextInput(attrs={'type': 'tel', }),
       'email'		: TextInput(attrs={'type': 'email', }),
       'start_date'	: TextInput(attrs={'type': 'date', 'id': 'dpicker',}),
     }

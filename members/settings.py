@@ -74,8 +74,11 @@ MEMBERS_TMPL_CONTENT = {
       'template'	: 'overview_member.html',
       'photo'		: u'Photo',
       'name'		: u'Nom',
+      'address'		: u'Address',
       'username'	: u'Login',
+      'mobile'		: u'Tél. mobile',
       'email'		: u'E-mail',
+      'phone'		: u'Tél. fixe',
       'role'		: u'Rôle',
     },
     'modify': {

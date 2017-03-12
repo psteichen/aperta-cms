@@ -70,7 +70,7 @@ class MemberTable(Table):
 
   class Meta:
     model = Member
-    fields = ( 'photo', 'first_name', 'last_name', 'email', 'start_date', 'end_date', 'status', 'role', 'meetings', )
+    fields = ( 'photo', 'first_name', 'last_name', 'address', 'email', 'mobile', 'status', 'role', 'meetings', )
     attrs = {"class": "table table-striped"}
 
 #management table
