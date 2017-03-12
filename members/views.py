@@ -28,7 +28,7 @@ def list(request):
                          ('members','/members/'),
                      ) )
 
-  table = MemberTable(Member.objects.all().order_by('status', 'last_name'),request=request)
+  table = MemberTable(Member.objects.all().order_by('status', 'last_name'),request,username=request.user.username)
   if request.user.has_perm('cms.BOARD'):
     table = MgmtMemberTable(Member.objects.all().order_by('status', 'last_name'))
   RequestConfig(request, paginate={"per_page": 75}).configure(table)
@@ -261,7 +261,7 @@ def mod_profile(r, username):
   M = Member.objects.get(user=r.user)
 
   if r.POST:
-    mf = MemberForm(r.POST,r.FILES)
+    mf = MemberForm(r.POST,r.FILES,instance=M)
     if mf.is_valid():
       Me = mf.save(commit=False)
       Me.save()
