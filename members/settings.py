@@ -9,6 +9,13 @@ ACTIONS = {
       'url'           	: '/members/add/',
       'has_perms'	: 'cms.BOARD',
     },
+    {
+      'label'		: u'Importer des Membres',
+      'icon'     	: 'upload',
+      'grade'     	: 'warning',
+      'url'           	: '/upload/members/',
+      'has_perms'	: 'cms.BOARD',
+    },
   ),
   'profile' : (
     {

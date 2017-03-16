@@ -42,7 +42,7 @@ INSTALLED_APPS = (
   'meetings',
   'events',
   'finance',
-  'web',
+  'upload',
 )
 
 MIDDLEWARE_CLASSES = (
