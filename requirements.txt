@@ -1,5 +1,4 @@
-django>=1.7
-pillow
+django>=1.10
 django-tables2
 django-breadcrumbs
 django-bootstrap3
