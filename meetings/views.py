@@ -79,39 +79,6 @@ def add(r):
       else:
         I = Invitation(meeting=Mt,message=mf.cleaned_data['additional_message'])
       I.save()
-      send = mf.cleaned_data['send']
-      if send:
-        I.sent = timezone.now()
-
-      email_error = { 'ok': True, 'who': [], }
-      for m in get_active_members():
-   
-        gen_attendance_hashes(Mt,Event.MEET,m)
-        invitation_message = gen_invitation_message(e_template,Mt,Event.MEET,m) + mf.cleaned_data['additional_message']
-        if m == user_member: 
-          done_message = invitation_message
-
-        message_content = {
-          'FULLNAME'    : gen_member_fullname(m),
-          'MESSAGE'     : invitation_message,
-        }
-        #send email
-        if send:
-          if I.attachement:
-            ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,e_subject,message_content,False,settings.MEDIA_ROOT + unicode(I.attachement))
-          else:
-            ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,e_subject,message_content)
-          if not ok:
-            email_error['ok']=False
-            email_error['who'].append(m.email)
-
-          # error in email -> show error messages
-          if not email_error['ok']:
-            I.save()
-            return render(r, settings.TEMPLATE_CONTENT['meetings']['add']['done']['template'], {
-                		'title': settings.TEMPLATE_CONTENT['meetings']['add']['done']['title'], 
-                		'error_message': settings.TEMPLATE_CONTENT['error']['email'] + ' ; '.join([e for e in email_error['who']]),
-			 })
 
       # all fine -> done
       I.save()
