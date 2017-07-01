@@ -25,6 +25,10 @@ def gen_member_initial(m):
   initial_data['first_name'] = m.first_name
   initial_data['last_name'] = m.last_name
   initial_data['email'] = m.email
+  initial_data['address'] = m.address
+  initial_data['prefix'] = m.prefix
+  initial_data['phone'] = m.phone
+  initial_data['mobile'] = m.mobile
   initial_data['start_date'] = m.start_date
   initial_data['end_date'] = m.end_date
   initial_data['status'] = m.status
