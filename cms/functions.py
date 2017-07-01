@@ -1,13 +1,15 @@
 #
 # coding=utf-8
 #
-import datetime
 from os import sep
 from os.path import splitext
 from unicodedata import normalize
 
+from datetime import date, datetime, time, timedelta
+
 from django.conf import settings
 from django.template.loader import render_to_string
+from django.utils import timezone
 
 ###############################
 # GLOBAL SUPPORTING FUNCTIONS #
@@ -60,8 +62,9 @@ def genIcal(event):
   #get details from event instance
   title         = event.title
   desc          = event.title
-  start         = datetime.combine(event.when, event.start)
-  end           = datetime.combine(event.when, event.end)
+  duration 	= 3
+  start         = datetime.combine(event.when, event.time)
+  end           = datetime.combine(event.when, event.time) + timedelta(hours=duration)
   location      = event.location
 
   # Timezone to use for our dates - change as needed
@@ -91,7 +94,7 @@ def genIcal(event):
   alarm = Alarm()
   alarm.add("action", "DISPLAY")
   alarm.add('description', "Reminder")
-  alarm.add("trigger", dt.timedelta(hours=-reminderHours))
+  alarm.add("trigger", timedelta(hours=-reminderHours))
   # The only way to convince Outlook to do it correctly
   alarm.add("TRIGGER;RELATED=START", "-PT{0}H".format(reminderHours))
   vevent.add_component(alarm)
