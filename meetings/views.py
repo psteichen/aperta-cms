@@ -11,7 +11,7 @@ from django.utils import timezone
 
 from django_tables2  import RequestConfig
 
-from cms.functions import notify_by_email, show_form, visualiseDateTime
+from cms.functions import notify_by_email, genIcal, show_form, visualiseDateTime
 
 from events.models import Event
 from members.models import Member
@@ -169,11 +169,15 @@ def send(r, meeting_num):
         'FULLNAME'    : gen_member_fullname(m),
         'MESSAGE'     : invitation_message + I.message,
     }
+
+    #generate ical invite
+    invite = genIcal(Mt)
+
     #send email
     try: #with attachement
-      ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,subject,message_content,False,settings.MEDIA_ROOT + unicode(I.attachement))
+      ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,subject,message_content,False,[invite,settings.MEDIA_ROOT + unicode(I.attachement)])
     except: #no attachement
-      ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,subject,message_content)
+      ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,subject,message_content,False,invite)
      
     if not ok: 
       email_error['ok']=False
