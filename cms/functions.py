@@ -136,9 +136,9 @@ def visualiseDateTime(dtIn):
   import locale
   locale.setlocale(locale.LC_ALL, settings.LC_ALL)
 
-  if type(dtIn) is datetime.date: return dtIn.strftime('%a le ') + dtIn.strftime('%d %b %Y').lstrip('0')
-  if type(dtIn) is datetime.time: return dtIn.strftime('%Hh%M').lstrip('0')
-  if type(dtIn) is datetime.datetime: return dtIn.strftime('%a le ') + dtIn.strftime('%d %b %Y').lstrip('0') + u' à ' + dtIn.strftime('%Hh%M').lstrip('0')
+  if type(dtIn) is date: return dtIn.strftime('%a le ') + dtIn.strftime('%d %b %Y').lstrip('0')
+  if type(dtIn) is time: return dtIn.strftime('%Hh%M').lstrip('0')
+  if type(dtIn) is datetime: return dtIn.strftime('%a le ') + dtIn.strftime('%d %b %Y').lstrip('0') + u' à ' + dtIn.strftime('%Hh%M').lstrip('0')
 
 
 # rename uploaded files
