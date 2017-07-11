@@ -1,35 +1,22 @@
 from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import login_required, permission_required
 
-from .forms import ListMembersForm, ModifyMemberForm, ModifyRoleForm, RoleForm
-from .views import ModifyMemberWizard, show_mod_role_form, show_add_role_form
-from .views import list, profile, mod_profile, add
-from .views import role_add
+from .views import list, add, modify
+from .views import roles, r_add, r_modify, r_type
+from .views import profile, p_modify
 
-# modify wizard #
-#forms
-modify_member_forms = [
-        ('member'       , ModifyMemberForm),
-        ('mod_role'     , ModifyRoleForm),
-        ('add_role'     , RoleForm),
-]
-#condition dict
-modify_member_condition_dict = {
-	'mod_role'	: show_mod_role_form,
-	'add_role'	: show_add_role_form,
-}
-
-#view
-modify_member_wizard = ModifyMemberWizard.as_view(modify_member_forms, condition_dict=modify_member_condition_dict)
-#wrapper with specific permissions
-modify_member_wrapper = permission_required('cms.BOARD',raise_exception=True)(modify_member_wizard)
 
 urlpatterns = patterns('',
   url(r'^$', list, name='list'),
   url(r'^add/', add, name='add'),
-  url(r'^role/add/', role_add, name='role_add'),
-  url(r'^modify/(?P<mem_id>.+?)/$', modify_member_wrapper, name='modify'),
+#  url(r'^modify/(?P<mem_id>.+?)/$', modify_member_wrapper, name='modify'),
+  url(r'^modify/(?P<mem_id>.+?)/$', modify, name='modify'),
 
-  url(r'^profile/modify/(?P<username>.+?)/$', mod_profile, name='mod_profile'),
+  url(r'^roles/$', roles, name='roles'),
+  url(r'^roles/add/$', r_add, name='roles_add'),
+  url(r'^roles/modify/(?P<role_id>.+?)/$', r_modify, name='roles_modify'),
+  url(r'^roles/type/$', r_type, name='roles_type'),
+
+  url(r'^profile/modify/(?P<username>.+?)/$', p_modify, name='profile_modify'),
   url(r'^profile/(?P<username>.+?)/$', profile, name='profile'),
 )

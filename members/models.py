@@ -52,16 +52,28 @@ class Member(Model):
   def __unicode__(self):
     return unicode(self.first_name) + ' ' + unicode.upper(self.last_name)
 
-class Role(Model):
+class RoleType(Model):
+  A = 0
+  B = 1
+  TYPES = (
+    (A, u'comité'),
+    (B, u'commission'),
+  )
+
   title		= CharField(verbose_name=u'Titre',max_length=100)
   desc		= CharField(verbose_name=u'Description',max_length=500,blank=True,null=True)
-  member      	= ForeignKey(Member) 
-  start_date    = DateField(verbose_name=u'Date de début',)
-  end_date      = DateField(verbose_name=u'Date de fin',blank=True,null=True) 
+  type      	= IntegerField(verbose_name=u'Type',choices=TYPES,default=A) 
 
   def __unicode__(self):
-    return self.title + ' : ' + unicode(self.member)
+    return self.title + u' ('+unicode(self.TYPES[self.type][1])+u')'
+
+class Role(Model):
+  member      	= ForeignKey(Member)
+  type      	= ForeignKey(RoleType)
+  year    	= CharField(verbose_name=u'Saison',max_length=25)
+
+  def __unicode__(self):
+    return unicode(self.type) + ' : ' + unicode(self.member)
 
   class Meta:
-    unique_together = ( 'member', 'title', )
-
+    unique_together = ( 'member', 'type', )

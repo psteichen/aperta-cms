@@ -46,11 +46,9 @@ def gen_member_initial(m):
 def gen_role_initial(r):
   initial_data = {}
 
-  initial_data['title'] = r.title
-  initial_data['desc'] = r.desc
+  initial_data['type'] = r.type
+  initial_data['year'] = r.year
   initial_data['member'] = r.member
-  initial_data['start_date'] = r.start_date
-  initial_data['end_date'] = r.end_date
 
   return initial_data
 

@@ -52,11 +52,8 @@ class MemberTable(Table):
   def render_role(self, value, record):
     try:
       role = Role.objects.get(member__id=record.id)
-      if role.end_date:
-        return unicode(role.title) + ' (' + unicode(role.start_date) + ' - ' + unicode(role.end_date) +')'
-      else:
-        return unicode(role.title) + ' (depuis ' + unicode(role.start_date) + ')'
-    except:
+      return unicode(role.type.title) + ' (' + unicode(role.year) + ')'
+    except Role.DoesNotExist:
       return ''
 
   def render_meetings(self, record):
@@ -149,11 +146,8 @@ class MgmtMemberTable(Table):
   def render_role(self, value, record):
     try:
       role = Role.objects.get(member__id=record.id)
-      if role.end_date:
-        return unicode(role.title) + ' (' + unicode(role.start_date) + ' - ' + unicode(role.end_date) +')'
-      else:
-        return unicode(role.title) + ' (depuis ' + unicode(role.start_date) + ')'
-    except:
+      return unicode(role.type.title) + ' (' + unicode(role.year) + ')'
+    except Role.DoesNotExist:
       return ''
 
   def render_meetings(self, record):
@@ -168,4 +162,17 @@ class MgmtMemberTable(Table):
   class Meta:
     model = Member
     fields = ( 'photo', 'first_name', 'last_name', 'address', 'email', 'mobile', 'status', 'role', 'meetings', )
+    attrs = {"class": "table table-striped"}
+
+#roles table
+class RoleTable(Table):
+  modify	= Column(verbose_name=u'Modifier',empty_values=())
+
+  def render_modify(self, record):
+    link = '<a class="btn btn-danger btn-sm" href="/members/roles/modify/{}/"><i class="fa fa-pencil"></i></a>'.format(escape(record.pk))
+    return mark_safe(link)
+
+  class Meta:
+    model = Role
+    fields = ( 'year', 'type', 'member', )
     attrs = {"class": "table table-striped"}

@@ -6,14 +6,38 @@ ACTIONS = {
     {
       'label'		: u'Nouveau Membre',
       'icon'     	: 'plus',
+      'grade'     	: 'danger',
       'url'           	: '/members/add/',
       'has_perms'	: 'cms.BOARD',
     },
     {
       'label'		: u'Importer des Membres',
       'icon'     	: 'upload',
-      'grade'     	: 'warning',
+      'grade'     	: 'danger',
       'url'           	: '/upload/members/',
+      'has_perms'	: 'cms.BOARD',
+    },
+    {
+      'label'		: u'Gestion des Rôles',
+      'icon'     	: 'graduation-cap',
+      'grade'     	: 'warning',
+      'url'     	: '/members/roles/',
+      'has_perms'	: 'cms.BOARD',
+    },
+  ),
+  'roles' : (
+    {
+      'label'		: u'Nouveau Rôle',
+      'icon'     	: 'plus',
+      'grade'     	: 'warning',
+      'url'           	: '/members/roles/add/',
+      'has_perms'	: 'cms.BOARD',
+    },
+   {
+      'label'		: u'Nouveau Rôle-Type',
+      'icon'     	: 'cog',
+      'grade'     	: 'warning',
+      'url'           	: '/members/roles/type/',
       'has_perms'	: 'cms.BOARD',
     },
   ),
@@ -51,26 +75,13 @@ MEMBERS_TMPL_CONTENT = {
     },
   },
   'modify': {
-    'first'             : u'début',
-    'prev'              : u'retour',
-    'overview' : {
-      'title'           : u'Résumé',
-    },
-    'member' : {
-      'title'           : u'Modifier le Member',
-      'next'            : 'enregistrer',
-    },
-    'mod_role' : {
-      'title'           : u'Modifier le Rôle',
-      'next'            : 'enregistrer',
-    },
-    'add_role' : {
-      'title'           : u'Ajouter un rôle',
-      'next'            : 'enregistrer',
-    },
-    'done' : {
-      'template'        : 'done.html',
-      'title'           : 'Member [%s] modified!',
+    'template'		: 'form.html',
+    'title'		: u'Modifier le Membre',
+    'desc'     		: u"Modifier les détails (adresse, tél, email, photo, etc.) d'un.",
+    'submit'   		: u'Enregistrer',
+    'done': {
+      'template'	: 'done.html',
+      'title'           : u'Le membre [{}] a été modifié!',
     },
   },
   'profile': {
@@ -100,16 +111,38 @@ MEMBERS_TMPL_CONTENT = {
       },
     },
   },
-  'role' : {
+  'roles' : {
+    'title'       	: u'Rôles',
+    'template'  	: 'list.html',
+    'actions'     	: ACTIONS['roles'],
     'add': {
       'template'	: 'form.html',
-      'title'     	: u'Ajouter un Rôle',
+      'title'     	: u'Nouveau Rôle',
       'desc'     	: '',
-      'submit'   	: u'Ajouter',
+      'submit'   	: u'Enregistrer',
       'done': {
         'template'	: 'done.html',
-        'title'     	: u'Un nouveau Rôle a été rajouté.',
-        'message'     	: u'Détails : ',
+        'title'     	: u'Le rôle a été créé.',
+      },
+    },
+    'modify': {
+      'template'	: 'form.html',
+      'title'     	: u'Modifié un Rôle',
+      'desc'     	: '',
+      'submit'   	: u'Enregistrer',
+      'done': {
+        'template'	: 'done.html',
+        'title'     	: u'Le rôle a été modifié.',
+      },
+    },
+    'type': {
+      'template'	: 'form.html',
+      'title'     	: u'Nouveau Rôle-Type',
+      'desc'     	: '',
+      'submit'   	: u'Enregistrer',
+      'done': {
+        'template'	: 'done.html',
+        'title'     	: u'Le rôle-type a été créé.',
       },
     },
   },
