@@ -55,9 +55,11 @@ class Member(Model):
 class RoleType(Model):
   A = 0
   B = 1
+  O = 2
   TYPES = (
     (A, u'comité'),
     (B, u'commission'),
+    (O, u'other'),
   )
 
   title		= CharField(verbose_name=u'Titre',max_length=100)

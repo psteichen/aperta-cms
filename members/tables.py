@@ -10,6 +10,8 @@ from django_tables2.utils import A
 from django.utils.safestring import mark_safe
 from django.utils.html import escape
 
+from cms.functions import getSaison
+
 from attendance.models import Meeting_Attendance
 
 from .models import Member, Role
@@ -73,7 +75,7 @@ class MemberTable(Table):
 #management table
 class MgmtMemberTable(Table):
   row_class     = Column(visible=False, empty_values=()) #used to highlight some rows
-  role		= Column(verbose_name=u'Rôle',empty_values=())
+  role		= Column(verbose_name=u'Rôle(s) ['+getSaison()+'] ',empty_values=())
   meetings	= Column(verbose_name=u'Réunions statutaires<br/>(présent / excusé)',empty_values=())
   modify	= Column(verbose_name=u'Modifier',empty_values=())
 
@@ -144,9 +146,13 @@ class MgmtMemberTable(Table):
 #    return format_datetime(value)
 
   def render_role(self, value, record):
+    roles = u''
     try:
-      role = Role.objects.get(member__id=record.id)
-      return unicode(role.type.title) + ' (' + unicode(role.year) + ')'
+      R = Role.objects.filter(member__id=record.id,year=getSaison())
+      for r in R:
+        roles += unicode(r.type.title)
+        if r != R.last(): roles += u' ; '
+      return roles
     except Role.DoesNotExist:
       return ''
 

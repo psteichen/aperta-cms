@@ -8,7 +8,7 @@ from django.core.files.storage import FileSystemStorage
 
 from django_tables2  import RequestConfig
 
-from cms.functions import show_form
+from cms.functions import show_form, getSaison
 
 from meetings.models import Meeting
 from events.models import Event
@@ -220,7 +220,7 @@ def r_add(r):
 
   # no post yet -> empty form
   else:
-    form = RoleForm()
+    form = RoleForm(initial = { 'year'	: getSaison(), })
     return render(r, settings.TEMPLATE_CONTENT['members']['roles']['add']['template'], {
                 'title': settings.TEMPLATE_CONTENT['members']['roles']['add']['title'],
                 'desc': settings.TEMPLATE_CONTENT['members']['roles']['add']['desc'],

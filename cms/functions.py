@@ -155,3 +155,11 @@ def rmf(dir, old, new=None):
 
   return {'name': normalize('NFKD', fn).encode('ascii','ignore'),'ext': orig_ext}
 
+
+def getSaison():
+  from datetime import date, timedelta
+  y1 = date.today().strftime('%Y')
+  y2 = (date.today() + timedelta(days=+365)).strftime('%Y')
+
+  return y1 + u'-' + y2
+

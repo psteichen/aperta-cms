@@ -1,6 +1,6 @@
 #coding=utf-8
 
-from datetime import date
+from datetime import date, timedelta
 
 from django.forms import Form, ModelForm, TextInput, Textarea, ModelChoiceField, BooleanField, CharField
 from django.conf import settings
