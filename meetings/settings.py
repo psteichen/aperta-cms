@@ -6,12 +6,14 @@ ACTIONS = {
     {
       'label'         	: u'Prochaine RS',
       'icon'     	: 'plus',
+      'grade'     	: 'danger',
       'url'           	: '/meetings/add/',
       'has_perms'     	: 'cms.BOARD',
     },
     { 
       'label'         	: u'Gestion des Lieux de Rencontre', 
       'icon'     	: 'home',
+      'grade'     	: 'warning',
       'url'           	: '/locations/', 
       'has_perms'     	: 'cms.COMM',
     },

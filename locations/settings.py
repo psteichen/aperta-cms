@@ -6,6 +6,7 @@ ACTIONS = {
     { 
       'label'         	: 'Ajouter', 
       'icon'     	: 'plus',
+      'grade'     	: 'danger',
       'url'           	: '/locations/add/', 
       'has_perms'     	: 'cms.COMM',
     },
