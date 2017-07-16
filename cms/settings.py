@@ -331,7 +331,7 @@ EVENTS_ATTENDANCE_URL = ATTENDANCE_BASE_URL + 'events/'
 from finance.settings import *
 TEMPLATE_CONTENT['finance'] = FINANCE_TMPL_CONTENT
 
-#web
-from web.settings import *
-TEMPLATE_CONTENT['web'] = WEB_TMPL_CONTENT
+#upload
+from upload.settings import *
+TEMPLATE_CONTENT['upload'] = UPLOAD_TMPL_CONTENT
 

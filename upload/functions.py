@@ -12,7 +12,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User, Permission
 
 from members.functions import gen_username, gen_random_password
-from members.models import Member, Address
+from members.models import Member
 from meetings.models import Meeting
 
 def import_data(ty,data):
@@ -29,20 +29,14 @@ def import_data(ty,data):
     Model = None
     try:
       if ty == "members": 
-#	Model = Member.objects.get(first_name=l[1],last_name=l[0],email=l[6])
 	Model = Member.objects.get(first_name=unicode(l['PRENOM']),last_name=unicode(l['NOM']),email=unicode(l['EMAIL']))
-      if ty == "calendar": Model = Meeting.objects.get(title=unicode(l[0]),when=unicode(l[1]),time=unicode(l[2]))
+      if ty == "calendar": 
+	Model = Meeting.objects.get(when=unicode(l['DATE']),title=unicode(l['TITRE']))
     except:
       if ty == "members": 
-#        A = Address (
-#		address		= unicode(l['ADRESS']),
-#		postal_code	= unicode(l['CP']),
-#		location	= unicode(l['DUERF']),
-#		country		= unicode(l['LAND'])
-#	)
 	Model = Member (
-			first_name    	= unicode(l['VIRNUMM']),
-			last_name	= unicode(l['NUMM']),
+			first_name    	= unicode(l['PRENOM']),
+			last_name	= unicode(l['NOM']),
 			address		= unicode(l['ADRESSE']),
 			phone		= unicode(l['TEL']),
 			mobile		= unicode(l['MOBILE']),
@@ -57,9 +51,8 @@ def import_data(ty,data):
 	Model.user = U
       if ty == "calendar": 
 	Model = Meeting (
-			title  		= unicode(l[0]),
-			when		= unicode(l[1]),
-			time		= unicode(l[2])
+			title  		= unicode(l['TITRE']),
+			when		= unicode(l['DATE']),
 		)
 
         # check/create location

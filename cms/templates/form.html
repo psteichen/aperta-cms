@@ -13,7 +13,7 @@
       <h2 class="panel-title">{{ title }}</h2>
     </div>
     <div class="panel-body">
-      <p>{{ desc }}</p>
+      <p>{{ desc|safe }}</p>
       <div class="col-xs-10">
        <form role="form" class="form-horizontal" action="." method="post" enctype="multipart/form-data">
         {% csrf_token %}
