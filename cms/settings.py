@@ -215,6 +215,7 @@ TEMPLATE_CONTENT = {
     },
     'gen'               : u'Error dans la saisie!',
     'email'             : u'Error dans l\'envoi d\'e-mail!',
+    'import'            : u'Import error!',
     'no-data'           : u'Pas de données!',
     'duplicate'         : u'Doublon, vérifiez votre saisie!',
   },

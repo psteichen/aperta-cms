@@ -39,7 +39,7 @@ def upload(r,ty):
       if ok == False:
         # issue with import -> error
         return render(r, done_template, {
-                               'error_message'  : settings.TEMPLATE_CONTENT['error']['gen'] + ' ' + str(ok),
+                               'error_message'  : settings.TEMPLATE_CONTENT['error']['import'] + ' ' + str(ok),
                     })
       else:
         # all fine -> done

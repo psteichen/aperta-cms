@@ -10,6 +10,13 @@ ACTIONS = {
       'url'           	: '/meetings/add/',
       'has_perms'     	: 'cms.BOARD',
     },
+    {
+      'label'		: u'Importer le Calendrier des réunions',
+      'icon'     	: 'upload',
+      'grade'     	: 'danger',
+      'url'           	: '/upload/calendar/',
+      'has_perms'	: 'cms.BOARD',
+    },
     { 
       'label'         	: u'Gestion des Lieux de Rencontre', 
       'icon'     	: 'home',
@@ -23,10 +30,10 @@ ACTIONS = {
 MEETINGS_TMPL_CONTENT = {
   'title'       	: u'Réunions Statutaires',
   'template'    	: 'list.html',
-  'desc'       		: u'''Changement dans la tenue des Réunions Statutaires, depuis la dernière AGO :
+  'desc'       		: u'''Changement dans la tenue des Réunions Statutaires, depuis la dernière AGO (27 juin 2017):
 <ul>
- <li>tous les quatrièmes mardis des mois <b>pairs</b> au Jardin Gourmand (Hesperange) le soir,</li>
- <li>tous les mois <b>impairs</b> une réunion commune avec un autre club est organisé.</li>
+  <li>Le 4ème mardi du mois, sauf juillet, août et décembre, soit 9 réunions statutaires internes au restaurant « Jardin Gourmand » à Hesperange (sauf avis contraire).</li>
+  <li>S'y rajoutent 4 réunions communes pendant l’année, clubs et dates à définir. Un planning sera fixé au plus vite avec les différents clubs.</li>
 </ul>
 ''',
   'actions'     	: ACTIONS['main'],
