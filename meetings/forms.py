@@ -14,11 +14,9 @@ from .models import Meeting, Invitee
 class MeetingForm(ModelForm):
   additional_message 	= CharField(label='Message supplémentaire',widget=Textarea(attrs={'placeholder': "Message à transmettre dans l'invitation.",}),required=False)
   attachement 		= FileField(label='Annexe(s)',required=False)
-#  send 			= BooleanField(label='Envoi direct des invitations',required=False)
 
   class Meta:
     model = Meeting
-#    fields = ( 'title', 'when', 'time', 'location', 'num', 'deadline', 'additional_message', 'attachement', 'send', )
     fields = ( 'title', 'when', 'time', 'location', 'num', 'deadline', 'additional_message', 'attachement', )
     widgets = {
 #      'title'	: TextInput(attrs={'readonly': 'readonly', }),
@@ -45,24 +43,23 @@ class BaseInviteeFormSet(BaseModelFormSet):
 InviteeFormSet = modelformset_factory(Invitee, form=InviteeForm, formset=BaseInviteeFormSet, extra=3)
 
 
-#modify wizard forms
-class ListMeetingsForm(Form):
-  meetings = ModelChoiceField(queryset=Meeting.objects.all().order_by('-num'))
-
+#modify forms
 class ModifyMeetingForm(ModelForm):
-  attendance = BooleanField(label='Inscrire/excuser un membre',required=False)
 
   class Meta:
     model = Meeting
-    fields = ( 'title', 'when', 'time', 'location', 'deadline', 'attendance', )
+    fields = ( 'title', 'when', 'time', 'location', 'deadline', )
     widgets = {
       'when'	: TextInput(attrs={'type': 'date', 'id': 'dpicker', }),
       'time'	: TextInput(attrs={'type': 'time', 'id': 'tpicker', }),
       'deadline': TextInput(attrs={'type': 'datetime', 'id': 'dtpicker', }),
     }
+    help_texts = {
+      'location': '<a href="/locations/add/" >Ajouter un nouveau lieu de rencontre</a>', 
+    }
 
 
-#report form
+#report forms
 class MeetingReportForm(Form):
   num		= IntegerField(widget=HiddenInput())
   title		= CharField(label=u'Titre',widget=TextInput(attrs={'readonly': 'readonly', }))

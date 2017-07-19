@@ -103,25 +103,14 @@ Destinataires:
     },
   },
   'modify' : {
-    'title'         	: u'Modifier une Réunion Statutaire',
-    'desc'		: u'Modifier les détails et les présences d\'une réunion statutaire.',
-    'first'		: u'début',
-    'prev'		: u'retour',
-    'list' : {
-      'title'   	: u'Choisir la réunion à modifier',
-      'next'    	: 'suivant',
-    },
-    'meeting' : {
-      'title'   	: u'Modifier la %(meeting)s',
-      'next'    	: 'suivant',
-    },
-    'attendance' : {
-      'title'   	: u'Ajuster les présences à la %(meeting)s',
-      'next'    	: 'soumettre',
-    },
+    'template'         	: 'form.html',
+    'title'  	 	: u'Modifier la {meeting}',
+    'desc'		: u'Modifier les détails d\'une réunion statutaire.',
+    'submit'   		: u'Enregistrer',
     'done' : {
       'template'        : 'done.html',
-      'title'           : u'La [%s] a été modifiée!',
+      'title'           : u'La [{meeting}] a été modifiée!',
+      'message'     	: u'',
     },
   },
   'details': {

@@ -21,7 +21,7 @@ from attendance.models import Meeting_Attendance
 
 from .functions import gen_meeting_overview, gen_meeting_initial, gen_current_attendance, gen_report_message, gen_invitee_message, gen_meeting_listing
 from .models import Meeting, Invitation
-from .forms import  MeetingForm, ListMeetingsForm, MeetingReportForm, InviteeFormSet
+from .forms import  MeetingForm, ModifyMeetingForm, MeetingReportForm, InviteeFormSet
 from .tables  import MeetingTable, MgmtMeetingTable, MeetingMixin, MeetingListingTable
 
 
@@ -293,105 +293,55 @@ def listing(r, meeting_num):
 
 # modify #
 ##########
+@permission_required('cms.BOARD',raise_exception=True)
+def modify(r,meeting_num):
+  r.breadcrumbs( ( 	
+			('home','/'),
+                   	('meetings','/meetings/'),
+                   	('modify meeting','/meetings/modify/'+meeting_num+'/'),
+               ) )
 
-#modify helper functions
-def show_attendance_form(wizard):
-  return show_form(wizard,'meeting','attendance',True)
+  Mt = Meeting.objects.get(pk=meeting_num)
+  template	= settings.TEMPLATE_CONTENT['meetings']['modify']['template']
+  title 	= settings.TEMPLATE_CONTENT['meetings']['modify']['title'].format(meeting=unicode(Mt))
+  desc 		= settings.TEMPLATE_CONTENT['meetings']['modify']['desc']
+  submit	= settings.TEMPLATE_CONTENT['meetings']['modify']['submit']
 
-#modify formwizard
-class ModifyMeetingWizard(SessionWizardView):
+  done_template	= settings.TEMPLATE_CONTENT['meetings']['modify']['done']['template']
+  done_title 	= settings.TEMPLATE_CONTENT['meetings']['modify']['done']['title'].format(meeting=unicode(Mt))
+  done_message	= settings.TEMPLATE_CONTENT['meetings']['modify']['done']['message'].format(meeting=unicode(Mt))
 
-  def get_template_names(self):
-    return 'wizard.html'
+  if r.POST:
+    done_message = ''
 
-  def get_context_data(self, form, **kwargs):
-    context = super(ModifyMeetingWizard, self).get_context_data(form=form, **kwargs)
-
-    #add breadcrumbs to context
-    self.request.breadcrumbs( ( ('home','/'),
-                                ('meetings','/meetings/'),
-                                ('modify a meeting','/meetings/modify/'),
-                            ) )
-
-    if self.steps.current != None:
-      title = u'réunion'
-      meeting_num = self.kwargs['meeting_num']
-      title = Meeting.objects.get(pk=meeting_num).title
-      context.update({'title': settings.TEMPLATE_CONTENT['meetings']['modify']['title']})
-      context.update({'first': settings.TEMPLATE_CONTENT['meetings']['modify']['first']})
-      context.update({'prev': settings.TEMPLATE_CONTENT['meetings']['modify']['prev']})
-      context.update({'step_title': settings.TEMPLATE_CONTENT['meetings']['modify'][self.steps.current]['title'] % { 'meeting': title, } })
-      context.update({'next': settings.TEMPLATE_CONTENT['meetings']['modify'][self.steps.current]['next']})
-
-    return context
-
-  def get_form(self, step=None, data=None, files=None):
-    form = super(ModifyMeetingWizard, self).get_form(step, data, files)
-
-    # determine the step if not given
-    if step is None:
-      step = self.steps.current
-
-    meeting_num = self.kwargs['meeting_num']
-    M = Meeting.objects.get(pk=meeting_num)
-
-    if step == 'meeting':
-      form.initial = gen_meeting_initial(M)
-      form.instance = M
-
-    if step == 'attendance':
-      form.initial = gen_current_attendance(M)
-
-    return form
-
-  def done(self, form_list, form_dict, **kwargs):
-    self.request.breadcrumbs( ( ('home','/'),
-                                ('meetings','/meetings/'),
-                                ('modify a meeting','/meetings/modify/'),
-                            ) )
-
-    template = settings.TEMPLATE_CONTENT['meetings']['modify']['done']['template']
-
-    M = None
-    mf = form_dict['meeting']
+    mf = ModifyMeetingForm(r.POST,instance=Mt)
     if mf.is_valid():
-      M = mf.save()
+      Mt = mf.save(commit=False)
+      Mt.save()
+      
+      # all fine -> done
+      return render(r, done_template, {
+                'title'		: done_title, 
+                'message'	: done_message,
+                })
 
-      attendance = mf.cleaned_data['attendance']
-      if attendance == True: 
-        af = form_dict['attendance']
-        if af.is_valid() and af.has_changed():
-          s_initial = af.initial['subscribed']
-          s_changed = af.cleaned_data['subscribed']
-          for s in s_changed:
-            try:
-              Meeting_Attendance(meeting=M,member=s,timestamp=datetime.now(),present=True).save()
-            except: pass
-#          s_diff = set(s_initial) ^ set(s_changed)
-#          for s_d in s_diff:
-#            try:
-#              Meeting_Attendance.objects.get(meeting=M,member=s_d).delete()
-#            except:
-#              pass
-
-          e_initial = af.initial['excused']
-          e_changed = af.cleaned_data['excused']
-          for e in e_changed:
-            try:
-              Meeting_Attendance(meeting=M,member=e,timestamp=datetime.now(),present=False).save()
-            except: pass
-#          e_diff = set(e_initial) ^ set(e_changed)
-#          for e_d in e_diff:
-#            try:
-#              Meeting_Attendance.objects.get(meeting=M,member=e_d).delete()
-#            except:
-#              pass
-
-    title = settings.TEMPLATE_CONTENT['meetings']['modify']['done']['title'] % M
-
-    return render(self.request, template, {
-                        'title': title,
-                 })
+    # form not valid -> error
+    else:
+      return render(r, done_template, {
+                'title'		: done_title, 
+                'error_message'	: settings.TEMPLATE_CONTENT['error']['gen'] + ' ; '.join([e for e in mf.errors]),
+                })
+  # no post yet -> empty form
+  else:
+    form = ModifyMeetingForm()
+    form.initial = gen_meeting_initial(Mt)
+    form.instance = Mt
+    return render(r, template, {
+                'title'	: title,
+                'desc'	: desc,
+                'submit': submit,
+                'form'	: form,
+                })
 
 
 # report #
