@@ -1,13 +1,16 @@
 #
 # coding=utf-8
 #
-import datetime
+from datetime import datetime, timedelta
+
+
 import locale
 from sys import stderr as errlog
 from os.path import splitext
 from re import search, findall
 import csv
 
+from django.utils import timezone
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User, Permission
 
@@ -19,23 +22,24 @@ from meetings.models import Meeting
 from events.models import Event
 from locations.models import Location
 
+
+def UnicodeDictReader(utf8_data, **kwargs):
+    csv_reader = csv.DictReader(utf8_data, **kwargs)
+    for row in csv_reader:
+        yield {unicode(key, 'utf-8'):unicode(value, 'utf-8') for key, value in row.iteritems()}
+
 def import_data(ty,data):
  
   nb=0
   ok = True
   errors = False
-  for l in csv.DictReader(data.read().splitlines(),delimiter=';',quoting=csv.QUOTE_NONE):
-#  for line in c_data:
-#    l = findall(r'\"(.+?)\"',str(line))
-#  for line in c_data:
-#    l = findall(r'\"(.+?)\"',str(line))
-    debug('upload','Line : '+unicode(l))
+  for l in UnicodeDictReader(data,delimiter=';',quoting=csv.QUOTE_NONE):
+    debug('upload',u'Line : '+unicode(l))
 
     Model = None
     if ty == 'members':  #import members
       try:
         Model = Member.objects.get(first_name=unicode(l['PRENOM']),last_name=unicode(l['NOM']),email=unicode(l['EMAIL']))
-        debug('upload','Found member : '+unicode(Model))
       except Member.DoesNotExist:
 	Model = Member (
 			first_name    	= unicode(l['PRENOM']),
@@ -45,62 +49,59 @@ def import_data(ty,data):
 			mobile		= unicode(l['MOBILE']),
 			email		= unicode(l['EMAIL'])
 	)
-        debug('upload','New member : '+unicode(Model))
         # create user
         U = User.objects.create_user(gen_username(Model.first_name,Model.last_name), Model.email, make_password(gen_random_password()))
         U.first_name = Model.first_name
         U.last_name = Model.last_name
         U.save()
-        debug('upload','Created user : '+unicode(U))
         U.user_permissions.add(Permission.objects.get(codename='MEMBER'))
 	Model.user = U
         Model.save()
-        debug('upload','Saved member : '+unicode(Model))
         nb+=1
 
     if ty == 'calendar': #import calendar
+      deadline = timezone.make_aware(datetime.strptime(l['DATE'] + ' ' + l['HEURE'],"%Y-%m-%d %H:%M")-timedelta(hours=24),None)
       if l['TYPE'] == '0': #meeting
-        debug('upload',"it's a meeting")
+        debug('upload',u"it's a meeting")
         try:
 	  Model = Meeting.objects.get(when=unicode(l['DATE']),title=unicode(l['TITRE']))
-          debug('upload','Found meeting : '+unicode(Model))
         except Meeting.DoesNotExist:
 	  Model = Meeting (
 			title  		= unicode(l['TITRE']),
 			when		= unicode(l['DATE']),
 			time		= unicode(l['HEURE']),
+			deadline	= deadline,
 		)
-          debug('upload','New meeting : '+unicode(Model))
 
 
       if l['TYPE'] == '1': #event
-        debug('upload',"it's an event")
+        debug('upload',u"it's an event")
         try:
 	  Model = Event.objects.get(when=unicode(l['DATE']),title=unicode(l['TITRE']))
-          debug('upload','Found event : '+unicode(Model))
         except Event.DoesNotExist:
 	  Model = Event (
 			title  		= unicode(l['TITRE']),
 			when		= unicode(l['DATE']),
+			time		= unicode(l['HEURE']),
+			deadline	= deadline,
 		)
-          debug('upload','New event : '+unicode(Model))
 
       # check/create location
       location = None
       try:
-        location = Location.objects.get(name=l['LIEU'])
-        debug('upload','Found location : '+unicode(location))
+        location = Location.objects.get(name=unicode(l['LIEU']))
       except Location.DoesNotExist:
-        location = Location (name=l['LIEU'])
-        debug('upload','New location : '+unicode(location))
+        location = Location(name=unicode(l['LIEU']))
+        location.save()
 
       Model.location = location
-      Model.save()
-      debug('upload','Saved meeting/event : '+unicode(Model))
-      nb+=1
       if l['TYPE'] == '0':  #add num to meeting title
-        Model.title = Model.num + u'. ' + Model.title
-        Model.save()
+        latest = Meeting.objects.values().latest('num')
+        next_num = latest['num'] + 1
+        Model.num = next_num
+        Model.title = unicode(next_num) + u'. ' + unicode(Model.title)
+      Model.save()
+      nb+=1
 
   if not ok: return errors
   else: return nb

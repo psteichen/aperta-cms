@@ -17,7 +17,7 @@ from django.utils import timezone
 def debug(app,message):
   if settings.DEBUG:
     from sys import stderr as errlog
-    print >>errlog, 'DEBUG ['+unicode(app)+']: '+unicode(message)
+    print >>errlog, u'DEBUG ['+unicode(app)+u']: '+unicode(message)
 
 def attach_to_email(email,attachment):
   from os import path

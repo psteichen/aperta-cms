@@ -48,8 +48,8 @@ Jean;Dupont;jean@dupont.lu;5, rue du Près L-1234 Mersch;36594812;621894578<br/>
 <p>Voici un exemple :</p>
 <div class="well">
 DATE;TITRE;HEURE;TYPE;LIEU</br>
-29/09/2017;Réunion statutaire;19:30;0;Fin Gourmand<br/>
-15/07/2018;Fête de l'amitié du District;20:00;1;Place d'Armes</br/>
+2017-09-29;Réunion statutaire;19:30;0;Fin Gourmand<br/>
+2018-07-15;Fête de l'amitié du District;20:00;1;Place d'Armes</br/>
 ...
 </div>
 <p>Le TYPE définit le type de rencontre: "0" -> réunion statuaire ; "1" -> autre évènement non-statutaire.</p>
@@ -57,7 +57,7 @@ DATE;TITRE;HEURE;TYPE;LIEU</br>
     'submit'   		: u'Importer',
     'done': {
       'template'	: 'done.html',
-      'title'     	: u'{} réuion(s) et/ou évènement(s) importé(es).',
+      'title'     	: u'{} réunion(s) et/ou évènement(s) importé(es).',
     },
   }
 }

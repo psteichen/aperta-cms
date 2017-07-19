@@ -23,7 +23,7 @@ class Meeting(Model):
   report        = FileField(verbose_name='Compte rendu', upload_to=rename_report,blank=True,null=True)
   
   def __unicode__(self):
-    return unicode(self.title) + ' du ' + unicode(self.when)
+    return unicode(self.title) + u' du ' + unicode(self.when)
 
 
 def rename_attach(i, f):
@@ -66,5 +66,5 @@ class Invitee(Model):
   type		= IntegerField(choices=TYPES,default=I)
   
   def __unicode__(self):
-    return self.first_name + ' ' + unicode.upper(self.last_name) + u' invité par ' + unicode(self.member) + u' pour la ' + unicode(self.meeting)
+    return self.first_name + u' ' + unicode.upper(self.last_name) + u' invité par ' + unicode(self.member) + u' pour la ' + unicode(self.meeting)
 
