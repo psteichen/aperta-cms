@@ -37,6 +37,9 @@ class Payment(Model):
 
 
 def rename_scan(i, f):
+  return 0
+
+def rename_be_scan(i, f):
   fn = rmf('bank', f, unicode(i))
 
   from os import sep
@@ -46,8 +49,22 @@ class BankExtract(Model):
   year		= CharField(max_length=4)
   num		= IntegerField()
   date		= DateField(verbose_name='état du')
-  scan  	= FileField(upload_to=rename_scan)
+  scan  	= FileField(upload_to=rename_be_scan)
 
   def __unicode__(self):
     return self.year+'-'+str(self.num) + u' (état du ' + unicode(self.date) +')'
+
+def rename_bs_scan(i, f):
+  fn = rmf('balance', f, unicode(i))
+
+  from os import sep
+  return fn['name'] + fn['ext']
+
+class BalanceSheet(Model):
+  year		= CharField(max_length=4)
+  date		= DateField(verbose_name='état du')
+  scan  	= FileField(upload_to=rename_bs_scan)
+
+  def __unicode__(self):
+    return self.year+ u' (état du ' + unicode(self.date) +')'
 
