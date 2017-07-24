@@ -5,10 +5,11 @@ ACTIONS = {
   'main' : (
     {
       'has_perms'	: 'cms.MEMBER',
-      'heading'		: '',
+      'heading'		: u'Bilan',
       'actions' : (
         {
           'label'	: u'Comptes annuels',
+      	  'desc'	: u"Les bilans financiers et les comptes des pertes et profits, tels qu'établient pour clôturer les périodes d'activitiées annuelles.",
           'icon'     	: 'balance-scale',
           'url'         : '/finance/balance/',
           'has_perms'	: 'cms.MEMBER',
@@ -17,10 +18,11 @@ ACTIONS = {
     },
     {
       'has_perms'	: 'cms.BOARD',
-      'heading'		: '',
+      'heading'		: u'Banque',
       'actions' : (
         {
           'label'	: u'Extraits bancaires',
+      	  'desc'	: u"Extraits et documents bancaires correspondant au compte de l'association.",
           'icon'     	: 'bank',
           'url'         : '/finance/bank/',
           'has_perms'	: 'cms.BOARD',

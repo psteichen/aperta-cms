@@ -18,5 +18,5 @@ urlpatterns = patterns('',
   url(r'^balance/$', balance, name='balance'),
   url(r'^balance/(?P<year>.+?)/$', balance, name='balance'),
 
-  url(r'^upload/(?P<type>.+?)/$', upload, name='upload'),
+  url(r'^upload/(?P<ty>.+?)/$', upload, name='upload'),
 )

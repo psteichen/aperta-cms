@@ -7,7 +7,7 @@ from .models import BankExtract, BalanceSheet
 
 #table for visualisation via django_tables2
 class BankExtractTable(Table):
-  ynum		= Column(verbose_name=u'Extrait', empty_values=())
+  ynum		= Column(verbose_name=u'Détails', empty_values=())
 
   def render_ynum(self, value, record):
     return unicode(record)

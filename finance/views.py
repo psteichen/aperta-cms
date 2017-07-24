@@ -104,10 +104,10 @@ def upload(r,ty):
   form_submit	= settings.TEMPLATE_CONTENT['finance']['upload']['submit']
 
   done_template	= settings.TEMPLATE_CONTENT['finance']['upload']['done']['template']
-  done_url	= settings.TEMPLATE_CONTENT['finance']['upload']['done']['url'].fomrat(type=ty)
+  done_url	= settings.TEMPLATE_CONTENT['finance']['upload']['done']['url'].format(type=ty)
 
   if r.POST:
-    f = form(r.POST,r.FILES)
+    f = BalanceSheetForm(r.POST,r.FILES)
     if f.is_valid():
       F = f.save(commit=False)
       F.save()

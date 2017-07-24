@@ -264,8 +264,8 @@ ACTIONS = (
         'label'         : u'Trésorerie', 
         'icon'     	: 'euro',
         'desc'          : 'Gérer les comptes et autres aspects financiers.',
-        'url'           : '/finance/bank/',
-   	'has_perms' 	: 'cms.BOARD',
+        'url'           : '/finance/',
+   	'has_perms' 	: 'cms.MEMBER',
      },
 
     ),
