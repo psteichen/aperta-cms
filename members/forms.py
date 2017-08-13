@@ -8,8 +8,7 @@ from django.conf import settings
 from .models import Member, Role, RoleType
 
 
-# members #
-###########
+#member forms
 class MemberForm(ModelForm):
 
   class Meta:
@@ -23,18 +22,16 @@ class MemberForm(ModelForm):
     }
 
 
-# roles #
-#########
+#role forms
 class RoleForm(ModelForm):
 
   class Meta:
     model = Role
-    fields = ( 'type', 'year', 'member', ) 
+    fields = ( 'type', 'year', 'member', )
 
 class RoleTypeForm(ModelForm):
 
   class Meta:
     model = RoleType
-    fields = ( 'title', 'desc', 'type', ) 
-
+    fields = ( 'title', 'desc', 'type', )
 

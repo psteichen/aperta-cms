@@ -11,11 +11,11 @@ ACTIONS = {
       'has_perms'     	: 'cms.BOARD',
     },
     {
-      'label'		: u'Importer le Calendrier des réunions',
-      'icon'     	: 'upload',
-      'grade'     	: 'danger',
-      'url'           	: '/upload/calendar/',
-      'has_perms'	: 'cms.BOARD',
+      'label'         	: u'Importer le Calendrier des réunions',
+      'icon'          	: 'upload',
+      'grade'         	: 'danger',
+      'url'             : '/upload/calendar/',
+      'has_perms'     	: 'cms.BOARD',
     },
     { 
       'label'         	: u'Gestion des Lieux de Rencontre', 
@@ -30,10 +30,10 @@ ACTIONS = {
 MEETINGS_TMPL_CONTENT = {
   'title'       	: u'Réunions Statutaires',
   'template'    	: 'list.html',
-  'desc'       		: u'''Changement dans la tenue des Réunions Statutaires, depuis la dernière AGO (27 juin 2017):
+  'desc'       		: u'''Changement dans la tenue des Réunions Statutaires, depuis la dernière AGO (27 juin 2017) :
 <ul>
-  <li>Le 4ème mardi du mois, sauf juillet, août et décembre, soit 9 réunions statutaires internes au restaurant « Jardin Gourmand » à Hesperange (sauf avis contraire).</li>
-  <li>S'y rajoutent 4 réunions communes pendant l’année, clubs et dates à définir. Un planning sera fixé au plus vite avec les différents clubs.</li>
+  <li>Le 4ème mardi du mois, sauf juillet, août et décembre, soit 9 réunions statutaires internes au restaurant « Jardin Gourmand » à Hesperange (sauf avis contraire).</li>
+  <li>S'y rajoutent 4 réunions communes pendant l’année, clubs et dates à définir. Un planning sera fixé au plus vite avec les différents clubs.</li>
 </ul>
 ''',
   'actions'     	: ACTIONS['main'],
@@ -103,14 +103,14 @@ Destinataires:
     },
   },
   'modify' : {
-    'template'         	: 'form.html',
-    'title'  	 	: u'Modifier la {meeting}',
-    'desc'		: u'Modifier les détails d\'une réunion statutaire.',
-    'submit'   		: u'Enregistrer',
+    'template'  	: 'form.html',
+    'title'           	: u'Modifier la {meeting}',
+    'desc'            	: u'Modifier les détails d\'une réunion statutaire.',
+    'submit'            : u'Enregistrer',
     'done' : {
       'template'        : 'done.html',
       'title'           : u'La [{meeting}] a été modifiée!',
-      'message'     	: u'',
+      'message'       	: u'',
     },
   },
   'details': {

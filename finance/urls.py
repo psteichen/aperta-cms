@@ -1,9 +1,9 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
-#from .views import list, invoice, payment, bank
+#from .views import invoice, payment
 from .views import list, bank, balance, upload
 
-urlpatterns = patterns('',
+urlpatterns = [
   url(r'^$', list, name='list'),
 
 #  url(r'^invoice/', invoice, name='invoice'),
@@ -19,4 +19,5 @@ urlpatterns = patterns('',
   url(r'^balance/(?P<year>.+?)/$', balance, name='balance'),
 
   url(r'^upload/(?P<ty>.+?)/$', upload, name='upload'),
-)
+
+]

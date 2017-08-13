@@ -4,7 +4,7 @@
 from datetime import date, datetime
 
 from django.utils import timezone
-from django.shortcuts import render
+from django.template.response import TemplateResponse
 from django.conf import settings
 
 from cms.functions import notify_by_email
@@ -124,14 +124,14 @@ def attendance(r, event_type, event_id, attendance_hash):
       for a in actions:
         a['url'] = a['url'].format(str(M.num),str(member.id))
 
-    return render(r, settings.TEMPLATE_CONTENT['attendance']['template'], {
+    return TemplateResponse(r, settings.TEMPLATE_CONTENT['attendance']['template'], {
                    'title': title,
                    'actions' : actions,
                    'message': message,
                })
 
   if event_type == 'events':
-    return render(r, settings.TEMPLATE_CONTENT['attendance']['template'], {
+    return TemplateResponse(r, settings.TEMPLATE_CONTENT['attendance']['template'], {
                    'title': title,
                    'message': message,
                })

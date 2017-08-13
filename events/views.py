@@ -3,14 +3,17 @@
 #
 from datetime import date, timedelta, datetime
 
-from django.shortcuts import render
+from django.template.response import TemplateResponse
 from django.contrib.auth.decorators import login_required, permission_required
-from django.contrib.formtools.wizard.views import SessionWizardView
 from django.conf import settings
 from django.utils import timezone
 
 from django_tables2  import RequestConfig
+from formtools.wizard.views import SessionWizardView
 
+from headcrumbs.decorators import crumb
+from headcrumbs.util import name_from_pk
+	
 from cms.functions import notify_by_email
 
 from members.models import Member
@@ -30,16 +33,13 @@ from .tables  import EventTable
 # list #
 ########
 @login_required
+@crumb(u'Évènements')
 def list(r):
-  r.breadcrumbs( ( 
-			('home','/'),
-                   	('events','/events/'),
-               ) )
 
   table = EventTable(Event.objects.all().order_by('-id'))
   RequestConfig(r, paginate={"per_page": 75}).configure(table)
 
-  return render(r, settings.TEMPLATE_CONTENT['events']['template'], {
+  return TemplateResponse(r, settings.TEMPLATE_CONTENT['events']['template'], {
                    'title': settings.TEMPLATE_CONTENT['events']['title'],
                    'actions': settings.TEMPLATE_CONTENT['events']['actions'],
                    'table': table,
@@ -50,12 +50,8 @@ def list(r):
 # add #
 #######
 @permission_required('cms.COMM',raise_exception=True)
+@crumb(u'Ajouter un évènement',parent=list)
 def add(r):
-  r.breadcrumbs( ( 
-			('home','/'),
-                   	('events','/events/'),
-                   	('add event','/events/add/'),
-               ) )
 
   if r.POST:
     e_template =  settings.TEMPLATE_CONTENT['events']['add']['done']['email']['template']
@@ -102,28 +98,28 @@ def add(r):
           # error in email -> show error messages
           if not email_error['ok']:
             I.save()
-            return render(r, settings.TEMPLATE_CONTENT['events']['add']['done']['template'], {
+            return TemplateResponse(r, settings.TEMPLATE_CONTENT['events']['add']['done']['template'], {
                 		'title': settings.TEMPLATE_CONTENT['events']['add']['done']['title'], 
                 		'error_message': settings.TEMPLATE_CONTENT['error']['email'] + ' ; '.join([e for e in email_error['who']]),
 			 })
 
       # all fine -> done
       I.save()
-      return render(r, settings.TEMPLATE_CONTENT['events']['add']['done']['template'], {
+      return TemplateResponse(r, settings.TEMPLATE_CONTENT['events']['add']['done']['template'], {
                 	'title': settings.TEMPLATE_CONTENT['events']['add']['done']['title'], 
 	                'message': settings.TEMPLATE_CONTENT['events']['add']['done']['message'] % { 'email': invitation_message, 'list': ' ; '.join([gen_member_fullname(m) for m in get_active_members()]), },
 		   })
 
     # form not valid -> error
     else:
-      return render(r, settings.TEMPLATE_CONTENT['events']['add']['done']['template'], {
+      return TemplateResponse(r, settings.TEMPLATE_CONTENT['events']['add']['done']['template'], {
                 'title': settings.TEMPLATE_CONTENT['events']['add']['done']['title'], 
                 'error_message': settings.TEMPLATE_CONTENT['error']['gen'] + ' ; '.join([e for e in ef.errors]),
                 })
   # no post yet -> empty form
   else:
     form = EventForm()
-    return render(r, settings.TEMPLATE_CONTENT['events']['add']['template'], {
+    return TemplateResponse(r, settings.TEMPLATE_CONTENT['events']['add']['template'], {
                 'title': settings.TEMPLATE_CONTENT['events']['add']['title'],
                 'desc': settings.TEMPLATE_CONTENT['events']['add']['desc'],
                 'submit': settings.TEMPLATE_CONTENT['events']['add']['submit'],
@@ -135,11 +131,6 @@ def add(r):
 ########
 @permission_required('cms.COMM',raise_exception=True)
 def send(r,event_id):
-  r.breadcrumbs( ( 
-			('home','/'),
-                   	('events','/events/'),
-                   	('send event invitations','/events/send/'),
-               ) )
 
   e_template =  settings.TEMPLATE_CONTENT['events']['send']['done']['email']['template']
 
@@ -166,14 +157,14 @@ def send(r,event_id):
 
   # error in email -> show error messages
   if not email_error['ok']:
-    return render(r, settings.TEMPLATE_CONTENT['events']['send']['done']['template'], {
+    return TemplateResponse(r, settings.TEMPLATE_CONTENT['events']['send']['done']['template'], {
 	                'title': title, 
         	        'error_message': settings.TEMPLATE_CONTENT['error']['email'] + ' ; '.join([e for e in email_error['who']]),
                   })
 
   # all fine -> done
   else:
-    return render(r, settings.TEMPLATE_CONTENT['events']['send']['done']['template'], {
+    return TemplateResponse(r, settings.TEMPLATE_CONTENT['events']['send']['done']['template'], {
 	                'title': title, 
         	        'message': settings.TEMPLATE_CONTENT['events']['send']['done']['message'] + ' ; '.join([gen_member_fullname(m) for m in get_active_members()]),
                   })
@@ -182,18 +173,14 @@ def send(r,event_id):
 # details #
 ###########
 @login_required
+@crumb(u"Détail d'un évènement",parent=list)
 def details(r, event_id):
-  r.breadcrumbs( ( 
-			('home','/'),
-                   	('events','/events/'),
-                   	('details for event n. '+event_id,'/events/details/'+event_id+'/'),
-               ) )
 
   event = Event.objects.get(pk=event_id)
   title = settings.TEMPLATE_CONTENT['events']['details']['title'] % { 'event' : event.title, }
   message = gen_event_overview(settings.TEMPLATE_CONTENT['events']['details']['overview']['template'],event)
 
-  return render(r, settings.TEMPLATE_CONTENT['events']['details']['template'], {
+  return TemplateResponse(r, settings.TEMPLATE_CONTENT['events']['details']['template'], {
                    'title': title,
                    'message': message,
                 })
@@ -214,12 +201,6 @@ class ModifyEventWizard(SessionWizardView):
 
   def get_context_data(self, form, **kwargs):
     context = super(ModifyEventWizard, self).get_context_data(form=form, **kwargs)
-
-    #add breadcrumbs to context
-    self.request.breadcrumbs( ( ('home','/'),
-                                ('events','/events/'),
-                                ('modify an event','/events/modify/'),
-                            ) )
 
     if self.steps.current != None:
       context.update({'title': settings.TEMPLATE_CONTENT['events']['modify']['title']})
@@ -246,10 +227,6 @@ class ModifyEventWizard(SessionWizardView):
     return form
 
   def done(self, fl, **kwargs):
-    self.request.breadcrumbs( ( ('home','/'),
-                                ('events','/events/'),
-                                ('modify an event','/events/modify/'),
-                            ) )
 
     template = settings.TEMPLATE_CONTENT['events']['modify']['done']['template']
 
@@ -260,7 +237,7 @@ class ModifyEventWizard(SessionWizardView):
 
     title = settings.TEMPLATE_CONTENT['events']['modify']['done']['title'] % E
 
-    return render(self.request, template, {
+    return TemplateResponse(self.request, template, {
                         'title': title,
                  })
 

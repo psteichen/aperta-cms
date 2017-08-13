@@ -23,4 +23,3 @@ class BalanceSheetTable(Table):
     model = BalanceSheet
     fields = ( 'year', 'scan', )
     attrs = {"class": "table table-striped"}
-

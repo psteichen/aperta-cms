@@ -1,8 +1,10 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 
+from .views import list, add, send, invite, details, report, listing
 from .views import list, add, modify, send, invite, details, report, listing
 
-urlpatterns = patterns('',
+
+urlpatterns = [
   url(r'^$', list, name='list'),
   url(r'^list/(?P<meeting_num>.+?)/$', details, name='details'),
   url(r'^listing/(?P<meeting_num>.+?)/$', listing, name='listing'),
@@ -11,7 +13,6 @@ urlpatterns = patterns('',
 #below urls need permissions
   url(r'^add/$', add, name='add'),
   url(r'^send/(?P<meeting_num>.+?)/$', send, name='send'),
-#  url(r'^modify/(?P<meeting_num>.+?)/$', modify_meeting_wrapper, name='modify'),
   url(r'^modify/(?P<meeting_num>.+?)/$', modify, name='modify'),
   url(r'^report/(?P<meeting_num>.+?)/$', report, name='report'),
-)
+]

@@ -1,11 +1,10 @@
 #
 # coding=utf-8
 #
+from datetime import date, datetime, time, timedelta
 from os import sep
 from os.path import splitext
 from unicodedata import normalize
-
-from datetime import date, datetime, time, timedelta
 
 from django.conf import settings
 from django.template.loader import render_to_string
@@ -17,7 +16,7 @@ from django.utils import timezone
 def debug(app,message):
   if settings.DEBUG:
     from sys import stderr as errlog
-    print >>errlog, u'DEBUG ['+unicode(app)+u']: '+unicode(message)
+    print >>errlog, 'DEBUG ['+unicode(app)+']: '+unicode(message)
 
 def attach_to_email(email,attachment):
   from os import path
@@ -44,12 +43,11 @@ def notify_by_email(sender,to,subject,message_content,cc=False,attachment=False,
           )
   message_content['FOOTER'] = settings.EMAILS['footer']
   email.body = render_to_string(template,message_content)
-  if cc: email.cc=[cc]
   if attachment:
     if is_array(attachment):
       for a in attachment: attach_to_email(email,a)
     else: attach_to_email(email,attachment)
-
+  if cc: email.cc=[cc]
   try:
     email.send()
     return True
@@ -62,7 +60,7 @@ def genIcal(event):
   #get details from event instance
   title         = event.title
   desc          = event.title
-  duration 	= 3
+  duration    = 3
   start         = datetime.combine(event.when, event.time)
   end           = datetime.combine(event.when, event.time) + timedelta(hours=duration)
   location      = event.location
@@ -140,6 +138,11 @@ def visualiseDateTime(dtIn):
   if type(dtIn) is time: return dtIn.strftime('%Hh%M').lstrip('0')
   if type(dtIn) is datetime: return dtIn.strftime('%a le ') + dtIn.strftime('%d %b %Y').lstrip('0') + u' à ' + dtIn.strftime('%Hh%M').lstrip('0')
 
+def getSaison():
+  y1 = date.today().strftime('%Y')
+  y2 = (date.today() + timedelta(days=+365)).strftime('%Y')
+
+  return y1 + u'-' + y2
 
 # rename uploaded files
 def rmf(dir, old, new=None):
@@ -154,12 +157,4 @@ def rmf(dir, old, new=None):
   fn=dir.upper() + sep + fn #add dir
 
   return {'name': normalize('NFKD', fn).encode('ascii','ignore'),'ext': orig_ext}
-
-
-def getSaison():
-  from datetime import date, timedelta
-  y1 = date.today().strftime('%Y')
-  y2 = (date.today() + timedelta(days=+365)).strftime('%Y')
-
-  return y1 + u'-' + y2
 

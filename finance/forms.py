@@ -19,7 +19,7 @@ class BalanceSheetForm(ModelForm):
 
   class Meta:
     model = BalanceSheet
-    fields = ( 'year', 'date', 'scan', ) 
+    fields = ( 'year', 'date', 'scan', )
     widgets = {
       'date'	: TextInput(attrs={'type': 'date', 'id': 'dpicker', }),
     }

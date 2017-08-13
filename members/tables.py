@@ -19,7 +19,7 @@ from .models import Member, Role
 #table for visualisation via django_tables2
 class MemberTable(Table):
   role		= Column(verbose_name=u'Rôle',empty_values=())
-  meetings	= Column(verbose_name=u'Réunions statutaires<br/>(présent / excusé)',empty_values=())
+  meetings    = Column(verbose_name=u'Réunions statutaires<br/>(présent / excusé)',empty_values=())
 
   def __init__(self, *args, **kwargs):
     if kwargs["username"]:
@@ -53,7 +53,6 @@ class MemberTable(Table):
 
   def render_role(self, value, record):
     try:
-      role = Role.objects.get(member__id=record.id)
       return unicode(role.type.title) + ' (' + unicode(role.year) + ')'
     except Role.DoesNotExist:
       return ''
@@ -75,8 +74,8 @@ class MemberTable(Table):
 #management table
 class MgmtMemberTable(Table):
   row_class     = Column(visible=False, empty_values=()) #used to highlight some rows
-  role		= Column(verbose_name=u'Rôle(s) ['+getSaison()+'] ',empty_values=())
-  meetings	= Column(verbose_name=u'Réunions statutaires<br/>(présent / excusé)',empty_values=())
+  role                = Column(verbose_name=u'Rôle(s) ['+getSaison()+'] ',empty_values=())
+  meetings    = Column(verbose_name=u'Réunions statutaires<br/>(présent / excusé)',empty_values=())
   modify	= Column(verbose_name=u'Modifier',empty_values=())
 
   def render_row_class(self, value, record):
@@ -106,6 +105,7 @@ class MgmtMemberTable(Table):
     except:
       pass
 
+
     picture = u'''<i class="fa-stack fa-3x"><a href="#{id}Modal" data-toggle="modal"><img src="{pic}" alt="Photo" class="img-responsive img-circle" /></a></i>
 
 <!-- Modal -->
@@ -132,7 +132,6 @@ class MgmtMemberTable(Table):
   </div>
 </div>
 '''.format(id=record.pk,name=unicode(record),pic=settings.MEDIA_URL+unicode(value),status=Member.STATUSES[record.status][1],address=unicode(record.address),phone=unicode(record.phone),mobile=unicode(record.mobile),role=role)
-#'''.format(id=record.pk,name=unicode(record),pic=settings.MEDIA_URL+unicode(value),status=Member.STATUSES[record.status],address=unicode(record.address),phone=unicode(Member.PREFIXES[record.prefix])+unicode(record.phone),mobile=unicode(Member.PREFIXES[record.prefix])+unicode(record.mobile),role=role)
 
     return mark_safe(picture)
 
@@ -172,7 +171,7 @@ class MgmtMemberTable(Table):
 
 #roles table
 class RoleTable(Table):
-  modify	= Column(verbose_name=u'Modifier',empty_values=())
+  modify      = Column(verbose_name=u'Modifier',empty_values=())
 
   def render_modify(self, record):
     link = '<a class="btn btn-danger btn-sm" href="/members/roles/modify/{}/"><i class="fa fa-pencil"></i></a>'.format(escape(record.pk))
@@ -182,3 +181,4 @@ class RoleTable(Table):
     model = Role
     fields = ( 'year', 'type', 'member', )
     attrs = {"class": "table table-striped"}
+

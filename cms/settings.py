@@ -1,168 +1,25 @@
 # coding=utf-8
-"""
-Django settings for cms project.
 
-For more information on this file, see
-https://docs.djangoproject.com/en/1.7/topics/settings/
+from .core_settings import *
 
-For the full list of settings and their values, see
-https://docs.djangoproject.com/en/1.7/ref/settings/
-"""
+######################
+## (LOCAL) SETTINGS ##
+######################
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-import os
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+SECRET_KEY = '4j$om7#%h7ahryh!lht(mlf!c*vm%5zcz4sf+5xc#ki)ij(v=&'
+DEBUG = True
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'i7_hpg!p406zhnei*v6(v+bm@rav4(r!)090re3df52o9b71c1'
-
-# Application definition
-
-INSTALLED_APPS = (
-# global bootstrap3 integration
-  'bootstrap3',
-# django core apps
-  'django.contrib.admin',
-  'django.contrib.auth',
-  'django.contrib.contenttypes',
-  'django.contrib.sessions',
-  'django.contrib.messages',
-  'django.contrib.staticfiles',
-# specific supporting apps
-  'django_tables2',
-  'breadcrumbs',
-# my apps
-  'cms',
-  'members',
-  'locations',
-  'attendance',
-  'meetings',
-  'events',
-  'finance',
-  'upload',
-)
-
-MIDDLEWARE_CLASSES = (
-  'django.contrib.sessions.middleware.SessionMiddleware',
-  'django.middleware.common.CommonMiddleware',
-  'django.middleware.csrf.CsrfViewMiddleware',
-  'django.contrib.auth.middleware.AuthenticationMiddleware',
-  'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-  'django.contrib.messages.middleware.MessageMiddleware',
-  'django.middleware.clickjacking.XFrameOptionsMiddleware',
-# via supporting apps
-  'breadcrumbs.middleware.BreadcrumbsMiddleware',
-)
-
-TEMPLATE_CONTEXT_PROCESSORS = (
-  'django.contrib.auth.context_processors.auth',
-  'django.core.context_processors.debug',
-  'django.core.context_processors.i18n',
-  'django.core.context_processors.media',
-  'django.core.context_processors.static',
-  'django.core.context_processors.tz',
-  'django.contrib.messages.context_processors.messages',
-  'django.core.context_processors.request', #needed for django-tables2
-  'cms.context_processors.template_content',
-)
-
-ROOT_URLCONF = 'cms.urls'
-
-WSGI_APPLICATION = 'cms.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/1.7/ref/settings/#databases
-
-DATABASES = {
-  'default': {
-    'ENGINE': 'django.db.backends.sqlite3',
-    'NAME': os.path.join(BASE_DIR, 'cms/db.sqlite'),
-  }
-}
-
-# Internationalization
-# https://docs.djangoproject.com/en/1.7/topics/i18n/
-
-LANGUAGE_CODE = 'fr-FR'
-LC_ALL = 'fr_FR.utf8' #to be used inpython afterwards
-
-TIME_ZONE = 'Europe/Luxembourg'
-
-USE_I18N = True
-
-USE_L10N = True
-
-USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.7/howto/static-files/
-
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'cms/static/'),
-)
-STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-)
-
-MEDIA_URL = '/media/'
+ALLOWED_HOSTS = [ 'dev.cms.aperta.lu', ]
 
 # Email settings
 SERVER_EMAIL = 'admin@aperta.lu'
-DEFAULT_FROM_EMAIL = SERVER_EMAIL
+DEFAULT_FROM_EMAIL = 'board@aperta.lu'
 
 ADMINS = (
   ('Admin', SERVER_EMAIL),
 )
 MANAGERS = ADMINS
 
-# Logging
-# See http://docs.djangoproject.com/en/1.7/topics/logging
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse'
-        }
-    },
-    'handlers': {
-        'mail_admins': {
-            'level': 'ERROR',
-            'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler'
-        }
-    },
-    'loggers': {
-        'django.request': {
-            'handlers': ['mail_admins'],
-            'level': 'ERROR',
-            'propagate': True,
-        },
-    }
-}
-
-# LOCAL settings
-from local_settings import *
-
-#login/auth (used by the login_required decorator)
-LOGIN_URL="/login/"
-LOGIN_REDIRECT_URL="/"
-
-#where to find templates
-TEMPLATE_DIRS = (
-  os.path.join(BASE_DIR, 'cms/templates/'),
-  os.path.join(BASE_DIR, 'cms/templates/email/'),
-)
-
-#emails
 EMAILS = {
   'sender' : {
     'default'	: "'FIFTY-ONE Aperta' <board@aperta.lu>",
@@ -182,6 +39,7 @@ TEMPLATE_CONTENT = {
     'logo' : {
       'title'		: 'FIFTY-ONE<br/><strong><em>APERTA</em></strong>',
       'img'		: 'https://aperta.lu/pics/logo-51-aperta_picto.png',
+      'url'             : '/',
     },
     'description'       : '',
     'keywords'          : '',
@@ -215,7 +73,7 @@ TEMPLATE_CONTENT = {
     },
     'gen'               : u'Error dans la saisie!',
     'email'             : u'Error dans l\'envoi d\'e-mail!',
-    'import'            : u'Import error!',
+    'import'            : u'Error dans l\'import!',
     'no-data'           : u'Pas de données!',
     'duplicate'         : u'Doublon, vérifiez votre saisie!',
   },
@@ -245,6 +103,8 @@ ACTIONS = (
   {
     'has_perms' 	: 'cms.MEMBER',
     'heading' 		: 'Association',
+    'grade' 		: 'success',
+    'icon' 		: 'users',
     'actions' : (
       {         
         'label'         : u'Réunions Statutaires', 
@@ -273,6 +133,8 @@ ACTIONS = (
   {
     'has_perms' 	: 'cms.MEMBER',
     'heading' 		: 'Activités',
+    'grade' 		: 'info',
+    'icon' 		: 'globe',
     'actions'   : (
       { 
         'label'         : 'Évènements', 
@@ -282,19 +144,19 @@ ACTIONS = (
     	'has_perms' 	: 'cms.MEMBER',
       },
       { 
-        'label'        	: u'Lieux de Rencontre', 
+        'label'        	: u'Lieux de Rencontres', 
         'icon'     	: 'home',
         'desc'         	: u'Gérer (ajouter/modifier) les lieux de rencontre.', 
         'url'          	: '/locations/', 
         'has_perms'    	: 'cms.MEMBER',
       },
-#      {         
-#	'label'		: 'Site web', 
-#	'icon'		: 'cloud',
-#	'desc'		: 'Gestion et mise-à-jour du contenu du site web public.',
-#	'url'		: '/web/',
-#	'has_perms'	: 'cms.COMM',
-#      },
+      {         
+	'label'		: 'DISTRICT', 
+	'icon'		: 'building',
+	'desc'		: 'Redirection vers le site du DISTRICT 104.',
+	'url'		: 'https://d104.fifty-one.club/',
+	'has_perms'	: 'cms.MEMBER',
+      },
     ),
   },
 )
@@ -304,10 +166,13 @@ TEMPLATE_CONTENT['home'] = {
   'actions'     : ACTIONS,
 }
 
+#setup
+from setup.settings import *
+TEMPLATE_CONTENT['setup'] = SETUP_TMPL_CONTENT
+
 #members
 from members.settings import *
 TEMPLATE_CONTENT['members'] = MEMBERS_TMPL_CONTENT
-
 
 #attendance
 from attendance.settings import *

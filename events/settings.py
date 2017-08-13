@@ -4,18 +4,18 @@
 ACTIONS = {
   'main': (
     {
+      'label'         	: u'Importer le Calendrier des évènements',
+      'icon'		: 'upload',
+      'grade'	        : 'danger',
+      'url'		: '/upload/calendar/',
+      'has_perms'     	: 'cms.BOARD',
+    },
+    {
       'label'           : u'Ajouter un évènement',
       'icon'            : 'plus',
       'grade'           : 'danger',
       'url'             : '/events/add/',
       'has_perms'       : 'cms.COMM',
-    },
-    {
-      'label'		: u'Importer le Calendrier des évènements',
-      'icon'     	: 'upload',
-      'grade'     	: 'danger',
-      'url'           	: '/upload/calendar/',
-      'has_perms'	: 'cms.BOARD',
     },
     {
       'label'           : u'Gestion des Lieux de Rencontre',

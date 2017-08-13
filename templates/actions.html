@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+{% if title %}<h2>{{ title }}</h2>{% endif %}
+  {% for part in actions %}
+  {% if part.has_perms in perms or not part.has_perms %}
+  <div class="col-sm-6">
+    <div class="panel panel-primary {% if part.grade %}panel-{{ part.grade }}{% endif %}">
+     {% if part.heading %}
+      <div class="panel-heading">
+       <h3 class="panel-title text-center">{% if part.icon %}<i class="fa fa-{{ part.icon }}"></i>&nbsp;&nbsp;{% endif %}{{ part.heading|safe }}{% if part.icon %}&nbsp;&nbsp;<i class="fa fa-{{ part.icon }}"></i>{% endif %}</h3>
+      </div>
+     {% endif %}
+      <div class="panel-body">
+        <center>
+        {% for action in part.actions %}
+        {% if action.has_perms in perms or not action.has_perms %}
+          {% if action.url %}
+            <a class="btn btn-default {% if action.grade %}btn-{{action.grade}}{% endif %}" href="{{ action.url }}" role="button">{% if action.icon %}<i class="fa fa-{{ action.icon }}"></i>{% endif %}&nbsp;&nbsp;{{ action.label }}&nbsp;</a>
+     	    <br />
+     	    {% if action.desc %}<p>{{ action.desc }}</p>{% endif %}
+     	    <br />
+     	    <br />
+          {% endif %}
+        {% endif %}
+        {% endfor %}
+        </center>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  {% endfor %}
+</div>
+{% endblock %}
+

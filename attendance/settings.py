@@ -6,6 +6,7 @@ ACTIONS = {
     {
       'label' 		: u'Inviter un(des) ami(s), conférencier(s) ou would-be(s).',
       'icon'     	: 'plus',
+      'grade'     	: 'danger',
       'url'           	: '/meetings/invite/{}/{}/',
     },
   ),

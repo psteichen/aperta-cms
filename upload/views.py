@@ -1,11 +1,15 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, permission_required
-from django.contrib.formtools.wizard.views import SessionWizardView
 from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 
+from formtools.wizard.views import SessionWizardView
+
 from django_tables2  import RequestConfig
+
+from headcrumbs.decorators import crumb
+from headcrumbs.util import name_from_pk
 
 from .functions import import_data
 from .forms import ImportData
@@ -14,11 +18,8 @@ from .forms import ImportData
 # upload #
 ##########
 @permission_required('cms.BOARD')
+@crumb(u'Import')
 def upload(r,ty):
-  r.breadcrumbs( ( 	
-			('home','/'),
-                   	('import data','/upload/'+ty+'/'),
-               ) )
 
   template  	= settings.TEMPLATE_CONTENT['upload'][ty]['template']
   title  	= settings.TEMPLATE_CONTENT['upload'][ty]['title']

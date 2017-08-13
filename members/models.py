@@ -39,10 +39,10 @@ class Member(Model):
   photo		= ImageField(verbose_name=u'Photo',upload_to=rename_photo,blank=True,null=True)
   first_name    = CharField(verbose_name=u'Prénom',max_length=100)
   last_name	= CharField(verbose_name=u'Nom',max_length=100)
-  address	= CharField(verbose_name=u'Adresse',max_length=250,blank=True,null=True)
+  address     = CharField(verbose_name=u'Adresse',max_length=250,blank=True,null=True)
   prefix      	= IntegerField(verbose_name=u'Préfix',choices=PREFIXES,default=LU) 
-  phone		= IntegerField(verbose_name=u'Tél. fixe',blank=True,null=True) 
-  mobile	= IntegerField(verbose_name=u'Tél. mobile',blank=True,null=True) 
+  phone               = IntegerField(verbose_name=u'Tél. fixe',blank=True,null=True)
+  mobile      = IntegerField(verbose_name=u'Tél. mobile',blank=True,null=True)
   email		= EmailField()
   start_date    = DateField(verbose_name=u'Date de début')
   end_date      = DateField(verbose_name=u'Date de fin',blank=True,null=True) 
@@ -63,19 +63,20 @@ class RoleType(Model):
   )
 
   title		= CharField(verbose_name=u'Titre',max_length=100)
+  type		= IntegerField(verbose_name=u'Type',choices=TYPES,default=A)
   desc		= CharField(verbose_name=u'Description',max_length=500,blank=True,null=True)
-  type      	= IntegerField(verbose_name=u'Type',choices=TYPES,default=A) 
 
   def __unicode__(self):
     return self.title + u' ('+unicode(self.TYPES[self.type][1])+u')'
 
 class Role(Model):
-  member      	= ForeignKey(Member)
-  type      	= ForeignKey(RoleType)
-  year    	= CharField(verbose_name=u'Saison',max_length=25)
+  member 	= ForeignKey(Member)
+  type        	= ForeignKey(RoleType)
+  year        	= CharField(verbose_name=u'Saison',max_length=25)
 
   def __unicode__(self):
     return unicode(self.type) + ' : ' + unicode(self.member)
 
   class Meta:
     unique_together = ( 'member', 'type', )
+

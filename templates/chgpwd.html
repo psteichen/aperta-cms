@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block content %}
+
+{% block errors %}
+  {% if error_message %}<p class="error">{{ error_message }}</p>{% endif %}
+{% endblock %}
+
+{% block form %}
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h2 class="panel-title">{{ auth.chgpwd.title }}&nbsp;{{ user }}</h2>
+    </div>
+    <div class="panel-body">
+      <p>{{ desc|safe }}</p>
+      <div class="col-xs-10">
+       <form role="form" class="form-horizontal" action="." method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.management_form }}
+        {% bootstrap_form form %}
+        <div class="btn-toolbar">
+         <div class="btn-group">
+           <button class="btn btn-success" type="submit" value="{{ auth.chgpwd.submit }}">{{ auth.chgpwd.submit }}</button>
+         </div>
+        </div>
+       </form>  
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% endblock %}

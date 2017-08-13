@@ -10,13 +10,15 @@ from members.functions import get_active_members
 
 from .models import Meeting, Invitee
 
-#meeting form
+#meeting forms
 class MeetingForm(ModelForm):
   additional_message 	= CharField(label='Message supplémentaire',widget=Textarea(attrs={'placeholder': "Message à transmettre dans l'invitation.",}),required=False)
   attachement 		= FileField(label='Annexe(s)',required=False)
+#  send 			= BooleanField(label='Envoi direct des invitations',required=False)
 
   class Meta:
     model = Meeting
+#    fields = ( 'title', 'when', 'time', 'location', 'num', 'deadline', 'additional_message', 'attachement', 'send', )
     fields = ( 'title', 'when', 'time', 'location', 'num', 'deadline', 'additional_message', 'attachement', )
     widgets = {
 #      'title'	: TextInput(attrs={'readonly': 'readonly', }),
@@ -55,7 +57,7 @@ class ModifyMeetingForm(ModelForm):
       'deadline': TextInput(attrs={'type': 'datetime', 'id': 'dtpicker', }),
     }
     help_texts = {
-      'location': '<a href="/locations/add/" >Ajouter un nouveau lieu de rencontre</a>', 
+      'location': '<a href="/locations/add/" >Ajouter un nouveau lieu de rencontre</a>',
     }
 
 
