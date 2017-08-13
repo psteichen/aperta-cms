@@ -35,7 +35,7 @@ TEMPLATE_CONTENT = {
   'meta' : {
     'author'            : 'Pascal Steichen - pst@libre.lu',
     'copyright'         : 'FIFTY-ONE Luxembourg APERTA a.s.b.l.',
-    'title'             : 'Club Management System',
+    'title'             : 'FIFTY-ONE APERTA - Club Management System (cms.aperta.lu)', 
     'logo' : {
       'title'		: 'FIFTY-ONE<br/><strong><em>APERTA</em></strong>',
       'img'		: 'https://aperta.lu/pics/logo-51-aperta_picto.png',
@@ -78,16 +78,31 @@ TEMPLATE_CONTENT = {
     'duplicate'         : u'Doublon, vérifiez votre saisie!',
   },
   'auth' : {
-    'title': u'Authentification',
-    'submit': u'Se connecter',
-    'chgpwd' : {
-      'title': u'Changer le mot de passe pour: ',
-      'submit': u'Changer',
-      'done' : {
-        'title': u'Changement du mot de passe réussi.',
-        'message': u'Ton mot de passe a été changé avec succès. Merci de te reconnecter avec le nouveau mot de passe.',
-        'backurl': '/',
-        'backurl_txt': u'Retour vers l\'applicaion.',
+    'login' : {
+      'title'		: u'Authentification',
+      'submit'		: u'Se connecter',
+      'next'		: '/',
+      'lost_password'	: u'Mot de passe perdu ?',
+    }
+    'password' : {
+      'change' : {
+        'title'		: u'Changer le mot de passe pour: ',
+        'submit'	: u'Changer',
+        'done' : {
+          'title'	: u'Changement du mot de passe réussi.',
+          'message'	: u'Ton mot de passe a été changé avec succès. Merci de te reconnecter avec le nouveau mot de passe.',
+          'backurl'	: '/',
+          'backurl_txt'	: u'Retour vers l\'applicaion.',
+        },
+      },
+      'reset' : {
+        'title'		: u'Réinitialisation du mot de passe de : ',
+        'submit'	: u'Réinitialiser',
+        'invalid_link'	: u"Ce lien pour réinitialiser votre mot de passe n'est plus valide. Veuillez recommencer la procédure.",
+        'done' : {
+          'title'	: u'Changement du mot de passe réussi.',
+          'message'	: u'Ton mot de passe a été changé avec succès. Merci de te reconnecter avec le nouveau mot de passe.',
+        },
       },
     },
   },

@@ -2,6 +2,7 @@
 {% load bootstrap3 %}
 
 {% block content %}
+
 <div class="jumbotron">
  {% block errors %}
   {% if error_message %}<p class="error">{{ error_message }}</p>{% endif %}
@@ -10,7 +11,7 @@
  {% block form %}
   <div class="panel panel-primary">
     <div class="panel-heading">
-      <h2 class="panel-title text-center">{{ auth.title }}</h2>
+      <h2 class="panel-title text-center">{{ auth.login.title }}</h2>
     </div>
     <div class="panel-body">
       <div class="col-xs-2"></div>
@@ -19,11 +20,13 @@
         {% csrf_token %}
         {{ form.management_form }}
         {% bootstrap_form form %}
+        <input type="hidden" name="next" value="{{ auth.login.next }}" />
         <div class="btn-toolbar">
          <div class="btn-group">
-          <button class="btn btn-success" type="submit" value="{{ auth.submit }}">{{ auth.submit }}&nbsp;&nbsp;<i class="fa fa-sign-in"></i></button>
+          <button class="btn btn-success" type="submit" value="{{ auth.login.submit }}">{{ auth.login.submit }}&nbsp;&nbsp;<i class="fa fa-sign-in"></i></button>
          </div>
         </div>
+        <p><a href="{% url 'password_reset' %}">{{ auth.login.lost_password }}</a></p>
        </form>  
       </div>
       <div class="col-xs-2"></div>
