@@ -21,12 +21,10 @@
         {{ form.management_form }}
         {% bootstrap_form form %}
         <input type="hidden" name="next" value="{{ auth.login.next }}" />
-        <div class="btn-toolbar">
-         <div class="btn-group">
-          <button class="btn btn-success" type="submit" value="{{ auth.login.submit }}">{{ auth.login.submit }}&nbsp;&nbsp;<i class="fa fa-sign-in"></i></button>
-         </div>
-        </div>
-        <p><a href="{% url 'password_reset' %}">{{ auth.login.lost_password }}</a></p>
+        <p class="text-center">
+          <button class="btn btn-success" type="submit" value="{{ auth.login.submit }}">{{ auth.login.submit }}&nbsp;&nbsp;<i class="fa fa-sign-in"></i></button><br/>
+          <a class="text-muted" href="{% url 'password_reset' %}"><small><em>{{ auth.login.lost_password }}</em><small></a>
+        </p>
        </form>  
       </div>
       <div class="col-xs-2"></div>

@@ -83,7 +83,7 @@ TEMPLATE_CONTENT = {
       'submit'		: u'Se connecter',
       'next'		: '/',
       'lost_password'	: u'Mot de passe perdu ?',
-    }
+    },
     'password' : {
       'change' : {
         'title'		: u'Changer le mot de passe pour: ',
@@ -96,7 +96,8 @@ TEMPLATE_CONTENT = {
         },
       },
       'reset' : {
-        'title'		: u'Réinitialisation du mot de passe de : ',
+        'title'		: u'Réinitialisation de mot de passe.',
+        'desc'		: u"Pour réinitialiser ton mot de passe, veuillez fournir une adresse email pour l'envoi du lien de réinitialisation, merci.",
         'submit'	: u'Réinitialiser',
         'invalid_link'	: u"Ce lien pour réinitialiser votre mot de passe n'est plus valide. Veuillez recommencer la procédure.",
         'done' : {

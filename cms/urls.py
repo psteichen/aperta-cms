@@ -1,5 +1,9 @@
+#
+# coding=utf-8
+#
+
 from django.conf.urls import include, url
-from django.contrib.auth.views import login, logout_then_login, password_change, password_change_done, password_reset, password_reset_done, password_reset_confrim, password_reset_complete
+#from django.contrib.auth.views import login, logout_then_login, password_change, password_change_done, password_reset, password_reset_done, password_reset_confrim, password_reset_complete
 from django.contrib import admin
 admin.autodiscover()
 
