@@ -39,10 +39,10 @@ class Member(Model):
   photo		= ImageField(verbose_name=u'Photo',upload_to=rename_photo,blank=True,null=True)
   first_name    = CharField(verbose_name=u'Prénom',max_length=100)
   last_name	= CharField(verbose_name=u'Nom',max_length=100)
-  address     = CharField(verbose_name=u'Adresse',max_length=250,blank=True,null=True)
+  address     	= CharField(verbose_name=u'Adresse',max_length=250,blank=True,null=True)
   prefix      	= IntegerField(verbose_name=u'Préfix',choices=PREFIXES,default=LU) 
-  phone               = IntegerField(verbose_name=u'Tél. fixe',blank=True,null=True)
-  mobile      = IntegerField(verbose_name=u'Tél. mobile',blank=True,null=True)
+  phone         = IntegerField(verbose_name=u'Tél. fixe',blank=True,null=True)
+  mobile      	= IntegerField(verbose_name=u'Tél. mobile',blank=True,null=True)
   email		= EmailField()
   start_date    = DateField(verbose_name=u'Date de début')
   end_date      = DateField(verbose_name=u'Date de fin',blank=True,null=True) 
@@ -79,4 +79,5 @@ class Role(Model):
 
   class Meta:
     unique_together = ( 'member', 'type', )
+
 

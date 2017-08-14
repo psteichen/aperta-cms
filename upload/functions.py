@@ -9,13 +9,13 @@ from re import search, findall
 import csv
 
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth.models import User, Permission
+from django.contrib.auth.models import Permission
 from django.utils import timezone
 
 from cms.functions import debug
 
 from members.functions import gen_username, gen_random_password
-from members.models import Member
+from members.models import User, Member
 from meetings.models import Meeting
 from events.models import Event
 from locations.models import Location

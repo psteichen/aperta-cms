@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 
 from .models import Member, Role
 
+
 def get_active_members():
   return Member.objects.filter(Q(status=Member.ACT)|Q(status=Member.WBE)).order_by('last_name')
 
@@ -98,3 +99,4 @@ def gen_username(fn, ln, pad=0):
 
 def gen_random_password():
   return User.objects.make_random_password(length=10)
+

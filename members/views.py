@@ -3,7 +3,6 @@
 #
 
 from django.conf import settings
-from django.contrib.auth.models import User
 from django.template.response import TemplateResponse
 from django.shortcuts import redirect
 from django.contrib.auth.hashers import make_password
@@ -24,7 +23,7 @@ from events.models import Event
 from attendance.functions import gen_attendance_hashes
 
 from .functions import gen_member_initial, gen_role_initial, gen_member_overview, gen_member_fullname, gen_username, gen_random_password
-from .models import Member, Role
+from .models import User, Member, Role
 from .forms import MemberForm, RoleForm, RoleTypeForm
 from .tables  import MemberTable, MgmtMemberTable, RoleTable
 
@@ -57,17 +56,22 @@ def add(r):
   if r.POST:
     mf = MemberForm(r.POST)
     if mf.is_valid():
-      Me = mf.save(commit=False)
-      Me.save()
+      M = mf.save(commit=False)
 
       # create user
-      user = User.objects.create_user(gen_username(Me.first_name,Me.last_name), Me.email, make_password(gen_random_password()))
+      U = User.objects.create_user(gen_username(M.first_name,M.last_name), M.email, make_password(gen_random_password()))
+      U.first_name = M.first_name
+      U.last_name = M.last_name
+      U.user_permissions.add(Permission.objects.get(codename='MEMBER'))
+      U.save()
+      M.user = U
+      M.save()
 
       #gen attendance hashes (to avoid errors with future events & meetings)
       for meeting in Meeting.objects.all():
-        gen_attendance_hashes(meeting,Event.MEET,Me)
+        gen_attendance_hashes(meeting,Event.MEET,M)
       for event in Event.objects.all():
-        gen_attendance_hashes(event,Event.OTH,Me)
+        gen_attendance_hashes(event,Event.OTH,M)
       
       # all fine -> done
       return TemplateResponse(r, settings.TEMPLATE_CONTENT['members']['add']['done']['template'], {
