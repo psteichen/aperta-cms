@@ -34,7 +34,8 @@
 
   <body role="document">
 
-   <div class="container-fluid">
+<!-- header and navigation -->
+  <div class="container-fluid">
     {% block nav %}
      {% include "nav.html" %}
     {% endblock %}
@@ -46,12 +47,14 @@
         <span class="btn btn-danger disabled">{{ meta.badge }}</span>
       </div>
     {% endif %}
+  </div>
+<!-- end nav-->
 
-  <!-- start jumbotron -->
-    <div class="jumbotron">
+<!-- content -->
+  <div class="container-fluid">
 
-     <!-- headcrumbs -->
-     {% if crumbs %}
+    {% if crumbs %}
+      <!-- headcrumbs -->
       <ol class="breadcrumb">
        <li><a href="/">Home</a></li>
        {% for crumb in crumbs %}
@@ -62,19 +65,24 @@
         {% endif %}
        {% endfor %}
       </ol>
-     {% endif %}
+    {% endif %}
 
-     <!-- content -->
+  <!-- jumbotron -->
+    <div class="jumbotron">
      {% block content %}{% endblock %}
     </div>
-  <!--  end jumbotron -->
+  <!-- end jumbotron -->
 
+  </div> 
+<!-- end content -->
+
+<!-- footer -->
+  <footer>
     <div class="footer">
-     <p class="text-muted pull-right">&copy; {{ meta.copyright }} 2014</p>
+     <small class="text-muted pull-right">&copy; {{ meta.copyright }} 2014</small>
     </div>
-
-   </div> 
-<!-- end container -->
+  </footer>
+<!-- end footer -->
 
    <!-- jquery //-->
    <script src="{{ meta.js.jq }}"></script>

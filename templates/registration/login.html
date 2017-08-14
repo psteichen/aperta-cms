@@ -3,35 +3,29 @@
 
 {% block content %}
 
-<div class="jumbotron">
- {% block errors %}
-  {% if error_message %}<p class="error">{{ error_message }}</p>{% endif %}
- {% endblock %}
-
+<div class="col-xs-3"></div>
+<div class="col-xs-6">
  {% block form %}
   <div class="panel panel-primary">
     <div class="panel-heading">
       <h2 class="panel-title text-center">{{ auth.login.title }}</h2>
     </div>
     <div class="panel-body">
-      <div class="col-xs-2"></div>
-      <div class="col-xs-8">
-       <form role="form" class="form-horizontal" action="{% url 'login' %}" method="post">
+      <form role="form" class="center-block" action="{% url 'login' %}" method="post">
         {% csrf_token %}
         {{ form.management_form }}
         {% bootstrap_form form %}
         <input type="hidden" name="next" value="{{ auth.login.next }}" />
         <p class="text-center">
           <button class="btn btn-success" type="submit" value="{{ auth.login.submit }}">{{ auth.login.submit }}&nbsp;&nbsp;<i class="fa fa-sign-in"></i></button><br/>
-          <a class="text-muted" href="{% url 'password_reset' %}"><small><em>{{ auth.login.lost_password }}</em><small></a>
+          <a class="text-muted" href="{% url 'password_reset' %}"><small><em>{{ auth.login.lost_password }}</em></small></a>
         </p>
-       </form>  
-      </div>
-      <div class="col-xs-2"></div>
+      </form>
     </div>
   </div>
  {% endblock %}
 </div>
+<div class="col-xs-3"></div>
 
 {% endblock %}
 
