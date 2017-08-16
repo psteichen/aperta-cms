@@ -4,7 +4,7 @@
 <div class="container-fluid">
 {% if title %}<h2>{{ title }}</h2>{% endif %}
   {% for part in actions %}
-  {% if part.has_perms in perms or not part.has_perms %}
+  {% if part.has_perms in groups or not part.has_perms %}
   <div class="col-sm-6">
     <div class="panel panel-primary {% if part.grade %}panel-{{ part.grade }}{% endif %}">
      {% if part.heading %}
@@ -15,7 +15,7 @@
       <div class="panel-body">
         <center>
         {% for action in part.actions %}
-        {% if action.has_perms in perms or not action.has_perms %}
+        {% if action.has_perms in groups or not action.has_perms %}
           {% if action.url %}
             <a class="btn btn-default {% if action.grade %}btn-{{action.grade}}{% endif %}" href="{{ action.url }}" role="button">{% if action.icon %}<i class="fa fa-{{ action.icon }}"></i>{% endif %}&nbsp;&nbsp;{{ action.label }}&nbsp;</a>
      	    <br />

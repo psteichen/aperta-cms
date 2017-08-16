@@ -7,7 +7,7 @@ from django.template.response import TemplateResponse
 from django.shortcuts import redirect
 from django.contrib.auth.hashers import make_password
 from django.core.files.storage import FileSystemStorage
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import login_required
 
 from formtools.wizard.views import SessionWizardView
 
@@ -16,13 +16,13 @@ from django_tables2  import RequestConfig
 from headcrumbs.decorators import crumb
 from headcrumbs.util import name_from_pk
 
-from cms.functions import show_form, getSaison
+from cms.functions import show_form, getSaison, group_required
 
 from meetings.models import Meeting
 from events.models import Event
 from attendance.functions import gen_attendance_hashes
 
-from .functions import gen_member_initial, gen_role_initial, gen_member_overview, gen_member_fullname, gen_username, gen_random_password
+from .functions import is_board, is_member, create_user, gen_member_initial, gen_role_initial, gen_member_overview, gen_member_fullname, gen_username, gen_random_password
 from .models import User, Member, Role
 from .forms import MemberForm, RoleForm, RoleTypeForm
 from .tables  import MemberTable, MgmtMemberTable, RoleTable
@@ -30,12 +30,12 @@ from .tables  import MemberTable, MgmtMemberTable, RoleTable
 
 # list #
 #########
-@permission_required('cms.MEMBER')
+@group_required('MEMBER')
 @crumb(u'Membres')
 def list(request):
 
   table = MemberTable(Member.objects.all().order_by('status', 'last_name'),request,username=request.user.username)
-  if request.user.has_perm('cms.BOARD'):
+  if is_board(request.user):
     table = MgmtMemberTable(Member.objects.all().order_by('status', 'last_name'))
   RequestConfig(request, paginate={"per_page": 75}).configure(table)
 
@@ -49,7 +49,7 @@ def list(request):
 
 # add #
 #######
-@permission_required('cms.BOARD')
+@group_required('BOARD')
 @crumb(u'Ajouter un membre', parent=list)
 def add(r):
 
@@ -59,11 +59,7 @@ def add(r):
       M = mf.save(commit=False)
 
       # create user
-      U = User.objects.create_user(gen_username(M.first_name,M.last_name), M.email, make_password(gen_random_password()))
-      U.first_name = M.first_name
-      U.last_name = M.last_name
-      U.user_permissions.add(Permission.objects.get(codename='MEMBER'))
-      U.save()
+      U = create_user(M.first_name,M.last_name, M.email)
       M.user = U
       M.save()
 
@@ -98,7 +94,7 @@ def add(r):
 
 # modify #
 ##########
-@permission_required('cms.BOARD')
+@group_required('BOARD')
 @crumb(u'Modifier le membre [{member}]'.format(member=name_from_pk(Member)),parent=list)
 def modify(r,mem_id):
 
@@ -134,7 +130,7 @@ def modify(r,mem_id):
 
 # roles #
 #########
-@permission_required('cms.BOARD')
+@group_required('BOARD')
 @crumb(u"Rôles")
 def roles(request):
 
@@ -149,7 +145,7 @@ def roles(request):
 
 # roles  modify #
 #################
-@permission_required('cms.BOARD')
+@group_required('BOARD')
 @crumb(u'Modifier le rôle [{role}]'.format(role=name_from_pk(Role)), parent=roles)
 def r_modify(r,role_id):
 
@@ -186,7 +182,7 @@ def r_modify(r,role_id):
 
 # roles  add #
 ##############
-@permission_required('cms.BOARD')
+@group_required('BOARD')
 @crumb(u'Ajouter un rôle', parent=roles)
 def r_add(r):
 
@@ -219,7 +215,7 @@ def r_add(r):
 
 # roles  type #
 #################
-@permission_required('cms.BOARD')
+@group_required('BOARD')
 @crumb(u'Créer un type de rôle', parent=roles)
 def r_type(r):
 

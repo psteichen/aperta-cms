@@ -19,7 +19,7 @@ from .models import Member, Role
 #table for visualisation via django_tables2
 class MemberTable(Table):
   role		= Column(verbose_name=u'Rôle',empty_values=())
-  meetings    = Column(verbose_name=u'Réunions statutaires<br/>(présent / excusé)',empty_values=())
+  meetings    	= Column(verbose_name=u'RS (présent / excusé)',empty_values=())
 
   def __init__(self, *args, **kwargs):
     if kwargs["username"]:
@@ -52,8 +52,13 @@ class MemberTable(Table):
     return unicode.upper(value)
 
   def render_role(self, value, record):
+    roles = u''
     try:
-      return unicode(role.type.title) + ' (' + unicode(role.year) + ')'
+      R = Role.objects.filter(member__id=record.id,year=getSaison())
+      for r in R:
+        roles += unicode(r.type.title)
+        if r != R.last(): roles += u' ; '
+      return roles
     except Role.DoesNotExist:
       return ''
 
@@ -73,9 +78,9 @@ class MemberTable(Table):
 
 #management table
 class MgmtMemberTable(Table):
-  row_class     = Column(visible=False, empty_values=()) #used to highlight some rows
-  role                = Column(verbose_name=u'Rôle(s) ['+getSaison()+'] ',empty_values=())
-  meetings    = Column(verbose_name=u'Réunions statutaires<br/>(présent / excusé)',empty_values=())
+  row_class	= Column(visible=False, empty_values=()) #used to highlight some rows
+  role          = Column(verbose_name=u'Rôle(s) ['+getSaison()+'] ',empty_values=())
+  meetings    	= Column(verbose_name=u'RS (présent / excusé)',empty_values=())
   modify	= Column(verbose_name=u'Modifier',empty_values=())
 
   def render_row_class(self, value, record):

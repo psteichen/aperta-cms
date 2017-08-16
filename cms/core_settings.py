@@ -81,6 +81,7 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
   		'cms.context_processors.template_content', #for own templating system
+  		'cms.context_processors.group_perms', #for own perms system (based on groups)
             ],
         },
     },

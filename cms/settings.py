@@ -117,37 +117,37 @@ except:
 # home
 ACTIONS = (
   {
-    'has_perms' 	: 'cms.MEMBER',
     'heading' 		: 'Association',
     'grade' 		: 'success',
     'icon' 		: 'users',
+    'has_perms' 	: 'MEMBER',
     'actions' : (
       {         
         'label'         : u'Réunions Statutaires', 
         'icon'     	: 'calendar',
         'desc'          : 'Outil de gestion des réunions statutaires.',
         'url'           : '/meetings/',
-    	'has_perms' 	: 'cms.MEMBER',
+    	'has_perms' 	: 'MEMBER',
       },
       {         
         'label'         : u'Membres', 
         'icon'     	: 'user',
         'desc'          : 'Gérer les members et leurs affiliations.',
         'url'           : '/members/',
-    	'has_perms' 	: 'cms.MEMBER',
+    	'has_perms' 	: 'MEMBER',
       },
       {         
         'label'         : u'Trésorerie', 
         'icon'     	: 'euro',
         'desc'          : 'Gérer les comptes et autres aspects financiers.',
         'url'           : '/finance/',
-   	'has_perms' 	: 'cms.MEMBER',
+   	'has_perms' 	: 'MEMBER',
      },
 
     ),
   },
   {
-    'has_perms' 	: 'cms.MEMBER',
+    'has_perms' 	: 'MEMBER',
     'heading' 		: 'Activités',
     'grade' 		: 'info',
     'icon' 		: 'globe',
@@ -157,21 +157,21 @@ ACTIONS = (
         'icon'     	: 'glass',
         'desc'          : 'Gérer les actvitiés et évènements (hors réunions statutaires).',
         'url'           : '/events/',
-    	'has_perms' 	: 'cms.MEMBER',
+    	'has_perms' 	: 'MEMBER',
       },
       { 
         'label'        	: u'Lieux de Rencontres', 
         'icon'     	: 'home',
         'desc'         	: u'Gérer (ajouter/modifier) les lieux de rencontre.', 
         'url'          	: '/locations/', 
-        'has_perms'    	: 'cms.MEMBER',
+        'has_perms'    	: 'MEMBER',
       },
       {         
 	'label'		: 'DISTRICT', 
 	'icon'		: 'building',
 	'desc'		: 'Redirection vers le site du DISTRICT 104.',
 	'url'		: 'https://d104.fifty-one.club/',
-	'has_perms'	: 'cms.MEMBER',
+	'has_perms'	: 'MEMBER',
       },
     ),
   },

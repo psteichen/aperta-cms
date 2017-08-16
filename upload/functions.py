@@ -8,14 +8,12 @@ from os.path import splitext
 from re import search, findall
 import csv
 
-from django.contrib.auth.hashers import make_password
-from django.contrib.auth.models import Permission
 from django.utils import timezone
 
 from cms.functions import debug
 
-from members.functions import gen_username, gen_random_password
-from members.models import User, Member
+from members.functions import gen_username, gen_random_password, create_user
+from members.models import Member
 from meetings.models import Meeting
 from events.models import Event
 from locations.models import Location
@@ -48,11 +46,7 @@ def import_data(ty,data):
 		email		= unicode(l['EMAIL'])
 	)
         # create user
-        U = User.objects.create_user(gen_username(Model.first_name,Model.last_name), Model.email, make_password(gen_random_password()))
-        U.first_name = Model.first_name
-        U.last_name = Model.last_name
-        U.save()
-        U.user_permissions.add(Permission.objects.get(codename='MEMBER'))
+        U = create_user(Model.first_name,Model.last_name, Model.email)
         Model.user = U
         Model.save()
         nb+=1

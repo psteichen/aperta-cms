@@ -2,9 +2,52 @@
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.db.models import Q
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
+from django.contrib.auth.hashers import make_password
 
 from .models import Member, Role
+
+
+def gen_username(fn, ln, pad=0):
+  username = ''
+  i=0
+  j=1
+  while i<=pad:
+    try:
+      username += fn[i]
+    except:
+      username += unicode(j)
+      j += 1
+
+    i += 1
+  username = unicode.lower(username + ln)
+  if login_exists(username): return gen_username(fn, ln, pad+1)
+  else: return username
+
+def gen_random_password():
+  return User.objects.make_random_password(length=10)
+
+def create_user(first_name,last_name,email):
+  # create user
+  U = User.objects.create_user(gen_username(first_name,last_name), email, make_password(gen_random_password()))
+  U.first_name = first_name
+  U.last_name = last_name
+  U.save()
+  U.groups.add(Group.objects.get(name='MEMBER'))
+
+  return U
+
+def is_board(user):
+  for g in user.groups.all():
+    if g.name == 'BOARD': return True
+
+  return False
+
+def is_member(user):
+  for g in user.groups.all():
+    if g.name == 'MEMBER': return True
+
+  return False
 
 
 def get_active_members():
@@ -81,22 +124,4 @@ def login_exists(username):
   except User.DoesNotExist:
     return False
 
-def gen_username(fn, ln, pad=0):
-  username = ''
-  i=0
-  j=1
-  while i<=pad:
-    try:
-      username += fn[i]
-    except:
-      username += unicode(j)
-      j += 1
-
-    i += 1
-  username = unicode.lower(username + ln)
-  if login_exists(username): return gen_username(fn, ln, pad+1)
-  else: return username
-
-def gen_random_password():
-  return User.objects.make_random_password(length=10)
 

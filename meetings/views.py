@@ -4,7 +4,6 @@
 from datetime import date, timedelta, datetime
 
 from django.template.response import TemplateResponse
-from django.contrib.auth.decorators import login_required, permission_required
 from django.conf import settings
 from django.utils import timezone
 
@@ -15,11 +14,11 @@ from django_tables2  import RequestConfig
 from headcrumbs.decorators import crumb
 from headcrumbs.util import name_from_pk
 
-from cms.functions import notify_by_email, show_form, visualiseDateTime, genIcal
+from cms.functions import notify_by_email, show_form, visualiseDateTime, genIcal, group_required
 
 from events.models import Event
 from members.models import Member
-from members.functions import get_active_members, gen_member_fullname
+from members.functions import get_active_members, gen_member_fullname, is_board
 from attendance.functions import gen_attendance_hashes, gen_invitation_message
 from attendance.models import Meeting_Attendance
 
@@ -35,12 +34,12 @@ from .tables  import MeetingTable, MgmtMeetingTable, MeetingMixin, MeetingListin
 
 # list #
 ########
-@permission_required('cms.MEMBER',raise_exception=True)
+@group_required('MEMBER')
 @crumb(u'Réunions statutaires')
 def list(r):
 
   table = MeetingTable(Meeting.objects.all().order_by('-num'))
-  if r.user.has_perm('cms.BOARD'):
+  if is_board(r.user):
     table = MgmtMeetingTable(Meeting.objects.all().order_by('-num'))
 
   RequestConfig(r, paginate={"per_page": 75}).configure(table)
@@ -55,7 +54,7 @@ def list(r):
 
 # add #
 #######
-@permission_required('cms.BOARD',raise_exception=True)
+@group_required('BOARD')
 @crumb(u'Ajoute une réunion',parent=list)
 def add(r):
 
@@ -110,7 +109,7 @@ def add(r):
 
 # send #
 ########
-@permission_required('cms.BOARD',raise_exception=True)
+@group_required('BOARD')
 @crumb(u'Envoie des invitations de la réunion : {meeting}'.format(meeting=name_from_pk(Meeting)),parent=list)
 def send(r, meeting_num):
 
@@ -163,7 +162,6 @@ def send(r, meeting_num):
 
 # invite #
 ##########
-#@permission_required('cms.MEMBER',raise_exception=True)
 @crumb(u'Inviter un externe à la réunion : {meeting}'.format(meeting=name_from_pk(Meeting)),parent=list)
 def invite(r, meeting_num, member_id):
 
@@ -248,7 +246,7 @@ def invite(r, meeting_num, member_id):
 
 # details #
 ############
-@login_required
+@group_required('MEMBER')
 @crumb(u'Détails de la réunion : {meeting}'.format(meeting=name_from_pk(Meeting)),parent=list)
 def details(r, meeting_num):
 
@@ -264,7 +262,7 @@ def details(r, meeting_num):
 
 # listing #
 ###########
-@login_required
+@group_required('MEMBER')
 @crumb(u'Listing pour la réunion : {meeting}'.format(meeting=name_from_pk(Meeting)),parent=details)
 def listing(r, meeting_num):
 
@@ -280,7 +278,7 @@ def listing(r, meeting_num):
 
 # modify #
 ##########
-@permission_required('cms.BOARD',raise_exception=True)
+@group_required('BOARD')
 @crumb(u'Modifier la réunion : {meeting}'.format(meeting=name_from_pk(Meeting)),parent=list)
 def modify(r,meeting_num):
 
@@ -329,7 +327,7 @@ def modify(r,meeting_num):
 
 # report #
 ##########
-@permission_required('cms.BOARD',raise_exception=True)
+@group_required('BOARD')
 @crumb(u'Rapport de réunion : {meeting}'.format(meeting=name_from_pk(Meeting)),parent=list)
 def report(r, meeting_num):
 
