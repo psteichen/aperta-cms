@@ -21,6 +21,14 @@ def debug(app,message):
     print >>errlog, 'DEBUG ['+unicode(app)+']: '+unicode(message)
 
 
+def check_if_setup():
+  from django.contrib.sites.models import Site
+
+  sid = settings.SITE_ID
+  S = Site.objects.get(pk=sid)
+  if S.domain in settings.ALLOWED_HOSTS: return True
+  return False
+
 def group_required(*group_names):
 
   """Requires user membership in at least one of the groups passed in."""

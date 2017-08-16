@@ -180,6 +180,12 @@ ACTIONS = (
 TEMPLATE_CONTENT['home'] = {
   'template'    : 'actions.html',
   'actions'     : ACTIONS,
+  'setup_alert' : {
+    'title'	: u'Système non-configuré',
+    'desc'	: u"Pour que le système 'club management system' (CMS) soit utilisable et corresponde à vos besoins propres, veuillez suivre le lien et les instructions ci-dessous pour faire la configuration initiale du système.",
+    'url'	: '/setup/',
+    'action'	: 'Configuration initiale!',
+  },
 }
 
 #setup
