@@ -8,7 +8,7 @@ ACTIONS = {
       'icon'     	: 'bank',
       'grade'     	: 'info',
       'url'           	: '/finance/bank/',
-      'has_perms'	: 'cms.BOARD',
+      'has_perms'	: 'BOARD',
     },
   ),
   'invoice' : (
@@ -17,7 +17,7 @@ ACTIONS = {
       'icon'     	: 'euro',
       'grade'     	: 'danger',
       'url'           	: '/finance/invoice/add/',
-      'has_perms'	: 'cms.BOARD',
+      'has_perms'	: 'BOARD',
     },
   ),
 }

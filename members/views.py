@@ -7,7 +7,6 @@ from django.template.response import TemplateResponse
 from django.shortcuts import redirect
 from django.contrib.auth.hashers import make_password
 from django.core.files.storage import FileSystemStorage
-from django.contrib.auth.decorators import login_required
 
 from formtools.wizard.views import SessionWizardView
 
@@ -249,7 +248,7 @@ def r_type(r):
 
 # profile #
 ###########
-@login_required
+@group_required('MEMBER')
 @crumb(u'Profile utilisateur: {user}'.format(user=name_from_pk(User)))
 def profile(r, username):
 
@@ -275,7 +274,7 @@ def profile(r, username):
 
 # profile modify #
 ##################
-@login_required
+@group_required('MEMBER')
 @crumb(name_from_pk(User), parent=list)
 def p_modify(r, username):
 

@@ -4,27 +4,28 @@
 ACTIONS = {
   'main' : (
     {
-      'has_perms'     : 'cms.MEMBER',
-      'heading'               : u'Bilan',
+      'has_perms'     	: 'MEMBER',
+      'heading'         : u'Bilan',
       'actions' : (
         {
-          'label'     : u'Comptes annuels',
-                'desc'        : u"Les bilans financiers et les comptes des pertes et profits, tels qu'établient pour clôturer les périodes d'activitiées annuelles.",
-          'icon'      : 'balance-scale',
+          'label'     	: u'Comptes annuels',
+          'desc'        : u"Les bilans financiers et les comptes des pertes et profits, tels qu'établient pour clôturer les périodes d'activitiées annuelles.",
+          'icon'      	: 'balance-scale',
           'url'         : '/finance/balance/',
-          'has_perms' : 'cms.MEMBER',
+          'has_perms' 	: 'MEMBER',
         },
       ),
     },
     {
-      'heading'               : u'Banque',
+      'has_perms'     	: 'BOARD',
+      'heading'         : u'Banque',
       'actions' : (
         {
-          'label'     : u'Extraits bancaires',
-                'desc'        : u"Extraits et documents bancaires correspondant au compte de l'association.",
-          'icon'      : 'bank',
+          'label'     	: u'Extraits bancaires',
+          'desc'        : u"Extraits et documents bancaires correspondant au compte de l'association.",
+          'icon'      	: 'bank',
           'url'         : '/finance/bank/',
-          'has_perms' : 'cms.BOARD',
+          'has_perms' 	: 'BOARD',
         },
       ),
     },
@@ -35,7 +36,7 @@ ACTIONS = {
       'icon'          	: 'balance-scale',
       'grade'     	: 'danger',
       'url'		: '/finance/upload/balance/',
-      'has_perms'	: 'cms.BOARD',
+      'has_perms'	: 'BOARD',
     },
   ),
   'bank' : (
@@ -44,7 +45,7 @@ ACTIONS = {
       'icon'     	: 'bank',
       'grade'     	: 'danger',
       'url'           	: '/finance/bank/upload/bank/',
-      'has_perms'	: 'cms.BOARD',
+      'has_perms'	: 'BOARD',
     },
   ),
   'invoice' : (
@@ -53,7 +54,7 @@ ACTIONS = {
       'icon'     	: 'euro',
       'grade'     	: 'danger',
       'url'           	: '/finance/invoice/add/',
-      'has_perms'	: 'cms.BOARD',
+      'has_perms'	: 'BOARD',
     },
   ),
   'payment' : (
@@ -62,7 +63,7 @@ ACTIONS = {
       'icon'     	: 'euro',
       'grade'     	: 'danger',
       'url'           	: '/finance/payment/add/',
-      'has_perms'	: 'cms.BOARD',
+      'has_perms'	: 'BOARD',
     },
   ),
 }
