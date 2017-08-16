@@ -4,7 +4,6 @@
 from datetime import date, timedelta
 
 from django.template.response import TemplateResponse
-from django.contrib.auth.decorators import permission_required
 from django.conf import settings
 
 from django_tables2  import RequestConfig
@@ -12,6 +11,8 @@ from formtools.wizard.views import SessionWizardView
 
 from headcrumbs.decorators import crumb
 from headcrumbs.util import name_from_pk
+
+from cms.functions import group_required
 
 from .functions import gen_location_initial
 from .models import Location
@@ -24,7 +25,7 @@ from .tables  import LocationTable, MgmtLocationTable
 
 # list #
 ########
-@permission_required('cms.MEMBER',raise_exception=True)
+@group_required('MEMBER')
 @crumb(u'Lieux de Rencontres')
 def list(r):
 
@@ -42,7 +43,7 @@ def list(r):
 
 # add #
 #######
-@permission_required('cms.COMM',raise_exception=True)
+@group_required('BOARD')
 @crumb(u'Ajouter un lieux',parent=list)
 def add(r):
 
@@ -126,7 +127,7 @@ class ModifyLocationWizard(SessionWizardView):
 
 # delete #
 ##########
-@permission_required('cms.COMM',raise_exception=True)
+@group_required('BOARD')
 def delete(r,location_id):
 
   Lo = Location.objects.get(pk=location_id)

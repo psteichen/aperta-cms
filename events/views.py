@@ -4,7 +4,6 @@
 from datetime import date, timedelta, datetime
 
 from django.template.response import TemplateResponse
-from django.contrib.auth.decorators import login_required, permission_required
 from django.conf import settings
 from django.utils import timezone
 
@@ -14,7 +13,7 @@ from formtools.wizard.views import SessionWizardView
 from headcrumbs.decorators import crumb
 from headcrumbs.util import name_from_pk
 	
-from cms.functions import notify_by_email
+from cms.functions import notify_by_email, group_required
 
 from members.models import Member
 from members.functions import get_active_members, gen_member_fullname
@@ -32,7 +31,7 @@ from .tables  import EventTable
 
 # list #
 ########
-@login_required
+@group_required('MEMBER')
 @crumb(u'Évènements')
 def list(r):
 
@@ -49,7 +48,7 @@ def list(r):
 
 # add #
 #######
-@permission_required('cms.COMM',raise_exception=True)
+@group_required('BOARD')
 @crumb(u'Ajouter un évènement',parent=list)
 def add(r):
 
@@ -129,7 +128,7 @@ def add(r):
 
 # send #
 ########
-@permission_required('cms.COMM',raise_exception=True)
+@group_required('BOARD')
 def send(r,event_id):
 
   e_template =  settings.TEMPLATE_CONTENT['events']['send']['done']['email']['template']
@@ -172,7 +171,7 @@ def send(r,event_id):
 
 # details #
 ###########
-@login_required
+@group_required('MEMBER')
 @crumb(u"Détail d'un évènement",parent=list)
 def details(r, event_id):
 

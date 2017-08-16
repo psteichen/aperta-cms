@@ -5,7 +5,6 @@ from datetime import date, timedelta, datetime
 
 from django.shortcuts import redirect
 from django.template.response import TemplateResponse
-from django.contrib.auth.decorators import login_required, permission_required
 from django.conf import settings
 from django.utils import timezone
 
@@ -13,7 +12,7 @@ from django_tables2  import RequestConfig
 from headcrumbs.decorators import crumb
 from headcrumbs.util import name_from_pk
 
-from cms.functions import notify_by_email, show_form, visualiseDateTime
+from cms.functions import notify_by_email, show_form, visualiseDateTime, group_required
 
 from members.models import Member
 
@@ -28,7 +27,7 @@ from .tables  import BankExtractTable, BalanceSheetTable
 
 # list #
 ########
-@permission_required('cms.BOARD',raise_exception=True)
+@group_required('BOARD')
 @crumb(u'Trésorerie')
 def list(r):
   return TemplateResponse(r, settings.TEMPLATE_CONTENT['finance']['template'], { 'actions': settings.TEMPLATE_CONTENT['finance']['actions'], })
@@ -36,7 +35,7 @@ def list(r):
 
 # balance #
 ###########
-@permission_required('cms.MEMBER',raise_exception=True)
+@group_required('MEMBER')
 @crumb(u'Balance',parent=list)
 def balance(r):
   table = BalanceSheetTable(BalanceSheet.objects.all().order_by('-year'))
@@ -51,7 +50,7 @@ def balance(r):
 
 # bank #
 ########
-@permission_required('cms.BOARD',raise_exception=True)
+@group_required('BOARD')
 @crumb(u'Bank',parent=list)
 def bank(r):
 
@@ -67,7 +66,7 @@ def bank(r):
 
 # upload #
 ##########
-@permission_required('cms.BOARD',raise_exception=True)
+@group_required('BOARD')
 @crumb(u'Upload',parent=list)
 def upload(r,ty):
 

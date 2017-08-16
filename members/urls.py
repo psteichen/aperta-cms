@@ -1,5 +1,4 @@
 from django.conf.urls import include, url
-from django.contrib.auth.decorators import login_required, permission_required
 
 from .views import list, add, modify
 from .views import roles, r_add, r_modify, r_type

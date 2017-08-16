@@ -1,5 +1,6 @@
 from django.conf.urls import include, url
-from django.contrib.auth.decorators import permission_required
+
+from cms.functions import group_required
 
 from attendance.forms import ModifyAttendanceForm
 
@@ -20,7 +21,7 @@ modify_event_condition_dict = {
 #view
 modify_event_wizard = ModifyEventWizard.as_view(modify_event_forms, condition_dict=modify_event_condition_dict)
 #wrapper with specific permissions
-modify_event_wrapper = permission_required('cms.COMM',raise_exception=True)(modify_event_wizard)
+modify_event_wrapper = group_required('BOARD')(modify_event_wizard)
 
 urlpatterns = [
   url(r'^$', list, name='list'),

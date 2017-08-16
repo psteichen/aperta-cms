@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required, permission_required
 from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
@@ -11,13 +10,15 @@ from django_tables2  import RequestConfig
 from headcrumbs.decorators import crumb
 from headcrumbs.util import name_from_pk
 
+from cms.functions import group_required
+
 from .functions import import_data
 from .forms import ImportData
 
 
 # upload #
 ##########
-@permission_required('cms.BOARD')
+@group_required('BOARD')
 @crumb(u'Import')
 def upload(r,ty):
 

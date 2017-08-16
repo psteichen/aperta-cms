@@ -1,5 +1,6 @@
 from django.conf.urls import include, url
-from django.contrib.auth.decorators import permission_required
+
+from cms.functions import group_required
 
 from .views import list, add, delete
 from .forms import LocationForm, ContactForm
@@ -14,7 +15,7 @@ modify_location_forms = [
 #view
 modify_location_wizard = ModifyLocationWizard.as_view(modify_location_forms)
 #wrapper with specific permissions
-modify_location_wrapper = permission_required('cms.COMM',raise_exception=True)(modify_location_wizard)
+modify_location_wrapper = group_required('BOARD')(modify_location_wizard)
 
 
 urlpatterns = [
