@@ -47,7 +47,7 @@ def init(r):
       default_sender 	= sf.cleaned_data['default_sender']
       default_email 	= sf.cleaned_data['default_email']
       default_footer 	= sf.cleaned_data['default_footer']
-      apps		= sf.cleaned_data['apps']
+      optinal_apps	= sf.cleaned_data['optional_apps']
       # HERE
 
     # form not valid -> error

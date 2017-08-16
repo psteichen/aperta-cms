@@ -43,11 +43,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-#    'django.contrib.sites', #needed by breadcrumbs
+    'django.contrib.sites', #used by setup
 #    'django.contrib.flatpages', #needed by breadcrumbs
 ]
 
-#SITE_ID = 1
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
