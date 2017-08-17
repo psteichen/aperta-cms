@@ -184,7 +184,7 @@ TEMPLATE_CONTENT['home'] = {
     'title'	: u'Système non-configuré',
     'desc'	: u"Pour que le système 'club management system' (CMS) soit utilisable et corresponde à vos besoins propres, veuillez suivre le lien et les instructions ci-dessous pour faire la configuration initiale du système.",
     'url'	: '/setup/',
-    'action'	: 'Configuration initiale!',
+    'action'	: 'Configurateur',
   },
 }
 

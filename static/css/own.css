@@ -14,3 +14,8 @@
 .footer {
   padding: 5px 20px;
 }
+
+div.alert {
+  margin: 0 50px 50px 50px;
+  padding: 20px;
+}

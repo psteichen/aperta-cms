@@ -34,7 +34,8 @@ from .tables  import MeetingTable, MgmtMeetingTable, MeetingMixin, MeetingListin
 
 # list #
 ########
-@group_required('MEMBER')
+#@group_required('MEMBER')
+@group_required('BOARD')
 @crumb(u'Réunions statutaires')
 def list(r):
 
