@@ -163,7 +163,7 @@ LOGGING = {
     }
 }
 
-#login/auth (used by the login_required decorator)
+#login/auth (used by the auth decorators)
 LOGIN_URL="/login/"
 LOGIN_REDIRECT_URL="/"
 LOGOUT_REDIRECT_URL="/login/"
