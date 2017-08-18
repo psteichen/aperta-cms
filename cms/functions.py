@@ -33,14 +33,8 @@ def group_required(*group_names):
 
   """Requires user membership in at least one of the groups passed in."""
   def in_groups(user):
-    debug('cms','user: '+ unicode(user))
-    debug('cms','group_names: '+ unicode(group_names))
-    debug('cms','user.groups: '+ unicode(user.groups.all()))
     if user.is_authenticated():
-      debug('cms','user is authenticated')
       if bool(user.groups.filter(name__in=group_names)) or user.is_superuser:
-        debug('cms','user is in  groups or superuser')
-        debug('cms','Superuser? '+ unicode(user.is_superuser))
         return True
       else:
         raise PermissionDenied

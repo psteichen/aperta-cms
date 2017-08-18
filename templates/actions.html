@@ -26,7 +26,7 @@
         {% for action in part.actions %}
         {% if action.has_perms in groups or not action.has_perms %}
           {% if action.url %}
-            <a class="btn btn-default {% if action.grade %}btn-{{action.grade}}{% endif %}" href="{{ action.url }}" role="button">{% if action.icon %}<i class="fa fa-{{ action.icon }}"></i>{% endif %}&nbsp;&nbsp;{{ action.label }}&nbsp;</a>
+            <a class="btn btn-default {% if action.grade %}btn-{{action.grade}}{% endif %}" href="{{ action.url }}" {% if action.target %}target="{{action.target}}"{% endif %} role="button">{% if action.icon %}<i class="fa fa-{{ action.icon }}"></i>{% endif %}&nbsp;&nbsp;{{ action.label }}&nbsp;</a>
      	    <br />
      	    {% if action.desc %}<p>{{ action.desc }}</p>{% endif %}
      	    <br />

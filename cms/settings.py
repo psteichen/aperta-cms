@@ -125,6 +125,7 @@ ACTIONS = (
       {         
         'label'         : u'Réunions Statutaires', 
         'icon'     	: 'calendar',
+        'grade' 	: 'success',
         'desc'          : 'Outil de gestion des réunions statutaires.',
         'url'           : '/meetings/',
     	'has_perms' 	: 'MEMBER',
@@ -132,6 +133,7 @@ ACTIONS = (
       {         
         'label'         : u'Membres', 
         'icon'     	: 'user',
+        'grade' 	: 'success',
         'desc'          : 'Gérer les members et leurs affiliations.',
         'url'           : '/members/',
     	'has_perms' 	: 'MEMBER',
@@ -139,6 +141,7 @@ ACTIONS = (
       {         
         'label'         : u'Trésorerie', 
         'icon'     	: 'euro',
+        'grade' 	: 'success',
         'desc'          : 'Gérer les comptes et autres aspects financiers.',
         'url'           : '/finance/',
    	'has_perms' 	: 'MEMBER',
@@ -155,6 +158,7 @@ ACTIONS = (
       { 
         'label'         : 'Évènements', 
         'icon'     	: 'glass',
+        'grade' 	: 'info',
         'desc'          : 'Gérer les actvitiés et évènements (hors réunions statutaires).',
         'url'           : '/events/',
     	'has_perms' 	: 'MEMBER',
@@ -162,6 +166,7 @@ ACTIONS = (
       { 
         'label'        	: u'Lieux de Rencontres', 
         'icon'     	: 'home',
+        'grade' 	: 'info',
         'desc'         	: u'Gérer (ajouter/modifier) les lieux de rencontre.', 
         'url'          	: '/locations/', 
         'has_perms'    	: 'MEMBER',
@@ -169,8 +174,10 @@ ACTIONS = (
       {         
 	'label'		: 'DISTRICT', 
 	'icon'		: 'building',
+	'grade'		: 'primary',
 	'desc'		: 'Redirection vers le site du DISTRICT 104.',
 	'url'		: 'https://d104.fifty-one.club/',
+	'target'	: '_blank',
 	'has_perms'	: 'MEMBER',
       },
     ),

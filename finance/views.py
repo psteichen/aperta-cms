@@ -27,7 +27,7 @@ from .tables  import BankExtractTable, BalanceSheetTable
 
 # list #
 ########
-@group_required('BOARD')
+@group_required('MEMBER')
 @crumb(u'Trésorerie')
 def list(r):
   return TemplateResponse(r, settings.TEMPLATE_CONTENT['finance']['template'], { 'actions': settings.TEMPLATE_CONTENT['finance']['actions'], })
