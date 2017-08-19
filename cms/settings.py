@@ -35,7 +35,7 @@ TEMPLATE_CONTENT = {
   'meta' : {
     'author'            : 'Pascal Steichen - pst@libre.lu',
     'copyright'         : 'FIFTY-ONE Luxembourg APERTA a.s.b.l.',
-    'title'             : 'FIFTY-ONE APERTA - Club Management System (cms.aperta.lu)', 
+    'title'             : 'FIFTY-ONE APERTA - Club Management System (CMS)', 
     'logo' : {
       'title'		: 'FIFTY-ONE<br/><strong><em>APERTA</em></strong>',
       'img'		: 'https://aperta.lu/pics/logo-51-aperta_picto.png',
@@ -109,10 +109,7 @@ TEMPLATE_CONTENT = {
   },
 }
 #add env badge
-try:
-  TEMPLATE_CONTENT['meta']['badge'] = APP_ENV
-except:
-  pass
+TEMPLATE_CONTENT['meta']['badge'] = 'DEV'
 
 # home
 ACTIONS = (

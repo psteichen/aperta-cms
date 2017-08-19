@@ -14,15 +14,14 @@ class SetupForm(Form):
     ( 'finance'		, u'Trésorerie (pour gérer les comptes annuels et les extraits bancaires)'), 
   )
 
-  org_name		= CharField(help_text='Official name of the Club/Organisation')
-  org_logo		= ImageField(help_text='Official logo of the Club/Organisation')
-  admin_email		= EmailField(initial='admin@aperta.lu',help_text='Email oddress f the Site Admin, which will get error messages and system messages.')
+  org_name		= CharField(initial=u'FIFTY-ONE Aperta',help_text=u"Nom officiel du club/de l'organisation")
+  org_logo		= ImageField(initial='Logo Aperta',help_text=u"Logo officiel du club/de l'organisation")
+  admin_email		= EmailField(initial='admin@aperta.lu',help_text=u"Adresse email de l'administrateur, qui recevera les messages d'erreurs et autres alertes système.")
 
-  default_sender 	= CharField(widget=Textarea(),initial='FIFTY-ONE Aperta',help_text='Header of the "sending email".')
-  default_email 	= EmailField(initial='board@aperta.lu',help_text='Email address where all messages are being send from and whoch will get "user" replies.')
-  default_footer 	= CharField(widget=Textarea(),initial='''Amicalement,
+  default_email 	= EmailField(initial=u'board@aperta.lu',help_text=u"Adresse email utilisée pour les automatiques aux utilisateurs et qui recevra aussi les réponses/questions des utilisateurs.")
+  default_footer 	= CharField(widget=Textarea(),initial=u'''Amicalement,
 Le comité APERTA
-''')
+''',help_text=u"Le 'footer' des envoi emails automatique")
 
-  opional_apps		= MultipleChoiceField(widget=CheckboxSelectMultiple(),choices=APPS,help_text='Optional applications not part of the core system.')
+  optional_apps		= MultipleChoiceField(widget=CheckboxSelectMultiple(),choices=APPS,help_text=u"Application(s) optionnelle(s), ne faisant pas partie du coeur du système.",required=False)
 
