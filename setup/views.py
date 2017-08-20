@@ -17,6 +17,7 @@ from cms.functions import notify_by_email, show_form, visualiseDateTime
 
 from members.models import Member
 
+from .models import Setup
 from .forms import SetupForm
 
 
@@ -42,13 +43,9 @@ def init(r):
   if r.POST:
     sf = SetupForm(r.POST,r.FILES)
     if sf.is_valid():
+      S = sf.save()
+
       # all fine -> create (local) settings file
-      name		= sf.cleaned_data['org_name']
-      logo		= sf.cleaned_data['org_logo']
-      admin_email	= sf.cleaned_data['admin_email']
-      default_email 	= sf.cleaned_data['default_email']
-      default_footer 	= sf.cleaned_data['default_footer']
-      optional_apps	= sf.cleaned_data['optional_apps']
 
 # HERE
       # adjust settings file
@@ -58,14 +55,13 @@ def init(r):
 #        line.replace(textToSearch, textToReplace)
 
 # configure method:
-#      settings.configure(ADMIN_EMAIL=admin_email)
-#      settings.configure(SERVER_EMAIL=admin_email)
-#      settings.configure(DEFAULT_FROM_EMAIL=default_email)
-#      settings.configure(EMAILS['sender']['default']="'"+name+"' <"+default_email+">")
-#      settings.configure(EMAILS['footer']=default_footer)
-#      settings.configure(TEMPLATE_CONTENT['meta']['title']=name+" - Club Management System (CMS)")
-#      settings.configure(TEMPLATE_CONTENT['meta']['logo']['title']=name)
-#      settings.configure(TEMPLATE_CONTENT['meta']['logo']['img']=logo)
+#      settings.configure(SERVER_EMAIL=S.admin_email)
+#      settings.configure(DEFAULT_FROM_EMAIL=S.default_email)
+#      settings.configure(EMAILS['sender']['default']="'"+S.name+"' <"+S.default_email+">")
+#      settings.configure(EMAILS['footer']=S.default_footer)
+#      settings.configure(TEMPLATE_CONTENT['meta']['title']=S.name+" - Club Management System (CMS)")
+#      settings.configure(TEMPLATE_CONTENT['meta']['logo']['title']=S.name)
+#      settings.configure(TEMPLATE_CONTENT['meta']['logo']['img']=S.logo)
 
       # all fine -> redirect to "import members and calendar"
       return TemplateResponse(r, done_template, {
@@ -82,7 +78,15 @@ def init(r):
 
   # no post yet -> empty form
   else:
-    form = SetupForm()
+    setup_initials = {
+      'org_name' 	: settings.TEMPLATE_CONTENT['meta']['logo']['title'],
+      'org_logo'	: settings.TEMPLATE_CONTENT['meta']['logo']['img'],
+      'admin_email'	: settings.SERVER_EMAIL,
+      'default_email'	: settings.EMAILS['sender']['default'],
+      'default_footer'	: settings.EMAILS['footer'],
+    }
+    form = SetupForm(initial=setup_initials)
+
     return TemplateResponse(r, form_template, {
                 	'title'	: form_title,
                 	'desc'	: form_desc,
