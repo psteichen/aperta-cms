@@ -13,7 +13,7 @@ ALLOWED_HOSTS = [ 'dev.cms.aperta.lu', ]
 
 # Email settings
 SERVER_EMAIL = 'admin@aperta.lu'
-DEFAULT_FROM_EMAIL = 'board@aperta.lu'
+DEFAULT_FROM_EMAIL = "'FIFTY-ONE Aperta' <board@aperta.lu>"
 
 ADMINS = (
   ('Admin', SERVER_EMAIL),
@@ -22,7 +22,7 @@ MANAGERS = ADMINS
 
 EMAILS = {
   'sender' : {
-    'default'	: "'FIFTY-ONE Aperta' <board@aperta.lu>",
+    'default'	: DEFAULT_FROM_EMAIL,
   },
   'footer' 	: '''Amicalement,
 Le comité APERTA

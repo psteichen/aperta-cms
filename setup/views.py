@@ -43,25 +43,14 @@ def init(r):
   if r.POST:
     sf = SetupForm(r.POST,r.FILES)
     if sf.is_valid():
-      S = sf.save()
+      S = sf.save(commit=False)
+      S.cfg_date = timezone.now()
+      S.save()
 
-      # all fine -> create (local) settings file
-
-# HERE
-      # adjust settings file
-# file method:
-#      with FileInput(fileToSearch, inplace=True, backup='.bak') as file:
-#      for line in file:
-#        line.replace(textToSearch, textToReplace)
-
-# configure method:
-#      settings.configure(SERVER_EMAIL=S.admin_email)
-#      settings.configure(DEFAULT_FROM_EMAIL=S.default_email)
-#      settings.configure(EMAILS['sender']['default']="'"+S.name+"' <"+S.default_email+">")
-#      settings.configure(EMAILS['footer']=S.default_footer)
-#      settings.configure(TEMPLATE_CONTENT['meta']['title']=S.name+" - Club Management System (CMS)")
-#      settings.configure(TEMPLATE_CONTENT['meta']['logo']['title']=S.name)
-#      settings.configure(TEMPLATE_CONTENT['meta']['logo']['img']=S.logo)
+      # adjust site to actual site (this removes 'config' alert)
+      site = Site.objects.get(pk=settings.SITE_ID)
+      site.name=settings.ALLOWED_HOST[0]
+      site.save()
 
       # all fine -> redirect to "import members and calendar"
       return TemplateResponse(r, done_template, {
@@ -82,7 +71,7 @@ def init(r):
       'org_name' 	: settings.TEMPLATE_CONTENT['meta']['logo']['title'],
       'org_logo'	: settings.TEMPLATE_CONTENT['meta']['logo']['img'],
       'admin_email'	: settings.SERVER_EMAIL,
-      'default_email'	: settings.EMAILS['sender']['default'],
+      'default_email'	: settings.DEFAULT_FROM_EMAIL,
       'default_footer'	: settings.EMAILS['footer'],
     }
     form = SetupForm(initial=setup_initials)
