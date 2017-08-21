@@ -9,6 +9,7 @@ from django.template.response import TemplateResponse
 from django.contrib.admin.views.decorators import staff_member_required
 from django.conf import settings
 from django.utils import timezone
+from django.contrib.sites.models import Site
 
 from headcrumbs.decorators import crumb
 from headcrumbs.util import name_from_pk

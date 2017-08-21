@@ -1,9 +1,11 @@
 #coding=utf-8
 
 from random import SystemRandom
+from string import ascii_letters, digits, punctuation
 
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
+from django.contrib.sites.models import Site
 
 from setup.models import Setup
 
@@ -12,7 +14,9 @@ class Command(BaseCommand):
 
   def handle(self, *args, **options):
     # create secret key
-    settings.SECRET_KEY	= ''.join([random.SystemRandom().choice(string.ascii_letters + string.digits + string.punctuation) for _ in range(50)])
+    generated_key = u''.join([SystemRandom().choice(ascii_letters + digits + punctuation) for _ in range(50)])
+#    settings.SECRET_KEY	= generated_key
+    self.stdout.write(self.style.SUCCESS(u"settings.SECRETY_KEY = "+generated_key))
 
     #adjust settings from setup app
     try:
@@ -33,10 +37,12 @@ class Command(BaseCommand):
 #        settings.TEMPLATE_CONTENT['meta']['logo']['img'] = S.logo
         self.stdout.write(self.style.SUCCESS(u"settings.TEMPLATE_CONTENT['meta']['logo']['img'] = "+S.logo))
     except Setup.DoesNotExist:
-      self.stdout.write(self.style.ERROR(u"No setup data found in database. First you need to configure the system via the webinterface.")
+      self.stdout.write(self.style.ERROR(u"No setup data found in database. First you need to configure the system via the webinterface."))
 
     # finally set allowd host
-    settings.ALLOWED_HOSTS =
+    site = Site.objects.get(pk=settings.SITE_ID)
+#    settings.ALLOWED_HOSTS[0] = site.name
+    self.stdout.write(self.style.SUCCESS(u"settings.ALLOWED_HOSTS[0] = "+site.name))
 
 # file method:
 #      with FileInput(fileToSearch, inplace=True, backup='.bak') as file:
@@ -44,3 +50,4 @@ class Command(BaseCommand):
 #        line.replace(textToSearch, textToReplace)
 
     self.stdout.write(self.style.SUCCESS('Settings adjusted successfully.'))
+
