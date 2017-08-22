@@ -1,8 +1,6 @@
 from django.conf.urls import include, url
 
-from .views import list, add, send, invite, details, report, listing
 from .views import list, add, modify, send, invite, details, report, listing
-
 
 urlpatterns = [
   url(r'^$', list, name='list'),

@@ -11,7 +11,7 @@
     </div>
   {% endblock %}
 
-  {% if title %}<h2>{{ title }}</h2>{% endif %}
+  {% if title %}<h2>{{ title|safe }}</h2>{% endif %}
   <p class="text-danger">{{ error_message|safe }}</p>
   {% if message %}<p>{{ message|safe }}</p>{% endif %}
   {% if list %}<p>{{ list|join:"<br/>" }}</p>{% endif %}

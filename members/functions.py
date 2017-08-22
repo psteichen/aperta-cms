@@ -38,12 +38,16 @@ def create_user(first_name,last_name,email):
   return U
 
 def is_board(user):
+  if user.is_superuser: return True
+
   for g in user.groups.all():
     if g.name == 'BOARD': return True
 
   return False
 
 def is_member(user):
+  if user.is_superuser: return True
+
   for g in user.groups.all():
     if g.name == 'MEMBER': return True
 

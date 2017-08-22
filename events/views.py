@@ -16,13 +16,13 @@ from headcrumbs.util import name_from_pk
 from cms.functions import notify_by_email, group_required
 
 from members.models import Member
-from members.functions import get_active_members, gen_member_fullname
+from members.functions import get_active_members, gen_member_fullname, is_board
 from attendance.functions import gen_invitation_message, gen_hash, gen_attendance_hashes
 
 from .functions import gen_event_overview, gen_event_initial
 from .models import Event, Invitation
 from .forms import EventForm, ListEventsForm
-from .tables  import EventTable
+from .tables  import EventTable, MgmtEventTable
 
 
 ################
@@ -36,6 +36,9 @@ from .tables  import EventTable
 def list(r):
 
   table = EventTable(Event.objects.all().order_by('-id'))
+  if is_board(r.user):
+    table = MgmtEventTable(Event.objects.all().order_by('-id'))
+
   RequestConfig(r, paginate={"per_page": 75}).configure(table)
 
   return TemplateResponse(r, settings.TEMPLATE_CONTENT['events']['template'], {
@@ -53,60 +56,23 @@ def list(r):
 def add(r):
 
   if r.POST:
-    e_template =  settings.TEMPLATE_CONTENT['events']['add']['done']['email']['template']
 
     ef = EventForm(r.POST)
     if ef.is_valid():
       Ev = ef.save(commit=False)
       Ev.save()
       
-      user_member = Member.objects.get(user=r.user)
-      e_subject = settings.TEMPLATE_CONTENT['events']['add']['done']['email']['subject'] % { 'title': unicode(Ev.title) }
-
       if r.FILES:
         I = Invitation(event=Ev,message=ef.cleaned_data['additional_message'],attachement=r.FILES['attachement'])
       else:
         I = Invitation(event=Ev,message=ef.cleaned_data['additional_message'])
       I.save()
-      send = ef.cleaned_data['send']
-      if send:
-        I.sent = timezone.now()
-
-      email_error = { 'ok': True, 'who': [], }
-      for m in get_active_members():
-   
-        gen_attendance_hashes(Ev,Event.OTH,m)
-        invitation_message = gen_invitation_message(e_template,Ev,Event.OTH,m) + ef.cleaned_data['additional_message']
-        if m == user_member: 
-          done_message = invitation_message
-
-        message_content = {
-          'FULLNAME'    : gen_member_fullname(m),
-          'MESSAGE'     : invitation_message,
-        }
-        #send email
-        if send:
-          if I.attachement:
-            ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,e_subject,message_content,False,settings.MEDIA_ROOT + unicode(I.attachement))
-          else:
-            ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,e_subject,message_content)
-          if not ok:
-            email_error['ok']=False
-            email_error['who'].append(m.email)
-
-          # error in email -> show error messages
-          if not email_error['ok']:
-            I.save()
-            return TemplateResponse(r, settings.TEMPLATE_CONTENT['events']['add']['done']['template'], {
-                		'title': settings.TEMPLATE_CONTENT['events']['add']['done']['title'], 
-                		'error_message': settings.TEMPLATE_CONTENT['error']['email'] + ' ; '.join([e for e in email_error['who']]),
-			 })
 
       # all fine -> done
       I.save()
       return TemplateResponse(r, settings.TEMPLATE_CONTENT['events']['add']['done']['template'], {
                 	'title': settings.TEMPLATE_CONTENT['events']['add']['done']['title'], 
-	                'message': settings.TEMPLATE_CONTENT['events']['add']['done']['message'] % { 'email': invitation_message, 'list': ' ; '.join([gen_member_fullname(m) for m in get_active_members()]), },
+	                'message': settings.TEMPLATE_CONTENT['events']['add']['done']['message'].format(event=Ev,message=I.message,attachement=I.attachement,list=u' ; '.join([gen_member_fullname(m) for m in get_active_members()])),
 		   })
 
     # form not valid -> error
@@ -187,57 +153,42 @@ def details(r, event_id):
 
 # modify  #
 ###########
+@group_required('BOARD')
+@crumb(u"Modifier un évènement",parent=list)
+def modify(r, event_id):
 
-#modify helper functions
-def show_attendance_form(wizard):
-  return show_form(wizard,'event','attendance',True)
+  E = Event.objects.get(pk=event_id)
 
-# modify formwizard #
-class ModifyEventWizard(SessionWizardView):
+  if r.POST:
 
-  def get_template_names(self):
-    return 'wizard.html'
-
-  def get_context_data(self, form, **kwargs):
-    context = super(ModifyEventWizard, self).get_context_data(form=form, **kwargs)
-
-    if self.steps.current != None:
-      context.update({'title': settings.TEMPLATE_CONTENT['events']['modify']['title']})
-      context.update({'first': settings.TEMPLATE_CONTENT['events']['modify']['first']})
-      context.update({'prev': settings.TEMPLATE_CONTENT['events']['modify']['prev']})
-      context.update({'step_title': settings.TEMPLATE_CONTENT['events']['modify'][self.steps.current]['title']})
-      context.update({'next': settings.TEMPLATE_CONTENT['events']['modify'][self.steps.current]['next']})
-
-    return context
-
-  def get_form(self, step=None, data=None, files=None):
-    form = super(ModifyEventWizard, self).get_form(step, data, files)
-
-    # determine the step if not given
-    if step is None:
-      step = self.steps.current
-
-    if step == 'event':
-      cleaned_data = self.get_cleaned_data_for_step('list') or {}
-      if cleaned_data != {}:
-        form.initial = gen_event_initial(cleaned_data['events'])
-        form.instance = Event.objects.get(pk=cleaned_data['events'].id)
-
-    return form
-
-  def done(self, fl, **kwargs):
-
-    template = settings.TEMPLATE_CONTENT['events']['modify']['done']['template']
-
-    E = None
-    ef = fl[1]
+    ef = EventForm(r.POST,instance=E)
     if ef.is_valid():
-      E = ef.save()
+      Ev = ef.save(commit=False)
+      Ev.save()
+      
+      # all fine -> done
+      return TemplateResponse(r, settings.TEMPLATE_CONTENT['events']['modify']['done']['template'], {
+                	'title': settings.TEMPLATE_CONTENT['events']['modify']['done']['title'].format(event=unicode(Ev)), 
+		   })
 
-    title = settings.TEMPLATE_CONTENT['events']['modify']['done']['title'] % E
+    # form not valid -> error
+    else:
+      return TemplateResponse(r, settings.TEMPLATE_CONTENT['events']['modify']['done']['template'], {
+                'title': settings.TEMPLATE_CONTENT['events']['modify']['done']['title'], 
+                'error_message': settings.TEMPLATE_CONTENT['error']['gen'] + ' ; '.join([e for e in ef.errors]),
+                })
 
-    return TemplateResponse(self.request, template, {
-                        'title': title,
-                 })
+  # no post yet -> empty form
+  else:
+    form = EventForm()
+    form.initial = gen_event_initial(E)
+    return TemplateResponse(r, settings.TEMPLATE_CONTENT['events']['modify']['template'], {
+                'title': settings.TEMPLATE_CONTENT['events']['modify']['title'],
+                'desc': settings.TEMPLATE_CONTENT['events']['modify']['desc'],
+                'submit': settings.TEMPLATE_CONTENT['events']['modify']['submit'],
+                'form': form,
+                })
+
+
 
 

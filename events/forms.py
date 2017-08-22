@@ -7,19 +7,21 @@ from .models import Event
 
 #event form
 class EventForm(ModelForm):
-  additional_message 	= CharField(label='Message supplémentaire',widget=Textarea(attrs={'placeholder': "Message à transmettre dans l'invitation.",}),required=False)
-  attachement 		= FileField(label='Annexe(s)',required=False)
-  send 			= BooleanField(label='Envoi direct des invitations',required=False)
+  additional_message 	= CharField(label=u'Message supplémentaire',widget=Textarea(attrs={'placeholder': u"Message à transmettre dans l'invitation.",}),required=False)
+  attachement 		= FileField(label=u'Annexe(s)',required=False)
 
   class Meta:
     model = Event
-    fields = ( 'title', 'when', 'time', 'location', 'deadline', 'additional_message', 'attachement', 'send', )
+    fields = ( 'title', 'when', 'time', 'location', 'deadline', 'additional_message', 'attachement', )
     widgets = {
-#      'title'	: TextInput(attrs={'readonly': 'readonly', }),
-      'when'	: TextInput(attrs={'type': 'date', }),
-      'time'	: TextInput(attrs={'type': 'time', }),
-      'deadline': TextInput(attrs={'type': 'date', }),
+      'when'	: TextInput(attrs={'type': 'date', 'id': 'dpicker', }),
+      'time'	: TextInput(attrs={'type': 'time', 'id': 'tpicker', }),
+      'deadline': TextInput(attrs={'type': 'date', 'id': 'dtpicker', }),
     }
+    help_texts = {
+      'location': '<a href="/locations/add/" >Ajouter un nouveau lieu de rencontre</a>',
+    }
+
 
 
 #modify wizard forms
@@ -33,8 +35,12 @@ class ModifyEventForm(ModelForm):
     model = Event
     fields = ( 'title', 'when', 'time', 'location', 'deadline', 'attendance',  )
     widgets = {
-      'when'	: TextInput(attrs={'type': 'date', }),
-      'time'	: TextInput(attrs={'type': 'time', }),
-      'deadline': TextInput(attrs={'type': 'date', }),
+      'when'	: TextInput(attrs={'type': 'date', 'id': 'dpicker', }),
+      'time'	: TextInput(attrs={'type': 'time', 'id': 'tpicker', }),
+      'deadline': TextInput(attrs={'type': 'date', 'id': 'dtpicker', }),
     }
+    help_texts = {
+      'location': '<a href="/locations/add/" >Ajouter un nouveau lieu de rencontre</a>',
+    }
+
 

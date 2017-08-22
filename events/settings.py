@@ -4,13 +4,6 @@
 ACTIONS = {
   'main': (
     {
-      'label'         	: u'Importer le Calendrier des évènements',
-      'icon'		: 'upload',
-      'grade'	        : 'danger',
-      'url'		: '/upload/calendar/',
-      'has_perms'     	: 'BOARD',
-    },
-    {
       'label'           : u'Ajouter un évènement',
       'icon'            : 'plus',
       'grade'           : 'danger',
@@ -18,11 +11,18 @@ ACTIONS = {
       'has_perms'       : 'BOARD',
     },
     {
+      'label'         	: u'Importer le Calendrier des évènements',
+      'icon'		: 'upload',
+      'grade'	        : 'warning',
+      'url'		: '/upload/calendar/',
+      'has_perms'     	: 'BOARD',
+    },
+    {
       'label'           : u'Gestion des Lieux de Rencontre',
       'icon'            : 'home',
-      'grade'           : 'warning',
+      'grade'           : 'info',
       'url'             : '/locations/',
-      'has_perms'       : 'COMM',
+      'has_perms'       : 'BOARD',
     },
   ),
 }
@@ -38,22 +38,20 @@ EVENTS_TMPL_CONTENT = {
     'submit'   		: u'Ajouter',
     'done': {
       'template'	: 'done.html',
-      'title'     	: u'Nouvel évènement créé.',
-      'message'     	: '''
-<pre>
-Message d'invitation : 
---------------------------------------
-%(email)s
---------------------------------------
-
-Destinataires : 
-%(list)s
-</pre>
+      'title'     	: u'Nouvel évènement créé:',
+      'message'     	: u'''
+<div class="well">
+<h3>Titre : {event.title}</h3>
+<h4>Date : {event.when}</h4>
+<h4>Lieu : {event.location}</h4>
+<h4>Information(s) supplémentaire(s) :</h4>
+<p>{message}</p>
+<p><a href="/media/{attachement}" target="_blank">Voire les annexes</a></p>
+<hr />
+<h5>Les invité(e)s :</h5>
+<ul>{list}</ul>
+</div>
 ''',
-      'email': {
-	'template'	: 'event_invitation.txt',
-	'subject'	: u'[51 aperta] %(title)s',
-      },
     },
   },
   'send': {
@@ -72,25 +70,13 @@ Destinataires :
     },
   },
   'modify' : {
+    'template'		: 'form.html',
     'title'             : u'Modifier un Evènement',
     'desc'              : u'Modifier les détails et les présences d\'un évènement.',
-    'first'             : u'début',
-    'prev'              : u'retour',
-    'list' : {
-      'title'           : u'Choisir l\'évènement à modifier',
-      'next'            : 'suivant',
-    },
-    'meeting' : {
-      'title'           : u'Modifier l\'évènement %(event)s',
-      'next'            : 'suivant',
-    },
-    'attendance' : {
-      'title'           : u'Ajuster les présences',
-      'next'            : 'soumettre',
-    },
+    'submit'   		: u'Ajouter',
     'done' : {
       'template'        : 'done.html',
-      'title'           : u'[%s] a été modifiée!',
+      'title'           : u"L'évènement <i>{event}</i> a été modifiée!",
     },
   },
   'details': {

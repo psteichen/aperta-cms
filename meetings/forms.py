@@ -27,6 +27,10 @@ class MeetingForm(ModelForm):
       'deadline': TextInput(attrs={'type': 'datetime', 'id': 'dtpicker', }),
       'num'	: HiddenInput(),
     }
+    help_texts = {
+      'location': '<a href="/locations/add/" >Ajouter un nouveau lieu de rencontre</a>',
+    }
+
 
 
 #invite formset

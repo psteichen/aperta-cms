@@ -59,16 +59,11 @@ def list(r):
 def add(r):
 
   if r.POST:
-    e_template =  settings.TEMPLATE_CONTENT['meetings']['add']['done']['email']['template']
-    done_message = ''
 
     mf = MeetingForm(r.POST,r.FILES)
     if mf.is_valid():
       Mt = mf.save(commit=False)
       Mt.save()
-      
-      user_member = Member.objects.get(user=r.user)
-      e_subject = settings.TEMPLATE_CONTENT['meetings']['add']['done']['email']['subject'] % { 'title': unicode(Mt.title) }
 
       if r.FILES:
         I = Invitation(meeting=Mt,message=mf.cleaned_data['additional_message'],attachement=r.FILES['attachement'])
@@ -80,7 +75,7 @@ def add(r):
       I.save()
       return TemplateResponse(r, settings.TEMPLATE_CONTENT['meetings']['add']['done']['template'], {
                 'title': settings.TEMPLATE_CONTENT['meetings']['add']['done']['title'], 
-                'message': settings.TEMPLATE_CONTENT['meetings']['add']['done']['message'] % { 'email': done_message, 'attachement': I.attachement, 'list': ' ; '.join([gen_member_fullname(m) for m in get_active_members()]), },
+                'message': settings.TEMPLATE_CONTENT['meetings']['add']['done']['message'].format(meeting=Mt,invite=I,list=' ; '.join([gen_member_fullname(m) for m in get_active_members()])),
                 })
 
     # form not valid -> error
@@ -96,9 +91,10 @@ def add(r):
     try:
       latest = Meeting.objects.values().latest('num')
       next_num = latest['num'] + 1
-      form = MeetingForm(initial={ 'title': str(next_num) + '. réunion statutaire', 'num': next_num, })
     except Meeting.DoesNotExist:
-      pass
+      next_num = 1
+
+    form = MeetingForm(initial={ 'title': str(next_num) + '. réunion statutaire', 'num': next_num, })
     return TemplateResponse(r, settings.TEMPLATE_CONTENT['meetings']['add']['template'], {
                 'title': settings.TEMPLATE_CONTENT['meetings']['add']['title'],
                 'desc': settings.TEMPLATE_CONTENT['meetings']['add']['desc'],
