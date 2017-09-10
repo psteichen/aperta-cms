@@ -10,6 +10,8 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.conf import settings
 from django.utils import timezone
 from django.contrib.sites.models import Site
+from django.core import management
+from django.core.management.commands import loaddata
 
 from headcrumbs.decorators import crumb
 from headcrumbs.util import name_from_pk
@@ -52,6 +54,9 @@ def init(r):
       site = Site.objects.get(pk=settings.SITE_ID)
       site.name=settings.ALLOWED_HOST[0]
       site.save()
+
+      # load initial data for groups
+      management.call_command('loaddata', 'groups', verbosity=0)
 
       # all fine -> redirect to "import members and calendar"
       return TemplateResponse(r, done_template, {
