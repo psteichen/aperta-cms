@@ -34,7 +34,6 @@ class Payment(Model):
   def __unicode__(self):
     return ''
 
-
 def rename_be_scan(i, f):
   fn = rmf('bank', f, unicode(i))
 

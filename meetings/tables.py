@@ -1,9 +1,8 @@
 # coding=utf-8
 
-from datetime import date
-
 from django.utils.safestring import mark_safe
 from django.utils.html import escape
+from django.utils import timezone
 
 from django_tables2.tables import Table
 from django_tables2 import Column
@@ -21,7 +20,7 @@ class MeetingTable(Table):
   details	= Column(verbose_name='Détails',empty_values=())
 
   def render_row_class(self, record):
-    if record.when < date.today():
+    if record.when < timezone.now():
       return 'danger'
 
   def render_totals(self, record):
@@ -45,7 +44,7 @@ class MgmtMeetingTable(Table):
   report	= Column(verbose_name='Compte rendu',empty_values=())
 
   def render_row_class(self, record):
-    if record.when < date.today():
+    if record.when < timezone.now():
       return 'danger'
 
   def render_totals(self, record):

@@ -15,8 +15,8 @@
   <h2>{{ title }}</h2>
   <p>{{ desc|safe }}</p>
   <hr/>
-{#  {% render_table table "table_with_page_numbers.html" %}  old template contains deprecated tags #}
-  {% render_table table %}
+  {% render_table table "table_with_page_numbers.html" %} {# old template contains deprecated tags #}
+{#  {% render_table table %} #}
 {% endblock %}
 
 
