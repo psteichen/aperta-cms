@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.template.response import TemplateResponse
 from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
@@ -40,18 +40,18 @@ def upload(r,ty):
 
       if ok == False:
         # issue with import -> error
-        return render(r, done_template, {
+        return TemplateResponse(r, done_template, {
                                'error_message'  : settings.TEMPLATE_CONTENT['error']['import'] + ' ' + str(ok),
                     })
       else:
         # all fine -> done
-        return render(r, done_template, {
+        return TemplateResponse(r, done_template, {
                                'title'    : done_title.format(ok),
                     })
 
     else:
       # form not valid -> error
-      return render(r, done_template, {
+      return TemplateResponse(r, done_template, {
                                'title'          : done_title,
                                'error_message'  : settings.TEMPLATE_CONTENT['error']['gen'] + ' ; '.join([e for e in idf.errors]),
                   })
@@ -59,7 +59,7 @@ def upload(r,ty):
   else:
     # no post yet -> empty form
     form = ImportData()
-    return render(r, template, {
+    return TemplateResponse(r, template, {
                              'title'    : title,
                              'desc'     : desc,
                              'submit'   : submit,

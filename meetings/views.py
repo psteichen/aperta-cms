@@ -296,14 +296,14 @@ def modify(r,meeting_num):
       Mt.save()
 
       # all fine -> done
-      return render(r, done_template, {
+      return TemplateResponse(r, done_template, {
                 'title'		: done_title,
                 'message'     	: done_message,
                 })
 
     # form not valid -> error
     else:
-      return render(r, done_template, {
+      return TemplateResponse(r, done_template, {
                 'title'		: done_title,
                 'error_message'	: settings.TEMPLATE_CONTENT['error']['gen'] + ' ; '.join([e for e in mf.errors]),
                 })
@@ -313,7 +313,7 @@ def modify(r,meeting_num):
     form = ModifyMeetingForm()
     form.initial = gen_meeting_initial(Mt)
     form.instance = Mt
-    return render(r, template, {
+    return TemplateResponse(r, template, {
                 'title'       	: title,
                 'desc'        	: desc,
                 'submit'	: submit,
