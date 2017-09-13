@@ -86,11 +86,13 @@ def upload(r,ty):
   form_submit 		= settings.TEMPLATE_CONTENT['finance']['upload']['submit']
 
   done_template		= settings.TEMPLATE_CONTENT['finance']['upload']['done']['template']
-  done_url		= settings.TEMPLATE_CONTENT['finance']['upload']['done']['url']
+  done_url		= settings.TEMPLATE_CONTENT['finance']['upload']['done']['url'].format(type=ty)
 
   if r.POST:
-    f = form(r.POST,r.FILES)
-    if f.is_valid():
+    f = None
+    if ty == 'bank': f = BankExtractForm(r.POST,r.FILES)
+    if ty == 'balance': f = BalanceSheetForm(r.POST,r.FILES)
+    if f != None and f.is_valid():
       F = f.save(commit=False)
       F.save()
       
@@ -101,7 +103,8 @@ def upload(r,ty):
     else:
       return TemplateResponse(r, done_template, {
                 	'title'		: done_title, 
-                	'error_message'	: settings.TEMPLATE_CONTENT['error']['gen'] + ' ; '.join([e for e in bef.errors]),
+                	'error_message'	: settings.TEMPLATE_CONTENT['error']['gen'] + ' ; '.join([e for e in f.errors]),
+
                    })
   # no post yet -> empty form
   else:
