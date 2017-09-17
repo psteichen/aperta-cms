@@ -18,19 +18,21 @@ class Command(BaseCommand):
       S = Setup.objects.latest('cfg_date')
       if S.admin_email: 
         settings.SERVER_EMAIL = S.admin_email
-        self.stdout.write(self.style.SUCCESS(u"settings.SERVER_EMAIL = "+S.admin_email))
+        self.stdout.write(self.style.WARNING(u'SERVER_EMAIL = "'+S.admin_email+'"'))
       if S.org_name: 
         settings.TEMPLATE_CONTENT['meta']['logo']['title'] = S.org_name
-        self.stdout.write(self.style.SUCCESS(u"settings.TEMPLATE_CONTENT['meta']['logo']['title'] = "+S.org_name))
+        self.stdout.write(self.style.WARNING(u"TEMPLATE_CONTENT['meta']['logo']['title'] = \""+S.org_name+"\""))
         settings.TEMPLATE_CONTENT['meta']['title'] = S.org_name+" - Club Management System (CMS)"
-        self.stdout.write(self.style.SUCCESS(u"settings.TEMPLATE_CONTENT['meta']['title'] = "+S.org_name+u" - Club Management System (CMS)"))
-        if S.default_email: settings.DEFAULT_FROM_EMAIL = "'"+S.org_name+"' <"+S.default_email+">"
+        self.stdout.write(self.style.WARNING(u"TEMPLATE_CONTENT['meta']['title'] = \""+S.org_name+u" - Club Management System (CMS)\""))
+        if S.default_email: 
+          settings.DEFAULT_FROM_EMAIL = S.default_email
+          self.stdout.write(self.style.WARNING(u"DEFAULT_FROM_EMAIL = \""+S.default_email+"\""))
       if S.default_footer: 
         settings.EMAILS['footer'] = S.default_footer
-        self.stdout.write(self.style.SUCCESS(u"settings.EMAILS['footer'] = "+S.default_footer))
+        self.stdout.write(self.style.WARNING(u"EMAILS['footer'] = \"\"\""+S.default_footer+"\"\"\""))
       if S.org_logo: 
         settings.TEMPLATE_CONTENT['meta']['logo']['img'] = S.org_logo
-        self.stdout.write(self.style.SUCCESS(u"settings.TEMPLATE_CONTENT['meta']['logo']['img'] = "+S.org_logo))
+        self.stdout.write(self.style.WARNING(u"TEMPLATE_CONTENT['meta']['logo']['img'] = \""+S.org_logo+"\""))
     except Setup.DoesNotExist:
       self.stdout.write(self.style.ERROR(u"No setup data found in database. First you need to configure the system via the webinterface."))
 
