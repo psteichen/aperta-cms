@@ -44,7 +44,7 @@ class Member(Model):
   phone         = IntegerField(verbose_name=u'Tél. fixe',blank=True,null=True)
   mobile      	= IntegerField(verbose_name=u'Tél. mobile',blank=True,null=True)
   email		= EmailField()
-  start_date    = DateField(verbose_name=u'Date de début')
+  start_date    = DateField(verbose_name=u'Date de début',blank=True,null=True)
   end_date      = DateField(verbose_name=u'Date de fin',blank=True,null=True) 
   status      	= IntegerField(verbose_name=u'Statut',choices=STATUSES,default=ACT) 
   user		= ForeignKey(User,verbose_name=u'Utilisateur',blank=True,null=True) 
