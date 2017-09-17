@@ -9,7 +9,7 @@ from .core_settings import *
 SECRET_KEY = '4j$om7#%h7ahryh!lht(mlf!c*vm%5zcz4sf+5xc#ki)ij(v=&'
 DEBUG = True
 
-ALLOWED_HOSTS = [ 'cms.aperta.lu', ]
+ALLOWED_HOSTS = [ 'dev.cms.aperta.lu', ]
 
 # Email settings
 SERVER_EMAIL = 'admin@aperta.lu'
@@ -111,7 +111,7 @@ TEMPLATE_CONTENT = {
   },
 }
 #add env badge
-#TEMPLATE_CONTENT['meta']['badge'] = 'DEV'
+TEMPLATE_CONTENT['meta']['badge'] = 'DEV'
 
 # home
 ACTIONS = (
