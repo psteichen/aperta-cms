@@ -11,6 +11,6 @@ class Command(BaseCommand):
     # create secret key
     chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
     generated_key = get_random_string(50, chars)
-    self.stdout.write(self.style.SUCCESS(u'settings.SECRET_KEY = "'+generated_key+'"'))
-    options['secret_key'] = generated_key
+    self.stdout.write(self.style.SUCCESS(u'SECRET_KEY = "'+generated_key+'"'))
+    self.stdout.write(self.style.WARNING(u'COPY and PASTE this into your settings file!'))
 
