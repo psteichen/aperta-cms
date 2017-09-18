@@ -117,6 +117,7 @@ def send(r, meeting_num):
     I = Invitation.objects.get(meeting=Mt)
   except Invitation.DoesNotExist:
     I = Invitation(meeting=Mt)
+    I.save()
 
   title = settings.TEMPLATE_CONTENT['meetings']['send']['done']['title'] % unicode(Mt.title)
       
@@ -127,7 +128,7 @@ def send(r, meeting_num):
     invitation_message = gen_invitation_message(e_template,Mt,Event.MEET,m)
     message_content = {
         'FULLNAME'    : gen_member_fullname(m),
-        'MESSAGE'     : invitation_message + I.message,
+        'MESSAGE'     : invitation_message + str(I.message),
     }
 
     #generate ical invite
