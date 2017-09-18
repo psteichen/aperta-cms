@@ -29,7 +29,7 @@ def gen_meeting_overview(template,meeting):
   if meeting.report:  content['report'] = settings.MEDIA_URL + unicode(meeting.report)
   try:   
     invitation = Invitation.objects.get(meeting=meeting)
-    content['attach'] = settings.MEDIA_URL + unicode(invitation.attachement)
+    if invitation.attachement: content['attach'] = settings.MEDIA_URL + unicode(invitation.attachement)
   except: pass
   content['listing'] = '/meetings/listing/' + unicode(meeting.num)
   content['attendance'] = Meeting_Attendance.objects.filter(meeting=meeting,present=True).only('member')

@@ -264,7 +264,7 @@ def details(r, meeting_num):
 # listing #
 ###########
 @group_required('MEMBER')
-@crumb(u'Listing pour la réunion : {meeting}'.format(meeting=name_from_pk(Meeting)),parent=details)
+#@crumb(u'Listing pour la réunion : {meeting}'.format(meeting=name_from_pk(Meeting)),parent=details)
 def listing(r, meeting_num):
 
   meeting = Meeting.objects.get(num=meeting_num)
