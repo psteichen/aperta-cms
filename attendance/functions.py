@@ -17,11 +17,11 @@ from events.models import Event
 def gen_hash(event,email,yes=True):
   #hash
   h = hashlib.md5()
-  h.update(unicode(email)) #salt (email)
-  if yes: h.update('YES') #second salt (YES)
-  else: h.update('NO') #second salt (NO)
-  h.update(unicode(event.pk) + unicode(event.when)) #message
-  return unicode(h.hexdigest())
+  h.update(email.encode('utf-8')) #salt (email)
+  if yes: h.update('YES'.encode('utf-8')) #second salt (YES)
+  else: h.update('NO'.encode('utf-8')) #second salt (NO)
+  h.update(str(event.pk).encode('utf-8') + str(event.when).encode('utf-8')) #message
+  return h.hexdigest()
 
 def gen_attendance_hashes(event,event_type,member):
   yes_hash = gen_hash(event,member.email)
