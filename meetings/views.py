@@ -254,11 +254,100 @@ def details(r, meeting_num):
   meeting = Meeting.objects.get(num=meeting_num)
   title = settings.TEMPLATE_CONTENT['meetings']['details']['title'] % { 'meeting' : meeting.title, }
   message = gen_meeting_overview(settings.TEMPLATE_CONTENT['meetings']['details']['overview']['template'],meeting)
+  actions = settings.TEMPLATE_CONTENT['meetings']['details']['actions']
+  for a in actions:
+      a['url'] = a['url'].format(meeting_num)
 
   return TemplateResponse(r, settings.TEMPLATE_CONTENT['meetings']['details']['template'], {
-                   'title': title,
-                   'message': message,
+                   'title'	: title,
+                   'actions'	: actions,
+                   'message'	: message,
                 })
+
+
+# register #
+############
+@crumb(u'Inscrire un membre à la réunion : {meeting}'.format(meeting=name_from_pk(Meeting)),parent=details)
+def register(r, meeting_num):
+
+  Mt = M = None
+  if meeting_num:
+    Mt = Meeting.objects.get(pk=meeting_num)
+    if member_id:
+      M = Member.objects.get(pk=member_id)
+  else:
+    return TemplateResponse(r, settings.TEMPLATE_CONTENT['meetings']['invite']['done']['template'], {
+                'title': settings.TEMPLATE_CONTENT['meetings']['invite']['done']['title'], 
+                'error_message': settings.TEMPLATE_CONTENT['error']['gen'],
+                })
+
+  if r.POST:
+    e_template =  settings.TEMPLATE_CONTENT['meetings']['invite']['done']['email']['template']
+
+    ifs = InviteeFormSet(r.POST)
+    if ifs.is_valid():
+      invitees = []
+
+      I = Invitation.objects.get(meeting=Mt)
+      invitation_message = gen_invitee_message(e_template,Mt,M)
+      try: invitation_message += I.additional_message
+      except: pass
+      email_error = { 'ok': True, 'who': [], }
+      for i in ifs:
+        Iv = i.save(commit=False)
+        Iv.meeting = Mt
+        Iv.member = M
+        if Iv.email:
+          Iv.save()
+      
+          #invitation email for invitee(s)
+          subject = settings.TEMPLATE_CONTENT['meetings']['invite']['done']['email']['subject'] % { 'title': unicode(Mt.title) }
+          message_content = {
+            'FULLNAME'    : gen_member_fullname(Iv),
+            'MESSAGE'     : invitation_message,
+          }
+          #send email
+#no need to add attachement for invitees
+#          try:
+#            ok=notify_by_email(settings.EMAILS['sender']['default'],Iv.email,subject,message_content,False,settings.MEDIA_ROOT + unicode(I.attachement))
+#          except:
+          ok=notify_by_email(settings.EMAILS['sender']['default'],Iv.email,subject,message_content)
+          if not ok:
+            email_error['ok']=False
+            email_error['who'].append(Iv.email)
+
+          # all fine -> save Invitee
+          invitees.append(Iv)
+
+      # error in email -> show error messages
+      if not email_error['ok']:
+        return TemplateResponse(r, settings.TEMPLATE_CONTENT['meetings']['invite']['done']['template'], {
+              'title': settings.TEMPLATE_CONTENT['meetings']['invite']['done']['title'], 
+              'error_message': settings.TEMPLATE_CONTENT['error']['email'] + ' ; '.join([e for e in email_error['who']]),
+              })
+
+      # all fine -> done
+      I.sent = timezone.now()
+      I.save()
+      return TemplateResponse(r, settings.TEMPLATE_CONTENT['meetings']['invite']['done']['template'], {
+                'title': settings.TEMPLATE_CONTENT['meetings']['invite']['done']['title'], 
+                'message': settings.TEMPLATE_CONTENT['meetings']['invite']['done']['message'] % { 'email': invitation_message, 'attachement': I.attachement, 'list': ' ; '.join([gen_member_fullname(i) for i in invitees]), },
+                })
+
+    # form not valid -> error
+    else:
+      return TemplateResponse(r, settings.TEMPLATE_CONTENT['meetings']['invite']['done']['template'], {
+                'error_message': settings.TEMPLATE_CONTENT['error']['gen'] + ' ; '.join([str(e) for e in ifs.errors]),
+                })
+  # no post yet -> empty form
+  else:
+    return TemplateResponse(r, settings.TEMPLATE_CONTENT['meetings']['invite']['template'], {
+                'title': settings.TEMPLATE_CONTENT['meetings']['invite']['title'] + unicode(Mt),
+                'desc': settings.TEMPLATE_CONTENT['meetings']['invite']['desc'],
+                'submit': settings.TEMPLATE_CONTENT['meetings']['invite']['submit'],
+                'form': InviteeFormSet(),
+                })
+
 
 
 # listing #

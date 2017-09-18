@@ -9,7 +9,7 @@ from .core_settings import *
 SECRET_KEY = '4j$om7#%h7ahryh!lht(mlf!c*vm%5zcz4sf+5xc#ki)ij(v=&'
 DEBUG = True
 
-ALLOWED_HOSTS = [ 'cms.aperta.lu', ]
+ALLOWED_HOSTS = [ 'dev.cms.aperta.lu', ]
 
 # Email settings
 SERVER_EMAIL = 'admin@aperta.lu'
@@ -47,14 +47,14 @@ TEMPLATE_CONTENT = {
     'keywords'          : '',
     'favicon'		: STATIC_URL + '/favicon.ico',
     'css' : {
-        'bt'      	: '//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css',
-        'bt_theme'      : '//maxcdn.bootstrapcdn.com/bootswatch/3.3.4/yeti/bootstrap.min.css',
+        'bt'      	: '//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css',
+        'bt_theme'      : '//maxcdn.bootstrapcdn.com/bootswatch/3.3.7/yeti/bootstrap.min.css',
         'own'           : STATIC_URL + 'css/own.css',
         'dtpicker'      : '//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css',
     },
     'js' : {
         'jq'      	: '//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js',
-        'bt'       	: '//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js',
+        'bt'       	: '//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js',
         'fontawesome'   : '//use.fontawesome.com/c8a990aa54.js',
         'momentjs'      : '//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment-with-locales.min.js',
         'dtpicker'      : '//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js',
@@ -111,7 +111,7 @@ TEMPLATE_CONTENT = {
   },
 }
 #add env badge
-#TEMPLATE_CONTENT['meta']['badge'] = 'DEV'
+TEMPLATE_CONTENT['meta']['badge'] = 'DEV'
 
 # home
 ACTIONS = (

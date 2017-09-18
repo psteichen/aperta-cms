@@ -25,6 +25,23 @@ ACTIONS = {
       'has_perms'     	: 'BOARD',
     },
   ),
+  'details': (
+    {
+      'label'         	: u"Inscrire un membre",
+      'icon'     	: 'plus',
+      'grade'     	: 'success',
+      'url'           	: '/meetings/register/{}/',
+      'has_perms'     	: 'BOARD',
+    },
+    {
+      'label'         	: u"Désinscrire un membre",
+      'icon'     	: 'minus',
+      'grade'     	: 'danger',
+      'url'           	: '/meetings/unregister/{}/',
+      'has_perms'     	: 'BOARD',
+    },
+
+  ),
 }
 
 MEETINGS_TMPL_CONTENT = {
@@ -114,6 +131,7 @@ Destinataires:
   'details': {
     'template'  	: 'done.html',
     'title'     	: u'Détail de la %(meeting)s',
+    'actions'     	: ACTIONS['details'],
     'overview' : {
       'template'	: 'overview_meeting.html',
       'modify'		: u'Modifier',

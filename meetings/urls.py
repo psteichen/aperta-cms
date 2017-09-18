@@ -1,6 +1,6 @@
 from django.conf.urls import include, url
 
-from .views import list, add, modify, send, invite, details, report, listing
+from .views import list, add, modify, send, invite, details, report, listing, register
 
 urlpatterns = [
   url(r'^$', list, name='list'),
@@ -13,4 +13,5 @@ urlpatterns = [
   url(r'^send/(?P<meeting_num>.+?)/$', send, name='send'),
   url(r'^modify/(?P<meeting_num>.+?)/$', modify, name='modify'),
   url(r'^report/(?P<meeting_num>.+?)/$', report, name='report'),
+  url(r'^register/(?P<meeting_num>.+?)/$', register, name='register'),
 ]
