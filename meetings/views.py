@@ -112,7 +112,11 @@ def send(r, meeting_num):
   e_template =  settings.TEMPLATE_CONTENT['meetings']['send']['done']['email']['template']
 
   Mt = Meeting.objects.get(num=meeting_num)
-  I = Invitation.objects.get(meeting=Mt)
+  I = None
+  try:
+    I = Invitation.objects.get(meeting=Mt)
+  except Invitation.DoesNotExist:
+    I = Invitation(meeting=Mt)
 
   title = settings.TEMPLATE_CONTENT['meetings']['send']['done']['title'] % unicode(Mt.title)
       
