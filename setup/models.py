@@ -31,7 +31,7 @@ class Setup(Model):
   org_name		= CharField(max_length=100)
   org_logo		= ImageField(upload_to=rename_logo,blank=True,null=True)
   admin_email		= EmailField()
-  default_email 	= EmailField()
+  default_email 	= CharField(max_length=150)
   default_footer 	= CharField(max_length=500,blank=True,null=True)
   optional_apps		= CharField(max_length=50,choices=APPS,validators=[validate_comma_separated_integer_list],blank=True,null=True)
 

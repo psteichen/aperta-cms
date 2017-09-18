@@ -52,7 +52,8 @@ def init(r):
 
       # adjust site to actual site (this removes 'config' alert)
       site = Site.objects.get(pk=settings.SITE_ID)
-      site.name=settings.ALLOWED_HOST[0]
+      site.name=settings.ALLOWED_HOSTS[0]
+      site.domain=settings.ALLOWED_HOSTS[0]
       site.save()
 
       # load initial data for groups
