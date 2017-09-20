@@ -12,7 +12,7 @@ from formtools.wizard.views import SessionWizardView
 from django_tables2  import RequestConfig
 
 from headcrumbs.decorators import crumb
-from headcrumbs.util import name_from_pk
+from headcrumbs.util import name_from_pk, kwargs_id, args_id
 
 from cms.functions import notify_by_email, show_form, visualiseDateTime, genIcal, group_required
 
@@ -24,7 +24,7 @@ from attendance.models import Meeting_Attendance
 
 from .functions import gen_meeting_overview, gen_meeting_initial, gen_current_attendance, gen_report_message, gen_invitee_message, gen_meeting_listing
 from .models import Meeting, Invitation
-from .forms import  MeetingForm, ModifyMeetingForm, MeetingReportForm, InviteeFormSet
+from .forms import  MeetingForm, ModifyMeetingForm, MeetingReportForm, InviteeFormSet, RegForm
 from .tables  import MeetingTable, MgmtMeetingTable, MeetingMixin, MeetingListingTable
 
 
@@ -248,7 +248,7 @@ def invite(r, meeting_num, member_id):
 # details #
 ############
 @group_required('MEMBER')
-@crumb(u'Détails de la réunion : {meeting}'.format(meeting=name_from_pk(Meeting)),parent=list)
+@crumb(u'Inscription à la {meeting}'.format(meeting=name_from_pk(Meeting)),parent=list)
 def details(r, meeting_num):
 
   meeting = Meeting.objects.get(num=meeting_num)
@@ -267,85 +267,65 @@ def details(r, meeting_num):
 
 # register #
 ############
-@crumb(u'Inscrire un membre à la réunion : {meeting}'.format(meeting=name_from_pk(Meeting)),parent=details)
-def register(r, meeting_num):
+@group_required('BOARD')
+@crumb(u'Inscription à la {meeting}'.format(meeting=name_from_pk(Meeting)), parent=list)
+#@crumb(u'Inscription à la {meeting}'.format(meeting=name_from_pk(Meeting)), parent=details, parent_kwargs=kwargs_id)
+def register(r, meeting_num, mode):
 
-  Mt = M = None
-  if meeting_num:
-    Mt = Meeting.objects.get(pk=meeting_num)
-    if member_id:
-      M = Member.objects.get(pk=member_id)
+  Mt = Meeting.objects.get(pk=meeting_num)
+  OK = False
+  if mode == "yes": OK = True
+  if mode == "no": OK = False
+
+  template	= settings.TEMPLATE_CONTENT['meetings']['register']['template']
+  submit	= settings.TEMPLATE_CONTENT['meetings']['register']['submit']
+  done_template	= settings.TEMPLATE_CONTENT['meetings']['register']['done']['template']
+  title = grade = message = None
+  if OK:
+    title	= settings.TEMPLATE_CONTENT['meetings']['register']['title']['yes'].format(meeting=unicode(Mt))
+    grade	= settings.TEMPLATE_CONTENT['meetings']['register']['grade']['yes']
   else:
-    return TemplateResponse(r, settings.TEMPLATE_CONTENT['meetings']['invite']['done']['template'], {
-                'title': settings.TEMPLATE_CONTENT['meetings']['invite']['done']['title'], 
-                'error_message': settings.TEMPLATE_CONTENT['error']['gen'],
-                })
+    title	= settings.TEMPLATE_CONTENT['meetings']['register']['title']['no'].format(meeting=unicode(Mt))
+    grade	= settings.TEMPLATE_CONTENT['meetings']['register']['grade']['no']
+  
 
   if r.POST:
     e_template =  settings.TEMPLATE_CONTENT['meetings']['invite']['done']['email']['template']
 
-    ifs = InviteeFormSet(r.POST)
-    if ifs.is_valid():
-      invitees = []
+    rf = RegForm(r.POST)
+    if rf.is_valid():
+      M = rf.cleaned_data['member']
 
-      I = Invitation.objects.get(meeting=Mt)
-      invitation_message = gen_invitee_message(e_template,Mt,M)
-      try: invitation_message += I.additional_message
-      except: pass
-      email_error = { 'ok': True, 'who': [], }
-      for i in ifs:
-        Iv = i.save(commit=False)
-        Iv.meeting = Mt
-        Iv.member = M
-        if Iv.email:
-          Iv.save()
-      
-          #invitation email for invitee(s)
-          subject = settings.TEMPLATE_CONTENT['meetings']['invite']['done']['email']['subject'] % { 'title': unicode(Mt.title) }
-          message_content = {
-            'FULLNAME'    : gen_member_fullname(Iv),
-            'MESSAGE'     : invitation_message,
-          }
-          #send email
-#no need to add attachement for invitees
-#          try:
-#            ok=notify_by_email(settings.EMAILS['sender']['default'],Iv.email,subject,message_content,False,settings.MEDIA_ROOT + unicode(I.attachement))
-#          except:
-          ok=notify_by_email(settings.EMAILS['sender']['default'],Iv.email,subject,message_content)
-          if not ok:
-            email_error['ok']=False
-            email_error['who'].append(Iv.email)
+      try:
+        A = Meeting_Attendance.objects.get(meeting=Mt,member=M)
+      except:
+        A = Meeting_Attendance(meeting=Mt,member=M)
 
-          # all fine -> save Invitee
-          invitees.append(Iv)
-
-      # error in email -> show error messages
-      if not email_error['ok']:
-        return TemplateResponse(r, settings.TEMPLATE_CONTENT['meetings']['invite']['done']['template'], {
-              'title': settings.TEMPLATE_CONTENT['meetings']['invite']['done']['title'], 
-              'error_message': settings.TEMPLATE_CONTENT['error']['email'] + ' ; '.join([e for e in email_error['who']]),
-              })
+      A.present = OK
+      A.timestamp = timezone.now()
+      A.save()
+  
+      if OK: message 	= settings.TEMPLATE_CONTENT['meetings']['register']['done']['message']['yes'].format(meeting=unicode(Mt), member=unicode(M))
+      else:  message 	= settings.TEMPLATE_CONTENT['meetings']['register']['done']['message']['no'].format(meeting=unicode(Mt) ,member=unicode(M))
 
       # all fine -> done
-      I.sent = timezone.now()
-      I.save()
-      return TemplateResponse(r, settings.TEMPLATE_CONTENT['meetings']['invite']['done']['template'], {
-                'title': settings.TEMPLATE_CONTENT['meetings']['invite']['done']['title'], 
-                'message': settings.TEMPLATE_CONTENT['meetings']['invite']['done']['message'] % { 'email': invitation_message, 'attachement': I.attachement, 'list': ' ; '.join([gen_member_fullname(i) for i in invitees]), },
+      return TemplateResponse(r, done_template, {
+                'message'	: message,
                 })
 
     # form not valid -> error
     else:
-      return TemplateResponse(r, settings.TEMPLATE_CONTENT['meetings']['invite']['done']['template'], {
-                'error_message': settings.TEMPLATE_CONTENT['error']['gen'] + ' ; '.join([str(e) for e in ifs.errors]),
+      return TemplateResponse(r, done_template, {
+                'error_message': settings.TEMPLATE_CONTENT['error']['gen'] + ' ; '.join([str(e) for e in rf.errors]),
                 })
+
   # no post yet -> empty form
   else:
-    return TemplateResponse(r, settings.TEMPLATE_CONTENT['meetings']['invite']['template'], {
-                'title': settings.TEMPLATE_CONTENT['meetings']['invite']['title'] + unicode(Mt),
-                'desc': settings.TEMPLATE_CONTENT['meetings']['invite']['desc'],
-                'submit': settings.TEMPLATE_CONTENT['meetings']['invite']['submit'],
-                'form': InviteeFormSet(),
+    return TemplateResponse(r, template, {
+                'title'		: title, 
+                'grade'		: grade, 
+                'submit'	: submit,
+                'form'		: RegForm(),
                 })
 
 

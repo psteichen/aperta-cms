@@ -7,6 +7,7 @@ from django.forms import Form, ModelForm, TextInput, Textarea, HiddenInput, Char
 from django.forms.models import modelformset_factory, BaseModelFormSet
 
 from members.functions import get_active_members
+from members.models import Member
 
 from .models import Meeting, Invitee
 
@@ -72,4 +73,9 @@ class MeetingReportForm(Form):
   when		= CharField(label=u'Date',widget=TextInput(attrs={'readonly': 'readonly', }))
   report	= FileField(label='Compte rendu')
   send 		= BooleanField(label='Envoi du compte rendu aux membres',required=False)
+
+
+#reg form
+class RegForm(Form):
+  member	= ModelChoiceField(label='Choisir le membre',queryset=Member.objects.filter(status=Member.ACT))
 

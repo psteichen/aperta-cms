@@ -13,5 +13,6 @@ urlpatterns = [
   url(r'^send/(?P<meeting_num>.+?)/$', send, name='send'),
   url(r'^modify/(?P<meeting_num>.+?)/$', modify, name='modify'),
   url(r'^report/(?P<meeting_num>.+?)/$', report, name='report'),
-  url(r'^register/(?P<meeting_num>.+?)/$', register, name='register'),
+  url(r'^register/(?P<meeting_num>.+?)/(?P<mode>.+?)/$', register, name='register'),
+
 ]

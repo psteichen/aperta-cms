@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block form %}
-  <div class="panel panel-primary">
+  <div class="panel panel-{% if grade %}{{ grade }}{% else %}primary{% endif %}">
     <div class="panel-heading">
       <h2 class="panel-title">{{ title }}</h2>
     </div>
@@ -21,7 +21,7 @@
         {% bootstrap_form form %}
         <div class="btn-toolbar">
          <div class="btn-group">
-          <button class="btn btn-success" type="submit" value="{{ submit }}">{{ submit }}&nbsp;&nbsp;<span class="glyphicon glyphicon-play"></span></button>
+          <button class="btn btn-{% if grade %}{{ grade }}{% else %}success{% endif %}" type="submit" value="{{ submit }}">{{ submit }}&nbsp;&nbsp;<i class="fa fa-play"></i></button>
          </div>
         </div>
        </form>  
