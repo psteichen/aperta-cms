@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load extra_tags %}
 
 {% block content %}
 <h1>{{ title }}</h1>
@@ -27,7 +26,6 @@
          <div class="col-sm-12">{{ field.errors }}</div>
          <div class="col-sm-3">{{ field.label_tag }}</div>
          <div class="col-sm-9">
-{#            {{ field|addclass:"form-control" }}<br/> #}
             {{ field }}<br/>
             <span class="help-block">{{ field.help_text }}</span>
          </div>
@@ -44,7 +42,7 @@
         <div class="col-sm-12">{{ field.errors }}</div>
         <div class="col-sm-3">{{ field.label_tag }}</div>
         <div class="col-sm-9">
-            {{ field|addclass:"form-control" }}<br/>
+            {{ field }}<br/>
             <span class="help-block">{{ field.help_text }}</span>
         </div>
        </div>
