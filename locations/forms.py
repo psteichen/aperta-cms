@@ -14,6 +14,10 @@ class LocationForm(ModelForm):
     widgets = {
       'address'         : Textarea(),
     }
+    help_texts = {
+      'contact': '<a href="/locations/contact/add/">Ajouter une personne de contact</a>',
+    }
+
 
 class ContactForm(ModelForm):
 

@@ -75,54 +75,55 @@ def add(r):
                 'form': form,
                 })
 
-# modify formwizard #
-#####################
-class ModifyLocationWizard(SessionWizardView):
 
-  def get_template_names(self):
-    return 'wizard.html'
+# modify #
+##########
+@group_required('BOARD')
+def modify(r,location_id):
 
-  def get_context_data(self, form, **kwargs):
-    context = super(ModifyLocationWizard, self).get_context_data(form=form, **kwargs)
+  Lo = Location.objects.get(pk=location_id)
 
-    if self.steps.current != None:
-      context.update({'title': settings.TEMPLATE_CONTENT['locations']['modify']['title']})
-      context.update({'first': settings.TEMPLATE_CONTENT['locations']['modify']['first']})
-      context.update({'prev': settings.TEMPLATE_CONTENT['locations']['modify']['prev']})
-      context.update({'step_title': settings.TEMPLATE_CONTENT['locations']['modify'][self.steps.current]['title']})
-      context.update({'next': settings.TEMPLATE_CONTENT['locations']['modify'][self.steps.current]['next']})
+  template	= settings.TEMPLATE_CONTENT['locations']['modify']['template'] 
+  title 	= settings.TEMPLATE_CONTENT['locations']['modify']['title'].format(location=unicode(Lo))
+  desc		= settings.TEMPLATE_CONTENT['locations']['add']['desc']
+  submit	= settings.TEMPLATE_CONTENT['locations']['add']['submit']
 
-    return context
+  done_tempalte	= settings.TEMPLATE_CONTENT['locations']['modify']['done']['template']
+  done_title	= settings.TEMPLATE_CONTENT['locations']['modify']['done']['title'] 
+  done_message	= settings.TEMPLATE_CONTENT['locations']['modify']['done']['message'].format(location=unicode(Lo))
 
-  def get_form(self, step=None, data=None, files=None):
-    form = super(ModifyLocationWizard, self).get_form(step, data, files)
-
-    # determine the step if not given
-    if step is None:
-      step = self.steps.current
-
-    if step == 'location':
-      cleaned_data = self.get_cleaned_data_for_step('list') or {}
-      if cleaned_data != {}:
-        form.initial = gen_location_initial(cleaned_data['locations'])
-        form.instance = Location.objects.get(pk=cleaned_data['locations'].id)
-
-    return form
-
-  def done(self, fl, **kwargs):
-
-    template = settings.TEMPLATE_CONTENT['locations']['modify']['done']['template']
-
-    L = None
-    lf = fl[1]
+      
+  if r.POST:
+    lf = LocationForm(r.POST,instance=Lo)
     if lf.is_valid():
       L = lf.save()
+      
+      # all fine -> done
+      return TemplateResponse(r, done_template, {
+	                	'title'		: title, 
+        	     		'message'	: message,
+                	    })
 
-    title = settings.TEMPLATE_CONTENT['locations']['modify']['done']['title'] % L
+    # form not valid -> error
+    else:
+      return TemplateResponse(r, done_template, {
+		                'title'		: done_title, 
+                		'error_message'	: settings.TEMPLATE_CONTENT['error']['gen'] + ' ; '.join([e for e in lf.errors]),
+                	    })
 
-    return TemplateResponse(self.request, template, {
-                        'title': title,
-                 })
+  # no post yet -> empty form
+  else:
+    form = LocationForm()
+    form.initial = gen_location_initial(Lo)
+    form.instance = Location.objects.get(Lo)
+
+    return TemplateResponse(r, template, {
+		                'title'		: title,
+                		'desc'		: desc,
+              			'submit'	: submit,
+                		'form'		: form,
+                	  })
+
 
 
 # delete #
