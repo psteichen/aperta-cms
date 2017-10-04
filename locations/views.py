@@ -88,8 +88,8 @@ def modify(r,location_id):
   desc		= settings.TEMPLATE_CONTENT['locations']['add']['desc']
   submit	= settings.TEMPLATE_CONTENT['locations']['add']['submit']
 
-  done_tempalte	= settings.TEMPLATE_CONTENT['locations']['modify']['done']['template']
-  done_title	= settings.TEMPLATE_CONTENT['locations']['modify']['done']['title'] 
+  done_template	= settings.TEMPLATE_CONTENT['locations']['modify']['done']['template']
+  done_title	= settings.TEMPLATE_CONTENT['locations']['modify']['done']['title'].format(location=unicode(Lo)) 
   done_message	= settings.TEMPLATE_CONTENT['locations']['modify']['done']['message'].format(location=unicode(Lo))
 
       
@@ -100,8 +100,8 @@ def modify(r,location_id):
       
       # all fine -> done
       return TemplateResponse(r, done_template, {
-	                	'title'		: title, 
-        	     		'message'	: message,
+	                	'title'		: done_title, 
+        	     		'message'	: done_message,
                 	    })
 
     # form not valid -> error
@@ -115,7 +115,7 @@ def modify(r,location_id):
   else:
     form = LocationForm()
     form.initial = gen_location_initial(Lo)
-    form.instance = Location.objects.get(Lo)
+    form.instance = Lo
 
     return TemplateResponse(r, template, {
 		                'title'		: title,

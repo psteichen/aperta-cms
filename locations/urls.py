@@ -22,8 +22,8 @@ urlpatterns = [
   url(r'^$', list, name='list'),
 
   url(r'^add/$', add, name='add'),
-  url(r'^modify/(?P<location_id>.+?)$', modify, name='modify'),
-  url(r'^delete/(?P<location_id>.+?)$', delete, name='delete'),
+  url(r'^modify/(?P<location_id>.+?)/$', modify, name='modify'),
+  url(r'^delete/(?P<location_id>.+?)/$', delete, name='delete'),
 
 # contact stuff - TODO
 #  url(r'^contact/add/$', contact_add, name='contact_add'),

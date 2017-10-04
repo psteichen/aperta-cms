@@ -30,13 +30,13 @@ LOCATIONS_TMPL_CONTENT = {
   },
   'modify' : {
     'template'		: 'form.html',
-    'title'         	: 'Modifier un Lieu de Rencontres',
-    'desc'          	: 'Modifier un lieu de rencontre et le contact y associé.',
+    'title'         	: 'Modifier "%(location)s"',
+    'desc'          	: 'Modifier les détails d\'un lieu de rencontre.',
     'submit'           	: 'Soumettre',
     'done' : {
       'template'       	: 'done.html',
       'title'         	: u'Le Lieu de Rencontres "%(location)s" a été modifié.',
-      'message'       	: 'suite',
+      'message'       	: u'',
     },
   },
   'contact' : {
