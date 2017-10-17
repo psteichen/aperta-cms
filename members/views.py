@@ -155,15 +155,15 @@ def r_modify(r,role_id):
       Rl = rf.save()
       
       # all fine -> done
-      return TemplateResponse(r, settings.TEMPLATE_CONTENT['members']['role']['add']['done']['template'], {
-                'title': settings.TEMPLATE_CONTENT['members']['role']['add']['done']['title'], 
-                'message': settings.TEMPLATE_CONTENT['members']['role']['add']['done']['message'] + unicode(Rl),
+      return TemplateResponse(r, settings.TEMPLATE_CONTENT['members']['roles']['add']['done']['template'], {
+                'title': settings.TEMPLATE_CONTENT['members']['roles']['add']['done']['title'], 
+                'message': settings.TEMPLATE_CONTENT['members']['roles']['add']['done']['message'] + unicode(Rl),
                 })
 
     # form not valid -> error
     else:
-      return TemplateResponse(r, settings.TEMPLATE_CONTENT['members']['role']['add']['done']['template'], {
-                'title': settings.TEMPLATE_CONTENT['members']['role']['add']['done']['title'], 
+      return TemplateResponse(r, settings.TEMPLATE_CONTENT['members']['roles']['add']['done']['template'], {
+                'title': settings.TEMPLATE_CONTENT['members']['roles']['add']['done']['title'], 
                 'error_message': settings.TEMPLATE_CONTENT['error']['gen'] + ' ; '.join([e for e in rf.errors]),
                 })
 
@@ -172,10 +172,10 @@ def r_modify(r,role_id):
     form = RoleForm()
     form.initial = gen_role_initial(R)
     form.instance = R
-    return TemplateResponse(r, settings.TEMPLATE_CONTENT['members']['role']['add']['template'], {
-                'title': settings.TEMPLATE_CONTENT['members']['role']['add']['title'],
-                'desc': settings.TEMPLATE_CONTENT['members']['role']['add']['desc'],
-                'submit': settings.TEMPLATE_CONTENT['members']['role']['add']['submit'],
+    return TemplateResponse(r, settings.TEMPLATE_CONTENT['members']['roles']['add']['template'], {
+                'title': settings.TEMPLATE_CONTENT['members']['roles']['add']['title'],
+                'desc': settings.TEMPLATE_CONTENT['members']['roles']['add']['desc'],
+                'submit': settings.TEMPLATE_CONTENT['members']['roles']['add']['submit'],
                 'form': form,
                 })
 
