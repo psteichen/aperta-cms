@@ -90,11 +90,11 @@ ENV/
 
 #django stuff
 db.sqlite
-cms/wsgi.py
 wsgi.py
-cms/settings.py
 settings.py
 */migrations/
+cms/wsgi.py
+cms/settings.py
 
 #other stuff
 TODO
