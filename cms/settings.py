@@ -7,9 +7,9 @@ from .core_settings import *
 ######################
 
 SECRET_KEY = '4j$om7#%h7ahryh!lht(mlf!c*vm%5zcz4sf+5xc#ki)ij(v=&'
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = [ 'dev.cms.aperta.lu', ]
+ALLOWED_HOSTS = [ 'cms.aperta.lu', ]
 
 # Email settings
 SERVER_EMAIL = 'admin@aperta.lu'
