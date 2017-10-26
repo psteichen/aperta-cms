@@ -142,8 +142,8 @@ def roles(request):
                         })
 
 
-# roles  modify #
-#################
+# roles modify #
+################
 @group_required('BOARD')
 @crumb(u'Modifier le rôle [{role}]'.format(role=name_from_pk(Role)), parent=roles)
 def r_modify(r,role_id):
