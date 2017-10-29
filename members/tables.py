@@ -28,7 +28,16 @@ class MemberTable(Table):
     super(Table, self).__init__(*args, **kwargs)
 
   def render_photo(self, value, record):
-    picture = '''<i class="fa-stack fa-3x"><a href="#{id}Modal" data-toggle="modal"><img src="{pic}" alt="Photo" class="img-responsive img-circle" /></a></i>
+    roles = u''
+    try:
+      R = Role.objects.filter(member__id=record.id,year=getSaison())
+      for r in R:
+        roles += unicode(r.type.title)
+        if r != R.last(): roles += u' ; '
+    except Role.DoesNotExist:
+      pass
+
+    picture = u'''<i class="fa-stack fa-3x"><a href="#{id}Modal" data-toggle="modal"><img src="{pic}" alt="Photo" class="img-responsive img-circle" /></a></i>
 
 <!-- Modal -->
 <div class="modal fade" id="{id}Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -40,11 +49,20 @@ class MemberTable(Table):
       </div> 
       <div class="modal-body">
         <center><img src="{pic}" alt="Photo" class="img-responsive img-rounded" /></center>
+        <div class="panel">
+          <div class="btn btn-info pull-right">Statut: {status}</div>
+          <div class="panel-body">
+            <strong>Adresse :</strong> <p>{address}</p>
+            <strong>Tél. fixe :</strong> <p>{phone}</p>
+            <strong>Mobile :</strong> <p>{mobile}</p>
+            <em>Rôle(s) : <p>{roles}</p></em>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </div>
-'''.format(id=record.pk,name=unicode(record),pic=settings.MEDIA_URL+unicode(value))
+'''.format(id=record.pk,name=unicode(record),pic=settings.MEDIA_URL+unicode(value),status=Member.STATUSES[record.status][1],address=unicode(record.address),phone=unicode(record.phone),mobile=unicode(record.mobile),roles=roles)
 
     return mark_safe(picture)
 
@@ -100,16 +118,14 @@ class MgmtMemberTable(Table):
     return cl
 
   def render_photo(self, value, record):
-    role = ''
+    roles = u''
     try:
-      R = Role.objects.get(member__id=record.id)
-      if R.end_date:
-        role = unicode(R.title) + ' (' + unicode(R.start_date) + ' - ' + unicode(R.end_date) +')'
-      else:
-        role = unicode(R.title) + ' (depuis ' + unicode(R.start_date) + ')'
-    except:
+      R = Role.objects.filter(member__id=record.id,year=getSaison())
+      for r in R:
+        roles += unicode(r.type.title)
+        if r != R.last(): roles += u' ; '
+    except Role.DoesNotExist:
       pass
-
 
     picture = u'''<i class="fa-stack fa-3x"><a href="#{id}Modal" data-toggle="modal"><img src="{pic}" alt="Photo" class="img-responsive img-circle" /></a></i>
 
@@ -129,14 +145,14 @@ class MgmtMemberTable(Table):
             <strong>Adresse :</strong> <p>{address}</p>
             <strong>Tél. fixe :</strong> <p>{phone}</p>
             <strong>Mobile :</strong> <p>{mobile}</p>
-            <em>Rôle : <p>{role}</p></em>
+            <em>Rôle(s) : <p>{roles}</p></em>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-'''.format(id=record.pk,name=unicode(record),pic=settings.MEDIA_URL+unicode(value),status=Member.STATUSES[record.status][1],address=unicode(record.address),phone=unicode(record.phone),mobile=unicode(record.mobile),role=role)
+'''.format(id=record.pk,name=unicode(record),pic=settings.MEDIA_URL+unicode(value),status=Member.STATUSES[record.status][1],address=unicode(record.address),phone=unicode(record.phone),mobile=unicode(record.mobile),roles=roles)
 
     return mark_safe(picture)
 
