@@ -7,6 +7,7 @@ from django.template.response import TemplateResponse
 from django.shortcuts import redirect
 from django.contrib.auth.hashers import make_password
 from django.core.files.storage import FileSystemStorage
+from django.contrib.auth.models import Group
 
 from formtools.wizard.views import SessionWizardView
 
@@ -22,7 +23,7 @@ from events.models import Event
 from attendance.functions import gen_attendance_hashes
 
 from .functions import is_board, is_member, create_user, gen_member_initial, gen_role_initial, gen_member_overview, gen_member_fullname, gen_username, gen_random_password
-from .models import User, Member, Role
+from .models import User, Member, Role, RoleType
 from .forms import MemberForm, RoleForm, RoleTypeForm
 from .tables  import MemberTable, MgmtMemberTable, RoleTable
 
@@ -191,6 +192,12 @@ def r_add(r):
     if rf.is_valid():
       R = rf.save()
 
+      # add member to group board of role is board too
+      if R.type.type == RoleType.A: 
+        U = R.member.user
+        g = Group.objects.get(name='BOARD') 
+        g.user_set.add(U)
+
       # all fine -> done
       return TemplateResponse(r, settings.TEMPLATE_CONTENT['members']['roles']['add']['done']['template'], {
                 'title': settings.TEMPLATE_CONTENT['members']['roles']['add']['done']['title'],
@@ -205,7 +212,7 @@ def r_add(r):
 
   # no post yet -> empty form
   else:
-    form = RoleForm(initial = { 'year'        : getSaison(), })
+    form = RoleForm(initial = { 'year' : getSaison(), })
     return TemplateResponse(r, settings.TEMPLATE_CONTENT['members']['roles']['add']['template'], {
                 'title': settings.TEMPLATE_CONTENT['members']['roles']['add']['title'],
                 'desc': settings.TEMPLATE_CONTENT['members']['roles']['add']['desc'],
