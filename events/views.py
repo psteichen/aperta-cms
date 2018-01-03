@@ -61,6 +61,8 @@ def add(r):
     if ef.is_valid():
       Ev = ef.save(commit=False)
       Ev.save()
+      for member in Member.objects.all():
+        gen_attendance_hashes(Mt,Event.OTH,member)
       
       if r.FILES:
         I = Invitation(event=Ev,message=ef.cleaned_data['additional_message'],attachement=r.FILES['attachement'])

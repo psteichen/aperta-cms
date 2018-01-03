@@ -64,6 +64,8 @@ def add(r):
     if mf.is_valid():
       Mt = mf.save(commit=False)
       Mt.save()
+      for member in Member.objects.all():
+        gen_attendance_hashes(Mt,Event.MEET,member)
 
       if r.FILES:
         I = Invitation(meeting=Mt,message=mf.cleaned_data['additional_message'],attachement=r.FILES['attachement'])
