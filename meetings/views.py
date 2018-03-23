@@ -130,7 +130,7 @@ def send(r, meeting_num):
     invitation_message = gen_invitation_message(e_template,Mt,Event.MEET,m)
     message_content = {
         'FULLNAME'    : gen_member_fullname(m),
-        'MESSAGE'     : invitation_message + str(I.message),
+        'MESSAGE'     : invitation_message + unicode(I.message),
     }
 
     #generate ical invite
