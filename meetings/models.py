@@ -51,11 +51,13 @@ class Invitee(Model):
   M=1
   C=2
   W=3
+  B=4
   TYPES = (
     (I,u'Invité'),
     (M,u'Membre d\'un autre club'),
     (C,u'Conférencier'),
     (W,u'Would-Be'),
+    (B,u'Conjoint(e)'),
   )
 
   meeting	= ForeignKey(Meeting)
