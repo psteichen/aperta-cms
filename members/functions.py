@@ -55,7 +55,7 @@ def is_member(user):
 
 
 def get_active_members():
-  return Member.objects.filter(Q(status=Member.ACT)|Q(status=Member.WBE)).order_by('last_name')
+  return Member.objects.filter(Q(status=Member.ACT)|Q(status=Member.WBE)|Q(status=Member.HON)).order_by('last_name')
 
 def gen_member_fullname(member):
   return unicode(member.first_name) + u' ' + unicode.upper(member.last_name)
