@@ -125,7 +125,7 @@ def attendance(r, event_type, event_id, attendance_hash):
 
 
 
-    return TemplateResponse(r, settings.TEMPLATE_CONTENT['attendance']['template'], {
+  return TemplateResponse(r, settings.TEMPLATE_CONTENT['attendance']['template'], {
                    'title': title,
                    'actions' : actions,
                    'message': message,
