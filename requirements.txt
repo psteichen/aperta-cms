@@ -4,3 +4,4 @@ django-formtools #1.11 detached formwizard and stuff
 django-tables2
 django-bootstrap3
 #django-headcrumbs #no pip install script yet
+django-anymail
