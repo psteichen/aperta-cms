@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'bootstrap3',
     'formtools',
     'django_tables2',
+    'anymail',
 #    'headcrumbs',
   # project apps
     'members.apps.MembersConfig',

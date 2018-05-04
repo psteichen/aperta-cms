@@ -4,6 +4,5 @@ from .models import Event, Invitation, Partner, Distribution, Participant
 
 admin.site.register(Event)
 admin.site.register(Invitation)
-admin.site.register(Invitation)
 admin.site.register(Distribution)
 admin.site.register(Participant)
