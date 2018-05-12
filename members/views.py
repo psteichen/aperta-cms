@@ -106,7 +106,7 @@ def modify(r,mem_id):
 
       # all fine -> done
       return TemplateResponse(r, settings.TEMPLATE_CONTENT['members']['modify']['done']['template'], {
-                'title': settings.TEMPLATE_CONTENT['members']['modify']['done']['title'].format(unicode(M)),
+                'title': settings.TEMPLATE_CONTENT['members']['modify']['done']['title'].format(str(M)),
                 })
 
     # form not valid -> error
@@ -159,7 +159,7 @@ def r_modify(r,role_id):
       # all fine -> done
       return TemplateResponse(r, settings.TEMPLATE_CONTENT['members']['roles']['modify']['done']['template'], {
                 'title': settings.TEMPLATE_CONTENT['members']['roles']['modify']['done']['title'], 
-                'message': settings.TEMPLATE_CONTENT['members']['roles']['modify']['done']['message'] + unicode(Rl),
+                'message': settings.TEMPLATE_CONTENT['members']['roles']['modify']['done']['message'] + str(Rl),
                 })
 
     # form not valid -> error

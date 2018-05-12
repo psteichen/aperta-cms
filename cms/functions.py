@@ -18,7 +18,7 @@ from django.utils import timezone
 def debug(app,message):
   if settings.DEBUG:
     from sys import stderr as errlog
-    print >>errlog, 'DEBUG ['+unicode(app)+']: '+unicode(message)
+    print >>errlog, 'DEBUG ['+str(app)+']: '+str(message)
 
 
 def check_if_setup():
@@ -71,11 +71,12 @@ def notify_by_email(sender,to,subject,message_content,cc=False,attachment=False,
       for a in attachment: attach_to_email(email,a)
     else: attach_to_email(email,attachment)
   if cc: email.cc=[cc]
-  try:
-    email.send()
-    return True
-  except:
-    return False
+  email.send()
+#  try:
+#    email.send()
+#    return True
+#  except:
+#    return False
 
 def genIcal(event):
   from icalendar import Calendar, Event, Alarm
@@ -172,11 +173,11 @@ def rmf(dir, old, new=None):
   orig_name, orig_ext = splitext(old)
 
   if new:
-    fn=unicode(new).replace(' ','-') #remove whitespaces
+    fn=str(new).replace(' ','-') #remove whitespaces
   else:
-    fn=unicode(orig_name).replace(' ','-') #remove whitespaces
+    fn=str(orig_name).replace(' ','-') #remove whitespaces
 
-  fn=unicode(fn).replace('.','') #remove dots
+  fn=str(fn).replace('.','') #remove dots
   fn=dir.upper() + sep + fn #add dir
 
   return {'name': normalize('NFKD', fn).encode('ascii','ignore'),'ext': orig_ext}

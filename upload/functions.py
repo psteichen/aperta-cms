@@ -22,7 +22,7 @@ from locations.models import Location
 def UnicodeDictReader(utf8_data, **kwargs):
   csv_reader = csv.DictReader(utf8_data, **kwargs)
   for row in csv_reader:
-    yield {unicode(key, 'utf-8'):unicode(value, 'utf-8') for key, value in row.iteritems()}
+    yield {str(key, 'utf-8'):str(value, 'utf-8') for key, value in row.iteritems()}
 
 def import_data(ty,data):
  
@@ -30,20 +30,20 @@ def import_data(ty,data):
   ok = True
   errors = False
   for l in UnicodeDictReader(data,delimiter=';',quoting=csv.QUOTE_NONE):
-    debug('upload',u'Line : '+unicode(l))
+    debug('upload',u'Line : '+str(l))
 
     Model = None
     if ty == 'members':  #import members
       try:
-        Model = Member.objects.get(first_name=unicode(l['PRENOM']),last_name=unicode(l['NOM']),email=unicode(l['EMAIL']))
+        Model = Member.objects.get(first_name=str(l['PRENOM']),last_name=str(l['NOM']),email=str(l['EMAIL']))
       except Member.DoesNotExist:
         Model = Member(
-		first_name    = unicode(l['PRENOM']),
-		last_name	= unicode(l['NOM']),
-		address	= unicode(l['ADRESSE']),
-		phone		= unicode(l['TEL']),
-		mobile	= unicode(l['MOBILE']),
-		email		= unicode(l['EMAIL'])
+		first_name    = str(l['PRENOM']),
+		last_name	= str(l['NOM']),
+		address	= str(l['ADRESSE']),
+		phone		= str(l['TEL']),
+		mobile	= str(l['MOBILE']),
+		email		= str(l['EMAIL'])
 	)
         # create user
         U = create_user(Model.first_name,Model.last_name, Model.email)
@@ -56,33 +56,33 @@ def import_data(ty,data):
       if l['TYPE'] == '0': #meeting
         debug('upload',u"it's a meeting")
         try:
-          Model = Meeting.objects.get(when=unicode(l['DATE']),title=unicode(l['TITRE']))
+          Model = Meeting.objects.get(when=str(l['DATE']),title=str(l['TITRE']))
         except Meeting.DoesNotExist:
           Model = Meeting(
-		title  		= unicode(l['TITRE']),
-		when		= unicode(l['DATE']),
-		time		= unicode(l['HEURE']),
+		title  		= str(l['TITRE']),
+		when		= str(l['DATE']),
+		time		= str(l['HEURE']),
 		deadline	= deadline,
 	  )
 
       if l['TYPE'] == '1': #event
         debug('upload',u"it's an event")
         try:
-          Model = Event.objects.get(when=unicode(l['DATE']),title=unicode(l['TITRE']))
+          Model = Event.objects.get(when=str(l['DATE']),title=str(l['TITRE']))
         except Event.DoesNotExist:
           Model = Event (
-		title  		= unicode(l['TITRE']),
-		when		= unicode(l['DATE']),
-		time		= unicode(l['HEURE']),
+		title  		= str(l['TITRE']),
+		when		= str(l['DATE']),
+		time		= str(l['HEURE']),
 		deadline	= deadline,
 	  )
 
       # check/create location
       location = None
       try:
-        location = Location.objects.get(name=unicode(l['LIEU']))
+        location = Location.objects.get(name=str(l['LIEU']))
       except Location.DoesNotExist:
-        location = Location(name=unicode(l['LIEU']))
+        location = Location(name=str(l['LIEU']))
         location.save()
 
       Model.location = location
@@ -90,7 +90,7 @@ def import_data(ty,data):
         latest = Meeting.objects.values().latest('num')
         next_num = latest['num'] + 1
         Model.num = next_num
-        Model.title = unicode(next_num) + u'. ' + unicode(Model.title)
+        Model.title = str(next_num) + u'. ' + str(Model.title)
       Model.save()
       nb+=1
 

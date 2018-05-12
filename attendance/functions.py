@@ -48,10 +48,10 @@ def gen_attendance_links(event,event_type,member):
   attendance_url = ''
 
   if event_type == Event.MEET:
-    attendance_url = path.join(settings.MEETINGS_ATTENDANCE_URL, unicode(event.pk))
+    attendance_url = path.join(settings.MEETINGS_ATTENDANCE_URL, str(event.pk))
     
   if event_type == Event.OTH:
-    attendance_url = path.join(settings.EVENTS_ATTENDANCE_URL, unicode(event.pk))
+    attendance_url = path.join(settings.EVENTS_ATTENDANCE_URL, str(event.pk))
 
   links = {
     'YES' : path.join(attendance_url, get_attendance_hash(event,event_type,member,True)),

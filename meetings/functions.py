@@ -21,17 +21,17 @@ def gen_meeting_overview(template,meeting):
   content = { 'overview' : settings.TEMPLATE_CONTENT['meetings']['details']['overview'] }
 
   content['title'] = meeting.title
-  content['modify'] = '/meetings/modify/' + unicode(meeting.num)
+  content['modify'] = '/meetings/modify/' + str(meeting.num)
   content['when'] = visualiseDateTime(meeting.when)
   content['time'] = visualiseDateTime(meeting.time)
   content['location'] = meeting.location.name
   content['address'] = meeting.location.address
-  if meeting.report:  content['report'] = settings.MEDIA_URL + unicode(meeting.report)
+  if meeting.report:  content['report'] = settings.MEDIA_URL + str(meeting.report)
   try:   
     invitation = Invitation.objects.get(meeting=meeting)
-    if invitation.attachement: content['attach'] = settings.MEDIA_URL + unicode(invitation.attachement)
+    if invitation.attachement: content['attach'] = settings.MEDIA_URL + str(invitation.attachement)
   except: pass
-  content['listing'] = '/meetings/listing/' + unicode(meeting.num)
+  content['listing'] = '/meetings/listing/' + str(meeting.num)
   content['attendance'] = Meeting_Attendance.objects.filter(meeting=meeting,present=True).only('member')
   content['invitee'] = Invitee.objects.filter(meeting=meeting)
   content['excused'] = Meeting_Attendance.objects.filter(meeting=meeting,present=False).only('member')
@@ -124,7 +124,7 @@ def gen_meeting_listing(template,meeting):
   content['listing']['invitees'] = []
   for i in invited:
     content['listing']['invitees'].append([
-      	i.first_name + ' ' + unicode.upper(i.last_name), 
+      	i.first_name + ' ' + str.upper(i.last_name), 
     ])
 
 
@@ -137,14 +137,14 @@ def gen_meeting_listing(template,meeting):
   I = invited.count()
   N = M-P-E
   content['listing']['resume'].append([
-  	u'Présents : &emsp;&emsp;' + unicode(P) + '/' + unicode(M) + '&emsp;&emsp;&emsp;' + unicode(int(round((float(P)/M)*100))) + '%',
-  	u'Invités : &emsp;&emsp;' + unicode(I),
-  	u'Total : &emsp;&emsp;' + unicode(P+I),
+  	u'Présents : &emsp;&emsp;' + str(P) + '/' + str(M) + '&emsp;&emsp;&emsp;' + str(int(round((float(P)/M)*100))) + '%',
+  	u'Invités : &emsp;&emsp;' + str(I),
+  	u'Total : &emsp;&emsp;' + str(P+I),
   ])
   # excusés  / non exc. /
   content['listing']['resume'].append([
-  	u'Excusés : &emsp;&emsp;' + unicode(E) + '/' + unicode(M) + '&emsp;&emsp;&emsp;' + unicode(int(round((float(E)/M)*100))) + '%',
-  	u'Non-excusés : &emsp;&emsp;' + unicode(N) + '/' + unicode(M) + '&emsp;&emsp;&emsp;' + unicode(int(round((float(N)/M)*100))) + '%',
+  	u'Excusés : &emsp;&emsp;' + str(E) + '/' + str(M) + '&emsp;&emsp;&emsp;' + str(int(round((float(E)/M)*100))) + '%',
+  	u'Non-excusés : &emsp;&emsp;' + str(N) + '/' + str(M) + '&emsp;&emsp;&emsp;' + str(int(round((float(N)/M)*100))) + '%',
   ])
 
   return render_to_string(template,content)

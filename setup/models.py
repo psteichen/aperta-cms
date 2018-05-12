@@ -6,7 +6,7 @@ from django.core.validators import validate_comma_separated_integer_list
 from cms.functions import rmf
 
 def rename_logo(i, f):
-  name = unicode(i.nom)
+  name = str(i.nom)
   fn = rmf('', f, name)
 
   from os import sep
@@ -36,6 +36,6 @@ class Setup(Model):
   optional_apps		= CharField(max_length=50,choices=APPS,validators=[validate_comma_separated_integer_list],blank=True,null=True)
 
 
-  def __unicode__(self):
+  def __str__(self):
     return self.org_name
 

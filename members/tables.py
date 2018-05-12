@@ -32,7 +32,7 @@ class MemberTable(Table):
     try:
       R = Role.objects.filter(member__id=record.id,year=getSaison())
       for r in R:
-        roles += unicode(r.type.title)
+        roles += str(r.type.title)
         if r != R.last(): roles += u' ; '
     except Role.DoesNotExist:
       pass
@@ -62,19 +62,19 @@ class MemberTable(Table):
     </div>
   </div>
 </div>
-'''.format(id=record.pk,name=unicode(record),pic=settings.MEDIA_URL+unicode(value),status=Member.STATUSES[record.status][1],address=unicode(record.address),phone=unicode(record.phone),mobile=unicode(record.mobile),roles=roles)
+'''.format(id=record.pk,name=str(record),pic=settings.MEDIA_URL+str(value),status=Member.STATUSES[record.status][1],address=str(record.address),phone=str(record.phone),mobile=str(record.mobile),roles=roles)
 
     return mark_safe(picture)
 
   def render_last_name(self, value):
-    return unicode.upper(value)
+    return str.upper(value)
 
   def render_role(self, value, record):
     roles = u''
     try:
       R = Role.objects.filter(member__id=record.id,year=getSaison())
       for r in R:
-        roles += unicode(r.type.title)
+        roles += str(r.type.title)
         if r != R.last(): roles += u' ; '
       return roles
     except Role.DoesNotExist:
@@ -122,7 +122,7 @@ class MgmtMemberTable(Table):
     try:
       R = Role.objects.filter(member__id=record.id,year=getSaison())
       for r in R:
-        roles += unicode(r.type.title)
+        roles += str(r.type.title)
         if r != R.last(): roles += u' ; '
     except Role.DoesNotExist:
       pass
@@ -152,12 +152,12 @@ class MgmtMemberTable(Table):
     </div>
   </div>
 </div>
-'''.format(id=record.pk,name=unicode(record),pic=settings.MEDIA_URL+unicode(value),status=Member.STATUSES[record.status][1],address=unicode(record.address),phone=unicode(record.phone),mobile=unicode(record.mobile),roles=roles)
+'''.format(id=record.pk,name=str(record),pic=settings.MEDIA_URL+str(value),status=Member.STATUSES[record.status][1],address=str(record.address),phone=str(record.phone),mobile=str(record.mobile),roles=roles)
 
     return mark_safe(picture)
 
   def render_last_name(self, value):
-    return unicode.upper(value)
+    return str.upper(value)
 
 #  def render_start_date(self, value):
 #    return format_datetime(value)
@@ -170,7 +170,7 @@ class MgmtMemberTable(Table):
     try:
       R = Role.objects.filter(member__id=record.id,year=getSaison())
       for r in R:
-        roles += unicode(r.type.title)
+        roles += str(r.type.title)
         if r != R.last(): roles += u' ; '
       return roles
     except Role.DoesNotExist:

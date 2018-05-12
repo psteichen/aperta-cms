@@ -16,11 +16,11 @@ def gen_username(fn, ln, pad=0):
     try:
       username += fn[i]
     except:
-      username += unicode(j)
+      username += str(j)
       j += 1
 
     i += 1
-  username = unicode.lower(username + ln)
+  username = str.lower(username + ln)
   if login_exists(username): return gen_username(fn, ln, pad+1)
   else: return username
 
@@ -58,14 +58,14 @@ def get_active_members():
   return Member.objects.filter(Q(status=Member.ACT)|Q(status=Member.WBE)|Q(status=Member.HON)).order_by('last_name')
 
 def gen_member_fullname(member):
-  return unicode(member.first_name) + u' ' + unicode.upper(member.last_name)
+  return str(member.first_name) + u' ' + str.upper(member.last_name)
 
 def gen_member_fullname_n_role(member):
   role = ''
   try:
-    role = ' (' + unicode(Role.objects.get(member=member).title) + ')'
+    role = ' (' + str(Role.objects.get(member=member).title) + ')'
   except: pass
-  return unicode(member.first_name) + u' ' + unicode.upper(member.last_name) + role
+  return str(member.first_name) + u' ' + str.upper(member.last_name) + role
 
 def gen_member_initial(m):
   initial_data = {}
@@ -84,9 +84,9 @@ def gen_member_initial(m):
   try:
     role = Role.objects.get(member__pk=m.pk)
     if role.end_date:
-      initial_data['role'] = unicode(role.title) + ' (' + unicode(role.start_date) + ' - ' + unicode(role.end_date) +')'
+      initial_data['role'] = str(role.title) + ' (' + str(role.start_date) + ' - ' + str(role.end_date) +')'
     else:
-      initial_data['role'] = unicode(role.title) + ' (depuis ' + unicode(role.start_date) + ')'
+      initial_data['role'] = str(role.title) + ' (depuis ' + str(role.start_date) + ')'
   except:
     initial_data['role'] = ''
 
@@ -114,9 +114,9 @@ def gen_member_overview(template,member):
   try:
     role = Role.objects.get(member=member)
     if role.end_date:
-      content['role'] = unicode(role.title) + ' (' + unicode(role.start_date) + ' - ' + unicode(role.end_date) +')'
+      content['role'] = str(role.title) + ' (' + str(role.start_date) + ' - ' + str(role.end_date) +')'
     else:
-      content['role'] = unicode(role.title) + ' (depuis ' + unicode(role.start_date) + ')'
+      content['role'] = str(role.title) + ' (depuis ' + str(role.start_date) + ')'
   except: pass
 
   return render_to_string(template,content)
