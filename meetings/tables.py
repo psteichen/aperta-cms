@@ -7,6 +7,8 @@ from django.utils import timezone
 from django_tables2.tables import Table
 from django_tables2 import Column
 
+from cms.functions import getSaison
+
 from members.functions import gen_member_fullname
 from attendance.models import Meeting_Attendance
 from members.models import Member
@@ -96,35 +98,43 @@ class MeetingMixin(Table):
 class MeetingListingTable(MeetingMixin, Table):
   row_class	= Column(visible=False, empty_values=()) #used to highlight some rows
   name		= Column(verbose_name=u'Nom (rôle)',empty_values=())
-  email		= Column(verbose_name=u'E-mail',empty_values=())
 
   def render_row_class(self, record):
     if record.when < date.today():
       return 'danger'
 
   def render_name(self, record):
-    return record.last_name + ' ' + record.first_name + '( ' + record.role.title + ')'
+    roles = u''
+    try:
+      R = Role.objects.filter(member__id=record.id,year=getSaison())
+      for r in R:
+        roles += str(r.type.title)
+        if r != R.last(): roles += u' ; '
+    except Role.DoesNotExist:
+      pass
+
+    return record.last_name + ' ' + record.first_name + '( ' + roles + ')'
 
   def render_present(self, record):
     try:
       if Meeting_Attendance.objects.filter(meeting=record.meeting_num,member=record).only(present):
-        return 'X'
+        return '<center>X</center>'
     except: pass
 
   def render_excused(self, record):
     try:
       if not Meeting_Attendance.objects.filter(meeting=record.meeting_num,member=record).only(present):
-        return 'X'
+        return '<center>X</center>'
     except: pass
 
   def render_nonexcused(self, record):
     try:
       Meeting_Attendance.objects.filter(meeting=record.meeting_num,member=record).only(present)
     except:
-      return 'X'
+      return '<center>X</center>'
 
   class Meta:
     model = Member
-    fields = ( 'name', 'present', 'excused', 'non-excused', 'outside', 'email', )
+    fields = ( 'name', 'present', 'excused', 'non-excused', )
     attrs = {"class": "table table-striped"}
 

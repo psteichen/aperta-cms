@@ -139,10 +139,7 @@ Destinataires:
       'attach'		: u'Informations supplémentaires',
       'location'	: u'Lieu de rencontre',
       'report'		: u'Compte rendu',
-      'listing'		: u'Imprimer liste',
-      'attendance'	: u'Présent(s)',
-      'invitee'		: u'Invité(s)',
-      'excused'		: u'Excusé(s)',
+      'print'		: u'Imprimer les listes',
     },
   },
   'register' : {
@@ -183,13 +180,13 @@ Destinataires:
     },
   },
   'listing': {
-    'template'  	: 'done.html',
-    'title'     	: u'Listing (district) de la %(meeting)s',
+    'template'  	: 'print.html',
+    'title'     	: u'Listing des participations à la %(meeting)s',
     'content' : {
       'template'	: 'listing_meeting.html',
-      'members'		: u'Membres',
-      'invitee'		: u'Invités',
-      'resume'		: u'Résumé',
+      'members'		: u'Liste des membres',
+      'invitee'		: u'Liste des invités',
+      'resume'		: u'Résumé des participations',
     },
   },
 }

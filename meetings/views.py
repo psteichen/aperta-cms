@@ -250,7 +250,7 @@ def invite(r, meeting_num, member_id):
 # details #
 ############
 @group_required('MEMBER')
-@crumb(u'Inscription à la {meeting}'.format(meeting=name_from_pk(Meeting)),parent=list)
+@crumb(u'Détail de la {meeting}'.format(meeting=name_from_pk(Meeting)),parent=list)
 def details(r, meeting_num):
 
   meeting = Meeting.objects.get(num=meeting_num)
@@ -332,11 +332,10 @@ def register(r, meeting_num, mode):
 
 
 
-# listing #
-###########
+# print #
+#########
 @group_required('MEMBER')
-#@crumb(u'Listing pour la réunion : {meeting}'.format(meeting=name_from_pk(Meeting)),parent=details)
-def listing(r, meeting_num):
+def print(r, meeting_num):
 
   meeting = Meeting.objects.get(num=meeting_num)
   title = settings.TEMPLATE_CONTENT['meetings']['listing']['title'] % { 'meeting' : meeting.title, }

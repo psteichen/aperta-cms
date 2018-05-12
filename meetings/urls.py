@@ -1,11 +1,11 @@
 from django.conf.urls import include, url
 
-from .views import list, add, modify, send, invite, details, report, listing, register
+from .views import list, add, modify, send, invite, details, report, print, register
 
 urlpatterns = [
   url(r'^$', list, name='list'),
   url(r'^list/(?P<meeting_num>.+?)/$', details, name='details'),
-  url(r'^listing/(?P<meeting_num>.+?)/$', listing, name='listing'),
+  url(r'^print/(?P<meeting_num>.+?)/$', print, name='print'),
   url(r'^invite/(?P<meeting_num>.+?)/(?P<member_id>.+?)/$', invite, name='invite'),
 
 #below urls need permissions

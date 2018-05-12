@@ -152,7 +152,7 @@ def r_modify(r,role_id):
   R = Role.objects.get(pk=role_id)
 
   if r.POST:
-    rf = RoleForm(r.POST,instane=R)
+    rf = RoleForm(r.POST,instance=R)
     if rf.is_valid():
       Rl = rf.save()
       

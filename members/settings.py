@@ -126,6 +126,7 @@ MEMBERS_TMPL_CONTENT = {
       'done': {
         'template'    : 'done.html',
         'title'       : u'Le rôle a été modifié.',
+        'message'     : u'Détails : ',
       },
     },
     'type': {

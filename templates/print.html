@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+  {% block head %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="none">
+
+    <meta name="author" content="{{ meta.author }}">
+    <meta name="copyright" content="{{ meta.copyright }}">
+    
+    <title>{{ meta.title }}</title>
+    <meta name="description" content="{{ meta.description }}">
+    <meta name="keywords" content="{{ meta.keywords }}">
+    
+    <link rel="index" href="/" title="{{ meta.title }}">
+    <link rel="shortcut icon" type="image/png" href="{{ meta.favicon}}"/>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="{{ meta.css.bt }}" media="screen,print">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="{{ meta.css.bt_theme }}" media="screen,print">
+   
+    <!-- custom stylesheet -->
+    <link rel="stylesheet" href="{{ meta.css.own }}">
+
+   <!-- fontawesome //-->
+   <script src="{{ meta.js.fontawesome }}"></script>
+
+  {% endblock %}
+  </head>
+
+  <body role="document" onload="window.print()">
+
+  <div class="container">
+
+    {% if meta.badge %}
+      <div class="pull-left">
+        <span class="btn btn-danger btn-lg disabled">{{ meta.badge }}</span>
+      </div>
+      <div class="pull-right">
+        <span class="btn btn-danger btn-lg disabled">{{ meta.badge }}</span>
+      </div>
+    {% endif %}
+
+  <!-- content -->
+  {% if title %}<h3>{{ title|safe }}</h3<{% endif %}
+  {% if message %}<p>{{ message|safe }}</p>{% endif %}
+  <!-- end content -->
+
+  </div> 
+
+
+   <!-- jquery //-->
+   <script src="{{ meta.js.jq }}"></script>
+
+   <!-- Latest compiled and minified JavaScript -->
+   <script src="{{ meta.js.bt }}"></script>
+
+  </body>
+</html>
+
+

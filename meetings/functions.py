@@ -17,6 +17,71 @@ from .models import Invitation, Invitee
 # MEETINGS SUPPORTING FUNCTIONS #
 #################################
 
+def gen_meeting_listing(template,meeting):
+  content = { 'content' : settings.TEMPLATE_CONTENT['meetings']['listing']['content'] }
+
+  #get attendance / excused / invited
+  present = Meeting_Attendance.objects.filter(meeting=meeting,present=True).only('member')
+  excused = Meeting_Attendance.objects.filter(meeting=meeting,present=False).only('member')
+  invited = Invitee.objects.filter(meeting=meeting)
+
+  content['listing'] = {}
+  #header row
+  # name (role) / present / excuse / non-excuse / email
+  content['listing']['header'] = [
+    u'Nom (rôle)', u'présent', u'excusé', u'non excusé',
+  ]
+
+  #records table (alphabetical order on last_name)
+  members = Member.objects.all().order_by('last_name')
+  content['listing']['members'] = []
+  ok = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;'
+  nok = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-times"></i>&nbsp;'
+  for m in members:
+    p = e = n = ''
+    for x in present:
+      if m.id == x.member.id: p=ok
+    for y in excused:
+      if m.id == y.member.id: e=ok
+    if p == '' and e == '': n=nok
+    
+    content['listing']['members'].append([
+      	gen_member_fullname_n_role(m), 
+	p, 
+	e, 
+	n,
+    ])
+
+  #invitees table
+  content['listing']['invitees'] = []
+  for i in invited:
+    content['listing']['invitees'].append([
+      	i.first_name + ' ' + str.upper(i.last_name), 
+    ])
+
+
+  #resume table
+  content['listing']['resume'] = []
+  # presents / invités  / total
+  P = present.count()
+  M = members.all().count()
+  E = excused.count()
+  I = invited.count()
+  N = M-P-E
+  content['listing']['resume'].append([
+  	u'Présents : &emsp;&emsp;' + str(P) + '/' + str(M) + '&emsp;&emsp;&emsp;' + str(int(round((float(P)/M)*100))) + '%',
+  	u'Invités : &emsp;&emsp;' + str(I),
+  	u'Total : &emsp;&emsp;' + str(P+I),
+  ])
+  # excusés  / non exc. /
+  content['listing']['resume'].append([
+  	u'Excusés : &emsp;&emsp;' + str(E) + '/' + str(M) + '&emsp;&emsp;&emsp;' + str(int(round((float(E)/M)*100))) + '%',
+  	u'Non-excusés : &emsp;&emsp;' + str(N) + '/' + str(M) + '&emsp;&emsp;&emsp;' + str(int(round((float(N)/M)*100))) + '%',
+  ])
+
+  return render_to_string(template,content)
+
+
 def gen_meeting_overview(template,meeting):
   content = { 'overview' : settings.TEMPLATE_CONTENT['meetings']['details']['overview'] }
 
@@ -31,7 +96,8 @@ def gen_meeting_overview(template,meeting):
     invitation = Invitation.objects.get(meeting=meeting)
     if invitation.attachement: content['attach'] = settings.MEDIA_URL + str(invitation.attachement)
   except: pass
-  content['listing'] = '/meetings/listing/' + str(meeting.num)
+  content['print'] =  '/meetings/print/' + str(meeting.num)
+  content['listing'] = gen_meeting_listing(settings.TEMPLATE_CONTENT['meetings']['listing']['content']['template'],meeting)
   content['attendance'] = Meeting_Attendance.objects.filter(meeting=meeting,present=True).only('member')
   content['invitee'] = Invitee.objects.filter(meeting=meeting)
   content['excused'] = Meeting_Attendance.objects.filter(meeting=meeting,present=False).only('member')
@@ -76,69 +142,6 @@ def gen_report_message(template,meeting,member):
   content['when'] = meeting.when
   content['time'] = meeting.time
   content['location'] = meeting.location
-
-  return render_to_string(template,content)
-
-def gen_meeting_listing(template,meeting):
-  content = { 'content' : settings.TEMPLATE_CONTENT['meetings']['listing']['content'] }
-
-  #get attendance / excused / invited
-  present = Meeting_Attendance.objects.filter(meeting=meeting,present=True).only('member')
-  excused = Meeting_Attendance.objects.filter(meeting=meeting,present=False).only('member')
-  invited = Invitee.objects.filter(meeting=meeting)
-
-  content['listing'] = {}
-  #header row
-  # name (role) / present / excuse / non-excuse / email
-  content['listing']['header'] = [
-    u'Nom (rôle)', u'présent', u'excusé', u'non excusé', u'E-mail',
-  ]
-
-  #records table (alphabetical order on last_name)
-  members = Member.objects.all().order_by('last_name')
-  content['listing']['members'] = []
-  for m in members:
-    p = e = n = ''
-    for x in present:
-      if m.id == x.member.id: p='X'
-    for y in excused:
-      if m.id == y.member.id: e='X'
-    if p == '' and e == '': n='X'
-    
-    content['listing']['members'].append([
-      	gen_member_fullname_n_role(m), 
-	p, 
-	e, 
-	n,
-	m.email,
-    ])
-
-  #invitees table
-  content['listing']['invitees'] = []
-  for i in invited:
-    content['listing']['invitees'].append([
-      	i.first_name + ' ' + str.upper(i.last_name), 
-    ])
-
-
-  #resume table
-  content['listing']['resume'] = []
-  # presents / invités  / total
-  P = present.count()
-  M = members.all().count()
-  E = excused.count()
-  I = invited.count()
-  N = M-P-E
-  content['listing']['resume'].append([
-  	u'Présents : &emsp;&emsp;' + str(P) + '/' + str(M) + '&emsp;&emsp;&emsp;' + str(int(round((float(P)/M)*100))) + '%',
-  	u'Invités : &emsp;&emsp;' + str(I),
-  	u'Total : &emsp;&emsp;' + str(P+I),
-  ])
-  # excusés  / non exc. /
-  content['listing']['resume'].append([
-  	u'Excusés : &emsp;&emsp;' + str(E) + '/' + str(M) + '&emsp;&emsp;&emsp;' + str(int(round((float(E)/M)*100))) + '%',
-  	u'Non-excusés : &emsp;&emsp;' + str(N) + '/' + str(M) + '&emsp;&emsp;&emsp;' + str(int(round((float(N)/M)*100))) + '%',
-  ])
 
   return render_to_string(template,content)
 
