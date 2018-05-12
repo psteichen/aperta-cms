@@ -30,7 +30,7 @@ def rename_attach(i, f):
   fn = rmf('meetings', f, str(i.meeting.num) + '-attachement')
 
   from os import sep
-  return fn['name'] + fn['ext']
+  return str(fn['name']) + str(fn['ext'])
 
 
 class Invitation(Model):

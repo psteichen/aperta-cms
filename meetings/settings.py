@@ -139,7 +139,7 @@ Destinataires:
       'attach'		: u'Informations supplémentaires',
       'location'	: u'Lieu de rencontre',
       'report'		: u'Compte rendu',
-      'listing'		: u'Listing pour PV',
+      'listing'		: u'Imprimer liste',
       'attendance'	: u'Présent(s)',
       'invitee'		: u'Invité(s)',
       'excused'		: u'Excusé(s)',
