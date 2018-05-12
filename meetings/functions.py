@@ -82,12 +82,6 @@ def gen_report_message(template,meeting,member):
 def gen_meeting_listing(template,meeting):
   content = { 'content' : settings.TEMPLATE_CONTENT['meetings']['listing']['content'] }
 
-  content['title'] = meeting.title
-  content['when'] = visualiseDateTime(meeting.when)
-  content['time'] = visualiseDateTime(meeting.time)
-  content['location'] = meeting.location.name
-  content['address'] = meeting.location.address
-
   #get attendance / excused / invited
   present = Meeting_Attendance.objects.filter(meeting=meeting,present=True).only('member')
   excused = Meeting_Attendance.objects.filter(meeting=meeting,present=False).only('member')
@@ -95,9 +89,9 @@ def gen_meeting_listing(template,meeting):
 
   content['listing'] = {}
   #header row
-  # name (role) / present / excuse / non-excuse / rep / email
+  # name (role) / present / excuse / non-excuse / email
   content['listing']['header'] = [
-    u'Nom (rôle)', u'présent', u'excusé', u'non excusé', u'Visite hors club', u'E-mail',
+    u'Nom (rôle)', u'présent', u'excusé', u'non excusé', u'E-mail',
   ]
 
   #records table (alphabetical order on last_name)
@@ -116,7 +110,6 @@ def gen_meeting_listing(template,meeting):
 	p, 
 	e, 
 	n,
-	'?', 
 	m.email,
     ])
 

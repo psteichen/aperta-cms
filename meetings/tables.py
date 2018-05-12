@@ -88,11 +88,10 @@ class MeetingMixin(Table):
   present	= Column(verbose_name=u'Présent',empty_values=())
   excused	= Column(verbose_name=u'Excusé',empty_values=())
   nonexcused	= Column(verbose_name=u'Non-excusé',empty_values=())
-  outside	= Column(verbose_name=u'Visite hors club',empty_values=())
 
   class Meta:
     model = Meeting
-    fields = ( 'present', 'excused', 'oustide', 'non-excused', )
+    fields = ( 'present', 'excused', 'non-excused', )
 
 class MeetingListingTable(MeetingMixin, Table):
   row_class	= Column(visible=False, empty_values=()) #used to highlight some rows

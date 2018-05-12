@@ -187,11 +187,9 @@ Destinataires:
     'title'     	: u'Listing (district) de la %(meeting)s',
     'content' : {
       'template'	: 'listing_meeting.html',
-      'date'		: u'Date et heure',
-      'location'	: u'Lieu de rencontre',
-      'members'		: u'',
+      'members'		: u'Membres',
       'invitee'		: u'Invités',
-      'resume'		: u'',
+      'resume'		: u'Résumé',
     },
   },
 }

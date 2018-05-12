@@ -1,54 +1,43 @@
 <div class="overview">
 <div class="panel panel-primary">
   <div class="panel-body">
-    <div class="row">
-      <div class="col-sm-6">
-        {{ overview.date }}<p class="lead">{{ when }} à {{ time }}</p>
-      </div>
-      <div class="col-sm-6">
-        {{ overview.location }}<address class="lead">{{ location }}<br/>{{ address }}</address>
-      </div>
-    </div>
-    <br/>
-    <div class="row">
-      {{ content.members }}
-      <table class="table table-striped table-condensed">
-       <tr>
-       {% for h in listing.header %}
-        <th>{{ h }}</td>
-       {% endfor %}
-       </tr>
-       {% for m in listing.members %}
-       <tr>
-         {% for e in m %}
-          <td class="lead">{{ e }}</td>
-         {% endfor %}
-       </tr>
-       {% endfor %}
-      </table>
+    <h3>{{ content.members }}</h3>
+    <table class="table table-striped table-condensed">
+      <tr>
+        {% for h in listing.header %}
+         <th>{{ h }}</td>
+        {% endfor %}
+      </tr>
+      {% for m in listing.members %}
+      <tr>
+        {% for e in m %}
+         <td>{{ e }}</td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </table>
 
-      {{ content.invitee }}
-      <table class="table table-striped table-condensed">
-       {% for i in listing.invitees %}
-       <tr>
-         {% for e in i %}
-          <td class="lead"><em>{{ e }}</em></td>
-         {% endfor %}
-       </tr>
-       {% endfor %}
-      </table>
+    <h3>{{ content.invitee }}</h3>
+    <table class="table table-striped table-condensed">
+      {% for i in listing.invitees %}
+      <tr>
+        {% for e in i %}
+         <td><em>{{ e }}</em></td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </table>
 
-      {{ content.resume }}
-      <table class="table table-bordered table-condensed">
-       {% for r in listing.resume %}
-       <tr>
-         {% for e in r %}
-          <th>{{ e|safe }}</td>
-         {% endfor %}
-       </tr>
-       {% endfor %}
-      </table>
-    </div>
+    <h3>{{ content.resume }}</h3>
+    <table class="table table-bordered table-condensed">
+      {% for r in listing.resume %}
+      <tr>
+        {% for e in r %}
+         <th>{{ e|safe }}</td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </table>
   </div>
 </div>
 </div>
