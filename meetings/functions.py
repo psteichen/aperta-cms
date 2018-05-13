@@ -69,14 +69,14 @@ def gen_meeting_listing(template,meeting):
   I = invited.count()
   N = M-P-E
   content['listing']['resume'].append([
-  	u'Présents : &emsp;&emsp;' + str(P) + '/' + str(M) + '&emsp;&emsp;&emsp;' + str(int(round((float(P)/M)*100))) + '%',
-  	u'Invités : &emsp;&emsp;' + str(I),
-  	u'Total : &emsp;&emsp;' + str(P+I),
+  	u'<em>Présents :</em> &emsp;&emsp;' + str(P) + '/' + str(M) + '&emsp;(' + str(int(round((float(P)/M)*100))) + '%)',
+  	u'<em>Invités :</em> &emsp;&emsp;' + str(I),
+  	u'<strong>Total :</strong> &emsp;&emsp;' + str(P+I),
   ])
   # excusés  / non exc. /
   content['listing']['resume'].append([
-  	u'Excusés : &emsp;&emsp;' + str(E) + '/' + str(M) + '&emsp;&emsp;&emsp;' + str(int(round((float(E)/M)*100))) + '%',
-  	u'Non-excusés : &emsp;&emsp;' + str(N) + '/' + str(M) + '&emsp;&emsp;&emsp;' + str(int(round((float(N)/M)*100))) + '%',
+  	u'<em>Excusés :</em> &emsp;&emsp;' + str(E) + '/' + str(M) + '&emsp;(' + str(int(round((float(E)/M)*100))) + '%)',
+  	u'<em>Non-excusés :</em> &emsp;&emsp;' + str(N) + '/' + str(M) + '&emsp;(' + str(int(round((float(N)/M)*100))) + '%)',
   ])
 
   return render_to_string(template,content)
@@ -144,5 +144,4 @@ def gen_report_message(template,meeting,member):
   content['location'] = meeting.location
 
   return render_to_string(template,content)
-
 

@@ -18,7 +18,7 @@ from cms.functions import notify_by_email, show_form, visualiseDateTime, genIcal
 
 from events.models import Event
 from members.models import Member
-from members.functions import get_active_members, gen_member_fullname, is_board
+from members.functions import get_active_members, gen_member_fullname, is_board, get_meeting_missing_active_members
 from attendance.functions import gen_attendance_hashes, gen_invitation_message
 from attendance.models import Meeting_Attendance
 
@@ -124,7 +124,14 @@ def send(r, meeting_num):
   title = settings.TEMPLATE_CONTENT['meetings']['send']['done']['title'] % str(Mt.title)
       
   email_error = { 'ok': True, 'who': [], }
-  for m in get_active_members():
+  missing_members = get_meeting_missing_active_members(Mt)
+  if not missing_members:
+    return TemplateResponse(r, settings.TEMPLATE_CONTENT['meetings']['send']['done']['template'], {
+	                'title': title, 
+        	        'message': settings.TEMPLATE_CONTENT['meetings']['send']['done']['none_missing'],
+                })
+
+  for m in missing_members:
     #invitation email with "YES/NO button"
     subject = settings.TEMPLATE_CONTENT['meetings']['send']['done']['email']['subject'] % { 'title': str(Mt.title) }
     invitation_message = gen_invitation_message(e_template,Mt,Event.MEET,m)
@@ -133,14 +140,16 @@ def send(r, meeting_num):
         'MESSAGE'     : invitation_message + str(I.message),
     }
 
-    #generate ical invite
-    invite = genIcal(Mt)
+    #generate ical invite TODO: fix since py3 migration
+    #invite = genIcal(Mt)
 
     #send email
     try: #with attachement
-      ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,subject,message_content,False,[invite,settings.MEDIA_ROOT + str(I.attachement)])
+#      ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,subject,message_content,False,[invite,settings.MEDIA_ROOT + str(I.attachement)])
+      ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,subject,message_content,False,settings.MEDIA_ROOT + str(I.attachement))
     except: #no attachement
-      ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,subject,message_content,False,invite)
+#      ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,subject,message_content,False,invite)
+      ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,subject,message_content)
      
     if not ok: 
       email_error['ok']=False
@@ -159,7 +168,7 @@ def send(r, meeting_num):
     I.save()
     return TemplateResponse(r, settings.TEMPLATE_CONTENT['meetings']['send']['done']['template'], {
 	                'title': title, 
-        	        'message': settings.TEMPLATE_CONTENT['meetings']['send']['done']['message'] + ' ; '.join([gen_member_fullname(m) for m in get_active_members()]),
+        	        'message': settings.TEMPLATE_CONTENT['meetings']['send']['done']['message'] + ' ; '.join([gen_member_fullname(m) for m in missing_members]),
                   })
 
 

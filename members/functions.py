@@ -5,6 +5,8 @@ from django.db.models import Q
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.hashers import make_password
 
+from attendance.models import Meeting_Attendance
+
 from .models import Member, Role
 
 
@@ -128,4 +130,14 @@ def login_exists(username):
   except User.DoesNotExist:
     return False
 
+
+def get_meeting_missing_active_members(meeting):
+  members = ()
+  for m in get_active_members():
+    try:
+      Meeting_Attendance.objects.get(meeting=meeting,member=m)
+    except Meeting_Attendance.DoesNotExist:
+      members.add(m)
+
+  return members
 
