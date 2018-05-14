@@ -64,16 +64,16 @@ def gen_current_attendance(e):
 def gen_reg_hash(event):
   #hash
   h = hashlib.md5()
-  h.update(unicode(event.agenda)) #salt
-  h.update(unicode(event.title) + unicode(event.when)) #message
-  return unicode(h.hexdigest()[:10])
+  h.update(str(event.agenda).encode('utf-8')) #salt
+  h.update(str(event.title).encode('utf-8') + str(event.when).encode('utf-8')) #message
+  return str(h.hexdigest()[:10])
 
 def gen_reg_code(e,p):
   #hash
   h = hashlib.md5()
-  h.update(unicode(p.email)) #salt
-  h.update(unicode(e.title) + unicode(e.when)) #message
-  return unicode(h.hexdigest()[:15])
+  h.update(str(p.email).encode('utf-8')) #salt
+  h.update(str(e.title).encode('utf-8') + str(e.when).encode('utf-8')) #message
+  return str(h.hexdigest()[:15])
 
 def gen_registration_message(template,event,participant):
   content = {}

@@ -72,12 +72,20 @@ def add(r):
       # distribution
       sel_partners = ef.cleaned_data['partners']
       invitees = ef.cleaned_data['others']
-      D = Distribution(event=Ev,partners=sel_partners,others=invitees)
+      D = Distribution(event=Ev)
+      if sel_partners: D.partners=sel_partners
+      if invitees: D.others=invitees
       D.save()
 
       # all fine -> done
       return TemplateResponse(r, settings.TEMPLATE_CONTENT['events']['add']['done']['template'], {
                 	'title': settings.TEMPLATE_CONTENT['events']['add']['done']['title'], 
+                	'message': settings.TEMPLATE_CONTENT['events']['add']['done']['message'].format(
+													event		= Ev,
+													message		= I.message,
+													attachement	= I.attachement,
+													partners	= sel_partners,
+													invitees	= invitees), 
 		   })
 
     # form not valid -> error

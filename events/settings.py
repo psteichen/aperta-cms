@@ -34,8 +34,10 @@ EVENTS_TMPL_CONTENT = {
 <p>{message}</p>
 <p><a href="/media/{attachement}" target="_blank">Voire les annexes</a></p>
 <hr />
+<h5>Club(s) partenaire(s) :</h5>
+<ul>{partners}</ul>
 <h5>Les invité(e)s :</h5>
-<ul>{list}</ul>
+<ul>{invitees}</ul>
 </div>
 ''',
     },

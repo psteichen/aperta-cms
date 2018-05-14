@@ -18,7 +18,7 @@ class Event(Model):
   title		= CharField(verbose_name='Titre',max_length=100)
   when		= DateField(verbose_name='Date')
   time		= TimeField(verbose_name='Heure de début')
-  location	= ForeignKey(Location,verbose_name='Lieu')
+  location      = CharField(verbose_name='Lieu',max_length=500)
   deadline	= DateTimeField(verbose_name='Deadline')
   agenda        = CharField(verbose_name='Agenda',max_length=500)
   registration  = CharField(verbose_name='Code de régistration',max_length=25)
@@ -28,10 +28,10 @@ class Event(Model):
 
 
 def rename_attach(i, f):
-  fn = rmf('events', f, str(i.event.pk) + '-attachement')
+  fn = rmf(u'events', f, str(i.event.pk) + '-attachement')
 
   from os import sep
-  return fn['name'] + fn['ext']
+  return str(fn['name']) + str(fn['ext'])
 
 
 class Invitation(Model):
