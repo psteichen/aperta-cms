@@ -80,12 +80,13 @@ MEETINGS_TMPL_CONTENT = {
   'send': {
     'template'		: 'form.html',
     'title'         	: u'(R)Envoyer Invitations',
-    'desc'          	: u'Envoie ou renvoie les invitations pour la réunion statutaire choisie, par e-mail.',
+    'desc'          	: u'Envoyer ou renvoyer les invitations pour la réunion statutaire choisie, par e-mail.',
     'submit'   		: u'Envoyer',
     'done': {
       'template'	: 'done.html',
-      'title'     	: u'Invitations pour la : %s envoyées',
+      'title'     	: u'Envoi des invitations pour la <em>%s</em>',
       'message'     	: u'Destinataires : ',
+      'none_missing'   	: u'Aucune message envoyé! Tous les membres se sont manifestés pour cette réunion.',
       'email': {
 	'template'	: 'meeting_invitation.txt',
 	'subject'	: u'[51 aperta] %(title)s',
@@ -139,10 +140,7 @@ Destinataires:
       'attach'		: u'Informations supplémentaires',
       'location'	: u'Lieu de rencontre',
       'report'		: u'Compte rendu',
-      'listing'		: u'Listing pour PV',
-      'attendance'	: u'Présent(s)',
-      'invitee'		: u'Invité(s)',
-      'excused'		: u'Excusé(s)',
+      'print'		: u'Imprimer les listes',
     },
   },
   'register' : {
@@ -183,15 +181,13 @@ Destinataires:
     },
   },
   'listing': {
-    'template'  	: 'done.html',
-    'title'     	: u'Listing (district) de la %(meeting)s',
+    'template'  	: 'print.html',
+    'title'     	: u'Listing des participations à la %(meeting)s',
     'content' : {
       'template'	: 'listing_meeting.html',
-      'date'		: u'Date et heure',
-      'location'	: u'Lieu de rencontre',
-      'members'		: u'',
-      'invitee'		: u'Invités',
-      'resume'		: u'',
+      'members'		: u'Liste des membres',
+      'invitee'		: u'Liste des invités',
+      'resume'		: u'Résumé des participations',
     },
   },
 }

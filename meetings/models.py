@@ -22,15 +22,15 @@ class Meeting(Model):
   deadline	= DateTimeField(verbose_name='Deadline')
   report        = FileField(verbose_name='Compte rendu', upload_to=rename_report,blank=True,null=True)
   
-  def __unicode__(self):
-    return unicode(self.title) + u' du ' + unicode(self.when)
+  def __str__(self):
+    return str(self.title) + u' du ' + str(self.when)
 
 
 def rename_attach(i, f):
   fn = rmf('meetings', f, str(i.meeting.num) + '-attachement')
 
   from os import sep
-  return fn['name'] + fn['ext']
+  return str(fn['name']) + str(fn['ext'])
 
 
 class Invitation(Model):
@@ -39,11 +39,11 @@ class Invitation(Model):
   attachement   = FileField(verbose_name='Annexe(s)', upload_to=rename_attach,blank=True,null=True)
   sent		= DateTimeField(blank=True,null=True)
 
-  def __unicode__(self):
+  def __str__(self):
     if self.sent:
-      return u'Invitations pour: ' + unicode(self.meeting) + u' envoyées à: ' + self.sent.strftime('%Y-%m-%d %H:%M')
+      return u'Invitations pour: ' + str(self.meeting) + u' envoyées à: ' + self.sent.strftime('%Y-%m-%d %H:%M')
     else:
-      return u'Invitations pour: ' + unicode(self.meeting) + u' non encore envoyées.'
+      return u'Invitations pour: ' + str(self.meeting) + u' non encore envoyées.'
 
 
 class Invitee(Model):
@@ -67,6 +67,6 @@ class Invitee(Model):
   email		= EmailField()
   type		= IntegerField(choices=TYPES,default=I)
   
-  def __unicode__(self):
-    return self.first_name + u' ' + unicode.upper(self.last_name) + u' invité par ' + unicode(self.member) + u' pour la ' + unicode(self.meeting)
+  def __str__(self):
+    return self.first_name + u' ' + str.upper(self.last_name) + u' invité par ' + str(self.member) + u' pour la ' + str(self.meeting)
 

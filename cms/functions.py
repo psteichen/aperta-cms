@@ -18,7 +18,7 @@ from django.utils import timezone
 def debug(app,message):
   if settings.DEBUG:
     from sys import stderr as errlog
-    print >>errlog, 'DEBUG ['+unicode(app)+']: '+unicode(message)
+    print >>errlog, 'DEBUG ['+str(app)+']: '+str(message)
 
 
 def check_if_setup():
@@ -56,14 +56,16 @@ def attach_to_email(email,attachment):
 
 def notify_by_email(sender,to,subject,message_content,cc=False,attachment=False,template='default.txt'):
   from django.core.mail import EmailMessage
+  from django.core.mail import EmailMultiAlternatives
   is_array = lambda var: isinstance(var, (list, tuple))
 
   if not sender: sender = settings.EMAILS['sender']['default']
-  email = EmailMessage(
+  email = EmailMultiAlternatives(
                 subject=subject,
                 from_email=sender,
                 to=[to]
           )
+  email.esp_extra = {"sender_domain": settings.EMAIL_SENDER_DOMAIN}
   message_content['FOOTER'] = settings.EMAILS['footer']
   email.body = render_to_string(template,message_content)
   if attachment:
@@ -71,6 +73,7 @@ def notify_by_email(sender,to,subject,message_content,cc=False,attachment=False,
       for a in attachment: attach_to_email(email,a)
     else: attach_to_email(email,attachment)
   if cc: email.cc=[cc]
+
   try:
     email.send()
     return True
@@ -172,11 +175,11 @@ def rmf(dir, old, new=None):
   orig_name, orig_ext = splitext(old)
 
   if new:
-    fn=unicode(new).replace(' ','-') #remove whitespaces
+    fn=str(new).replace(' ','-') #remove whitespaces
   else:
-    fn=unicode(orig_name).replace(' ','-') #remove whitespaces
+    fn=str(orig_name).replace(' ','-') #remove whitespaces
 
-  fn=unicode(fn).replace('.','') #remove dots
+  fn=str(fn).replace('.','') #remove dots
   fn=dir.upper() + sep + fn #add dir
 
   return {'name': normalize('NFKD', fn).encode('ascii','ignore'),'ext': orig_ext}

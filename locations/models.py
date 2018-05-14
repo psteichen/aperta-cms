@@ -10,8 +10,8 @@ class Contact(Model):
   mobile	= CharField(verbose_name='Mobile',max_length=20,blank=True,null=True)
   email		= EmailField(verbose_name='Courriel',blank=True,null=True)
 
-  def __unicode__(self):
-    return unicode(self.first_name) + ' ' + unicode.upper(self.last_name)
+  def __str__(self):
+    return str(self.first_name) + ' ' + str.upper(self.last_name)
 
 class Location(Model):
   name		= CharField(verbose_name='Nom',max_length=100)
@@ -21,6 +21,6 @@ class Location(Model):
   website	= URLField(verbose_name='Site web',blank=True,null=True)
   contact	= ForeignKey(Contact,blank=True,null=True)
 
-  def __unicode__(self):
-    return unicode(self.name)
+  def __str__(self):
+    return str(self.name)
 

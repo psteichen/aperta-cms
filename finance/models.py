@@ -22,7 +22,7 @@ class Invoice(Model):
   amount	= DecimalField(max_digits=10,decimal_places=2)
   recipient	= ForeignKey(Member)
   
-  def __unicode__(self):
+  def __str__(self):
     return ''
 
 
@@ -31,11 +31,11 @@ class Payment(Model):
   invoice	= ForeignKey(Invoice)
   sender	= ForeignKey(Member)
 
-  def __unicode__(self):
+  def __str__(self):
     return ''
 
 def rename_be_scan(i, f):
-  fn = rmf('bank', f, unicode(i))
+  fn = rmf('bank', f, str(i))
 
   from os import sep
   return fn['name'] + fn['ext']
@@ -46,11 +46,11 @@ class BankExtract(Model):
   date		= DateField(verbose_name='état du')
   scan  	= FileField(upload_to=rename_be_scan)
 
-  def __unicode__(self):
-    return self.year+'-'+str(self.num) + u' (état du ' + unicode(self.date) +')'
+  def __str__(self):
+    return self.year+'-'+str(self.num) + u' (état du ' + str(self.date) +')'
 
 def rename_bs_scan(i, f):
-  fn = rmf('balance', f, unicode(i))
+  fn = rmf('balance', f, str(i))
 
   from os import sep
   return fn['name'] + fn['ext']
@@ -60,6 +60,6 @@ class BalanceSheet(Model):
   date        	= DateField(verbose_name='état du')
   scan        	= FileField(verbose_name='Document',upload_to=rename_bs_scan)
 
-  def __unicode__(self):
-    return self.year+ u' (état du ' + unicode(self.date) +')'
+  def __str__(self):
+    return self.year+ u' (état du ' + str(self.date) +')'
 

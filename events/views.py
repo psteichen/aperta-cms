@@ -104,13 +104,13 @@ def send(r,event_id):
   Ev = Event.objects.get(id=event_id)
   I = Invitation.objects.get(event=Ev)
 
-  title = settings.TEMPLATE_CONTENT['events']['send']['done']['title'] % unicode(Ev.title)
+  title = settings.TEMPLATE_CONTENT['events']['send']['done']['title'] % str(Ev.title)
       
   email_error = { 'ok': True, 'who': (), }
   for m in get_active_members():
    
     #invitation email with "YES/NO button"
-    subject = settings.TEMPLATE_CONTENT['events']['send']['done']['email']['subject'] % { 'title': unicode(Ev.title) }
+    subject = settings.TEMPLATE_CONTENT['events']['send']['done']['email']['subject'] % { 'title': str(Ev.title) }
     invitation_message = gen_invitation_message(e_template,Ev,Event.OTH,m)
     message_content = {
       'FULLNAME'    : gen_member_fullname(m),
@@ -170,7 +170,7 @@ def modify(r, event_id):
       
       # all fine -> done
       return TemplateResponse(r, settings.TEMPLATE_CONTENT['events']['modify']['done']['template'], {
-                	'title': settings.TEMPLATE_CONTENT['events']['modify']['done']['title'].format(event=unicode(Ev)), 
+                	'title': settings.TEMPLATE_CONTENT['events']['modify']['done']['title'].format(event=str(Ev)), 
 		   })
 
     # form not valid -> error

@@ -7,7 +7,7 @@ from cms.functions import rmf
 
 
 def rename_photo(i, f):
-  name = unicode(i.first_name) + '_' + unicode.upper(i.last_name)
+  name = str(i.first_name) + '_' + str.upper(i.last_name)
   fn = rmf('members', f, name)
 
   from os import sep
@@ -49,8 +49,8 @@ class Member(Model):
   status      	= IntegerField(verbose_name=u'Statut',choices=STATUSES,default=ACT) 
   user		= ForeignKey(User,verbose_name=u'Utilisateur',blank=True,null=True) 
 
-  def __unicode__(self):
-    return unicode(self.first_name) + ' ' + unicode.upper(self.last_name)
+  def __str__(self):
+    return str(self.first_name) + ' ' + str.upper(self.last_name)
 
 class RoleType(Model):
   A = 0
@@ -66,16 +66,16 @@ class RoleType(Model):
   type		= IntegerField(verbose_name=u'Type',choices=TYPES,default=A)
   desc		= CharField(verbose_name=u'Description',max_length=500,blank=True,null=True)
 
-  def __unicode__(self):
-    return self.title + u' ('+unicode(self.TYPES[self.type][1])+u')'
+  def __str__(self):
+    return self.title + u' ('+str(self.TYPES[self.type][1])+u')'
 
 class Role(Model):
   member 	= ForeignKey(Member)
   type        	= ForeignKey(RoleType)
   year        	= CharField(verbose_name=u'Saison',max_length=25)
 
-  def __unicode__(self):
-    return unicode(self.type) + ' : ' + unicode(self.member)
+  def __str__(self):
+    return str(self.type) + ' : ' + str(self.member)
 
   class Meta:
     unique_together = ( 'member', 'type', )

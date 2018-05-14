@@ -12,13 +12,13 @@ class Meeting_Attendance(Model):
   timestamp	= DateTimeField()
   present	= BooleanField(default=False)
   
-  def __unicode__(self):
+  def __str__(self):
     present = ''
     if self.present == True:
       present = 'YES'
     elif self.present == False:
       present = 'NO'
-    return unicode(self.member) + ' / ' + unicode(self.meeting) + ' (' + unicode(self.timestamp) +') - ' + present
+    return str(self.member) + ' / ' + str(self.meeting) + ' (' + str(self.timestamp) +') - ' + present
 
   class Meta:
     unique_together = ( 'member', 'meeting', )
@@ -29,8 +29,8 @@ class MtoM(Model):
   yes_hash   	= CharField(max_length=250)
   no_hash   	= CharField(max_length=250)
 
-  def __unicode__(self):
-    return unicode(self.meeting) + ' - ' + unicode(self.member)
+  def __str__(self):
+    return str(self.meeting) + ' - ' + str(self.member)
 
 
 class Event_Attendance(Model):
@@ -39,13 +39,13 @@ class Event_Attendance(Model):
   timestamp	= DateTimeField()
   present	= BooleanField(default=False)
   
-  def __unicode__(self):
+  def __str__(self):
     present = ''
     if self.present == True:
       present = 'YES'
     elif self.present == False:
       present = 'NO'
-    return unicode(self.member) + ' / ' + unicode(self.event) + ' (' + unicode(self.timestamp) +') - ' + present
+    return str(self.member) + ' / ' + str(self.event) + ' (' + str(self.timestamp) +') - ' + present
 
   class Meta:
     unique_together = ( 'member', 'event', )
@@ -56,8 +56,8 @@ class EtoM(Model):
   yes_hash   	= CharField(max_length=250)
   no_hash   	= CharField(max_length=250)
 
-  def __unicode__(self):
-    return unicode(self.event) + ' - ' + unicode(self.member)
+  def __str__(self):
+    return str(self.event) + ' - ' + str(self.member)
 
 
 

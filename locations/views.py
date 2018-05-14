@@ -55,7 +55,7 @@ def add(r):
       # all fine -> done
       return TemplateResponse(r, settings.TEMPLATE_CONTENT['locations']['add']['done']['template'], {
                 'title': settings.TEMPLATE_CONTENT['locations']['add']['done']['title'], 
-                'message': settings.TEMPLATE_CONTENT['locations']['add']['done']['message'] + unicode(Lo),
+                'message': settings.TEMPLATE_CONTENT['locations']['add']['done']['message'] + str(Lo),
                 })
 
     # form not valid -> error
@@ -84,13 +84,13 @@ def modify(r,location_id):
   Lo = Location.objects.get(pk=location_id)
 
   template	= settings.TEMPLATE_CONTENT['locations']['modify']['template'] 
-  title 	= settings.TEMPLATE_CONTENT['locations']['modify']['title'].format(location=unicode(Lo))
+  title 	= settings.TEMPLATE_CONTENT['locations']['modify']['title'].format(location=str(Lo))
   desc		= settings.TEMPLATE_CONTENT['locations']['add']['desc']
   submit	= settings.TEMPLATE_CONTENT['locations']['add']['submit']
 
   done_template	= settings.TEMPLATE_CONTENT['locations']['modify']['done']['template']
-  done_title	= settings.TEMPLATE_CONTENT['locations']['modify']['done']['title'].format(location=unicode(Lo)) 
-  done_message	= settings.TEMPLATE_CONTENT['locations']['modify']['done']['message'].format(location=unicode(Lo))
+  done_title	= settings.TEMPLATE_CONTENT['locations']['modify']['done']['title'].format(location=str(Lo)) 
+  done_message	= settings.TEMPLATE_CONTENT['locations']['modify']['done']['message'].format(location=str(Lo))
 
       
   if r.POST:
@@ -136,7 +136,7 @@ def delete(r,location_id):
   # all fine -> done
   return TemplateResponse(r, settings.TEMPLATE_CONTENT['locations']['add']['done']['template'], {
                		'title': settings.TEMPLATE_CONTENT['locations']['add']['done']['title'], 
-                	'message': settings.TEMPLATE_CONTENT['locations']['add']['done']['message'] + unicode(Lo),
+                	'message': settings.TEMPLATE_CONTENT['locations']['add']['done']['message'] + str(Lo),
                })
 
 

@@ -18,7 +18,7 @@ from cms.functions import notify_by_email, show_form, visualiseDateTime, genIcal
 
 from events.models import Event
 from members.models import Member
-from members.functions import get_active_members, gen_member_fullname, is_board
+from members.functions import get_active_members, gen_member_fullname, is_board, get_meeting_missing_active_members
 from attendance.functions import gen_attendance_hashes, gen_invitation_message
 from attendance.models import Meeting_Attendance
 
@@ -121,26 +121,35 @@ def send(r, meeting_num):
     I = Invitation(meeting=Mt)
     I.save()
 
-  title = settings.TEMPLATE_CONTENT['meetings']['send']['done']['title'] % unicode(Mt.title)
+  title = settings.TEMPLATE_CONTENT['meetings']['send']['done']['title'] % str(Mt.title)
       
   email_error = { 'ok': True, 'who': [], }
-  for m in get_active_members():
+  missing_members = get_meeting_missing_active_members(Mt)
+  if not missing_members:
+    return TemplateResponse(r, settings.TEMPLATE_CONTENT['meetings']['send']['done']['template'], {
+	                'title': title, 
+        	        'message': settings.TEMPLATE_CONTENT['meetings']['send']['done']['none_missing'],
+                })
+
+  for m in missing_members:
     #invitation email with "YES/NO button"
-    subject = settings.TEMPLATE_CONTENT['meetings']['send']['done']['email']['subject'] % { 'title': unicode(Mt.title) }
+    subject = settings.TEMPLATE_CONTENT['meetings']['send']['done']['email']['subject'] % { 'title': str(Mt.title) }
     invitation_message = gen_invitation_message(e_template,Mt,Event.MEET,m)
     message_content = {
         'FULLNAME'    : gen_member_fullname(m),
-        'MESSAGE'     : invitation_message + unicode(I.message),
+        'MESSAGE'     : invitation_message + str(I.message),
     }
 
-    #generate ical invite
-    invite = genIcal(Mt)
+    #generate ical invite TODO: fix since py3 migration
+    #invite = genIcal(Mt)
 
     #send email
     try: #with attachement
-      ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,subject,message_content,False,[invite,settings.MEDIA_ROOT + unicode(I.attachement)])
+#      ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,subject,message_content,False,[invite,settings.MEDIA_ROOT + str(I.attachement)])
+      ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,subject,message_content,False,settings.MEDIA_ROOT + str(I.attachement))
     except: #no attachement
-      ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,subject,message_content,False,invite)
+#      ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,subject,message_content,False,invite)
+      ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,subject,message_content)
      
     if not ok: 
       email_error['ok']=False
@@ -159,7 +168,7 @@ def send(r, meeting_num):
     I.save()
     return TemplateResponse(r, settings.TEMPLATE_CONTENT['meetings']['send']['done']['template'], {
 	                'title': title, 
-        	        'message': settings.TEMPLATE_CONTENT['meetings']['send']['done']['message'] + ' ; '.join([gen_member_fullname(m) for m in get_active_members()]),
+        	        'message': settings.TEMPLATE_CONTENT['meetings']['send']['done']['message'] + ' ; '.join([gen_member_fullname(m) for m in missing_members]),
                   })
 
 
@@ -199,7 +208,7 @@ def invite(r, meeting_num, member_id):
           Iv.save()
       
           #invitation email for invitee(s)
-          subject = settings.TEMPLATE_CONTENT['meetings']['invite']['done']['email']['subject'] % { 'title': unicode(Mt.title) }
+          subject = settings.TEMPLATE_CONTENT['meetings']['invite']['done']['email']['subject'] % { 'title': str(Mt.title) }
           message_content = {
             'FULLNAME'    : gen_member_fullname(Iv),
             'MESSAGE'     : invitation_message,
@@ -207,7 +216,7 @@ def invite(r, meeting_num, member_id):
           #send email
 #no need to add attachement for invitees
 #          try:
-#            ok=notify_by_email(settings.EMAILS['sender']['default'],Iv.email,subject,message_content,False,settings.MEDIA_ROOT + unicode(I.attachement))
+#            ok=notify_by_email(settings.EMAILS['sender']['default'],Iv.email,subject,message_content,False,settings.MEDIA_ROOT + str(I.attachement))
 #          except:
           ok=notify_by_email(settings.EMAILS['sender']['default'],Iv.email,subject,message_content)
           if not ok:
@@ -240,7 +249,7 @@ def invite(r, meeting_num, member_id):
   # no post yet -> empty form
   else:
     return TemplateResponse(r, settings.TEMPLATE_CONTENT['meetings']['invite']['template'], {
-                'title': settings.TEMPLATE_CONTENT['meetings']['invite']['title'] + unicode(Mt),
+                'title': settings.TEMPLATE_CONTENT['meetings']['invite']['title'] + str(Mt),
                 'desc': settings.TEMPLATE_CONTENT['meetings']['invite']['desc'],
                 'submit': settings.TEMPLATE_CONTENT['meetings']['invite']['submit'],
                 'form': InviteeFormSet(),
@@ -250,7 +259,7 @@ def invite(r, meeting_num, member_id):
 # details #
 ############
 @group_required('MEMBER')
-@crumb(u'Inscription à la {meeting}'.format(meeting=name_from_pk(Meeting)),parent=list)
+@crumb(u'Détail de la {meeting}'.format(meeting=name_from_pk(Meeting)),parent=list)
 def details(r, meeting_num):
 
   meeting = Meeting.objects.get(num=meeting_num)
@@ -284,10 +293,10 @@ def register(r, meeting_num, mode):
   done_template	= settings.TEMPLATE_CONTENT['meetings']['register']['done']['template']
   title = grade = message = None
   if OK:
-    title	= settings.TEMPLATE_CONTENT['meetings']['register']['title']['yes'].format(meeting=unicode(Mt))
+    title	= settings.TEMPLATE_CONTENT['meetings']['register']['title']['yes'].format(meeting=str(Mt))
     grade	= settings.TEMPLATE_CONTENT['meetings']['register']['grade']['yes']
   else:
-    title	= settings.TEMPLATE_CONTENT['meetings']['register']['title']['no'].format(meeting=unicode(Mt))
+    title	= settings.TEMPLATE_CONTENT['meetings']['register']['title']['no'].format(meeting=str(Mt))
     grade	= settings.TEMPLATE_CONTENT['meetings']['register']['grade']['no']
   
 
@@ -307,8 +316,8 @@ def register(r, meeting_num, mode):
       A.timestamp = timezone.now()
       A.save()
   
-      if OK: message 	= settings.TEMPLATE_CONTENT['meetings']['register']['done']['message']['yes'].format(meeting=unicode(Mt), member=unicode(M))
-      else:  message 	= settings.TEMPLATE_CONTENT['meetings']['register']['done']['message']['no'].format(meeting=unicode(Mt) ,member=unicode(M))
+      if OK: message 	= settings.TEMPLATE_CONTENT['meetings']['register']['done']['message']['yes'].format(meeting=str(Mt), member=str(M))
+      else:  message 	= settings.TEMPLATE_CONTENT['meetings']['register']['done']['message']['no'].format(meeting=str(Mt) ,member=str(M))
 
       # all fine -> done
       return TemplateResponse(r, done_template, {
@@ -332,11 +341,10 @@ def register(r, meeting_num, mode):
 
 
 
-# listing #
-###########
+# print #
+#########
 @group_required('MEMBER')
-#@crumb(u'Listing pour la réunion : {meeting}'.format(meeting=name_from_pk(Meeting)),parent=details)
-def listing(r, meeting_num):
+def print(r, meeting_num):
 
   meeting = Meeting.objects.get(num=meeting_num)
   title = settings.TEMPLATE_CONTENT['meetings']['listing']['title'] % { 'meeting' : meeting.title, }
@@ -356,13 +364,13 @@ def modify(r,meeting_num):
 
   Mt = Meeting.objects.get(pk=meeting_num)
   template    = settings.TEMPLATE_CONTENT['meetings']['modify']['template']
-  title       = settings.TEMPLATE_CONTENT['meetings']['modify']['title'].format(meeting=unicode(Mt))
+  title       = settings.TEMPLATE_CONTENT['meetings']['modify']['title'].format(meeting=str(Mt))
   desc                = settings.TEMPLATE_CONTENT['meetings']['modify']['desc']
   submit      = settings.TEMPLATE_CONTENT['meetings']['modify']['submit']
 
   done_template       = settings.TEMPLATE_CONTENT['meetings']['modify']['done']['template']
-  done_title  = settings.TEMPLATE_CONTENT['meetings']['modify']['done']['title'].format(meeting=unicode(Mt))
-  done_message        = settings.TEMPLATE_CONTENT['meetings']['modify']['done']['message'].format(meeting=unicode(Mt))
+  done_title  = settings.TEMPLATE_CONTENT['meetings']['modify']['done']['title'].format(meeting=str(Mt))
+  done_message        = settings.TEMPLATE_CONTENT['meetings']['modify']['done']['message'].format(meeting=str(Mt))
 
   if r.POST:
     done_message = ''
@@ -419,12 +427,12 @@ def report(r, meeting_num):
         for m in get_active_members():
    
           #notifiation per email for new report
-          subject = settings.TEMPLATE_CONTENT['meetings']['report']['done']['email']['subject'] % { 'title': unicode(Mt.title) }
+          subject = settings.TEMPLATE_CONTENT['meetings']['report']['done']['email']['subject'] % { 'title': str(Mt.title) }
           message_content = {
             'FULLNAME'    : gen_member_fullname(m),
             'MESSAGE'     : gen_report_message(e_template,Mt,m),
           }
-          attachement = settings.MEDIA_ROOT + unicode(Mt.report)
+          attachement = settings.MEDIA_ROOT + str(Mt.report)
           #send email
           ok=notify_by_email(settings.EMAILS['sender']['default'],m.email,subject,message_content,False,attachement)
           if not ok: 
@@ -459,7 +467,7 @@ def report(r, meeting_num):
   # no post yet -> empty form
   else:
     form = MeetingReportForm(initial={ 'num': Mt.num, 'title': Mt.title, 'when': visualiseDateTime(Mt.when), })
-    title = settings.TEMPLATE_CONTENT['meetings']['report']['title'].format(unicode(Mt.num))
+    title = settings.TEMPLATE_CONTENT['meetings']['report']['title'].format(str(Mt.num))
     return TemplateResponse(r, settings.TEMPLATE_CONTENT['meetings']['report']['template'], {
                 'title': title,
                 'desc': settings.TEMPLATE_CONTENT['meetings']['report']['desc'],
