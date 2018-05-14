@@ -1,0 +1,15 @@
+{% autoescape off %}
+Merci de votre enregistrement, au plaisir de vous accueillir à noter événement.
+
+Titre:          {{ title }}
+Lieur:          {{ location }}
+Date:           {{ when }} (heure de début {{ time }})
+
+Agenda
+------
+{{ agenda }}
+
+VOTRE CODE D'ACCES: {{ code }}
+
+Veuillez avoir ce code avec vous le jour de l'événement !
+{% endautoescape %}

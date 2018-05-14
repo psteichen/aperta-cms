@@ -65,9 +65,9 @@ class Distribution(Model):
 
 class Participant(Model):
   event         = ForeignKey(Event)
-  first_name    = CharField(max_length=150)
-  last_name     = CharField(max_length=150)
-  email         = EmailField()
+  first_name    = CharField(max_length=150,verbose_name='Prénom')
+  last_name     = CharField(max_length=150,verbose_name='Nom')
+  email         = EmailField(verbose_name='E-mail')
   regcode       = CharField(max_length=25)
   affiliation   = ForeignKey(Partner,verbose_name='Affiliation',blank=True,null=True)
 

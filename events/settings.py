@@ -10,20 +10,6 @@ ACTIONS = {
       'url'             : '/events/add/',
       'has_perms'       : 'BOARD',
     },
-    {
-      'label'         	: u'Importer le Calendrier des évènements',
-      'icon'		: 'upload',
-      'grade'	        : 'warning',
-      'url'		: '/upload/calendar/',
-      'has_perms'     	: 'BOARD',
-    },
-    {
-      'label'           : u'Gestion des Lieux de Rencontre',
-      'icon'            : 'home',
-      'grade'           : 'info',
-      'url'             : '/locations/',
-      'has_perms'       : 'BOARD',
-    },
   ),
 }
 
@@ -69,6 +55,36 @@ EVENTS_TMPL_CONTENT = {
       },
     },
   },
+  'register': {
+    'template'          : 'events_reg.html',
+    'title'             : u'{}',
+    'header'            : u"Formulaire d'inscription :",
+    'submit'            : u"S'inscrire",
+    'teaser' : {
+      'template'        : 'teaser_event_reg.html',
+      'title'           : u"Détails de l'évènement :",
+      'date'            : u'Date',
+      'location'        : u'Lieu',
+      'agenda'          : u'Agenda',
+      'info'            : u'Informations supplémetaires',
+    },
+    'email': {
+      'template'        : 'event_registration.txt',
+      'subject'         : u'Merci pour votre inscription',
+    },
+    'done': {
+      'template'        : 'done.html',
+      'title'         	: u'Merci pour votre inscription à notre évènement : {}',
+      'overview' : {
+        'template'      : 'overview_event_reg.html',
+        'date'          : u'Date and heure de début',
+        'location'      : u'Lieu',
+        'agenda'        : u'Agenda',
+        'info'          : u'Informations supplémetaires',
+        'regcode'       : u"Votre code d'accès :",
+      },
+    },
+  },
   'modify' : {
     'template'		: 'form.html',
     'title'             : u'Modifier un Evènement',
@@ -87,8 +103,11 @@ EVENTS_TMPL_CONTENT = {
       'modify'          : u'Modifier',
       'date'            : u'Date et heure',
       'location'        : u'Lieu de rencontre',
-      'attendance'      : u'Présent(s)',
-      'excused'         : u'Excusé(s)',
+      'agenda'          : u'Agenda',
+      'invitation'      : u"Texte de l'Invitation",
+      'attachement'     : u'Informations supplémentaires',
+      'attendance'      : u'Liste des inscrits',
+      'registration'    : u"Lien d'inscription",
     },
   },
 }

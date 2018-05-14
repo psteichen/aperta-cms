@@ -17,11 +17,10 @@ from cms.functions import notify_by_email, group_required
 
 from members.models import Member
 from members.functions import get_active_members, gen_member_fullname, is_board
-from attendance.functions import gen_invitation_message, gen_hash, gen_attendance_hashes
 
-from .functions import gen_event_overview, gen_event_initial
-from .models import Event, Invitation
-from .forms import EventForm, ListEventsForm
+from .functions import gen_event_overview, gen_event_initial, gen_reg_hash
+from .models import Event, Invitation, Distribution
+from .forms import EventForm, ListEventsForm, RegistrationForm
 from .tables  import EventTable, MgmtEventTable
 
 
@@ -60,21 +59,25 @@ def add(r):
     ef = EventForm(r.POST)
     if ef.is_valid():
       Ev = ef.save(commit=False)
+      Ev.registration=gen_reg_hash(Ev)
       Ev.save()
-      for member in Member.objects.all():
-        gen_attendance_hashes(Ev,Event.OTH,member)
-      
+
+      #invitation
       if r.FILES:
         I = Invitation(event=Ev,message=ef.cleaned_data['additional_message'],attachement=r.FILES['attachement'])
       else:
         I = Invitation(event=Ev,message=ef.cleaned_data['additional_message'])
       I.save()
 
+      # distribution
+      sel_partners = ef.cleaned_data['partners']
+      invitees = ef.cleaned_data['others']
+      D = Distribution(event=Ev,partners=sel_partners,others=invitees)
+      D.save()
+
       # all fine -> done
-      I.save()
       return TemplateResponse(r, settings.TEMPLATE_CONTENT['events']['add']['done']['template'], {
                 	'title': settings.TEMPLATE_CONTENT['events']['add']['done']['title'], 
-	                'message': settings.TEMPLATE_CONTENT['events']['add']['done']['message'].format(event=Ev,message=I.message,attachement=I.attachement,list=u' ; '.join([gen_member_fullname(m) for m in get_active_members()])),
 		   })
 
     # form not valid -> error
@@ -87,19 +90,33 @@ def add(r):
   else:
     form = EventForm()
     return TemplateResponse(r, settings.TEMPLATE_CONTENT['events']['add']['template'], {
-                'title': settings.TEMPLATE_CONTENT['events']['add']['title'],
-                'desc': settings.TEMPLATE_CONTENT['events']['add']['desc'],
-                'submit': settings.TEMPLATE_CONTENT['events']['add']['submit'],
-                'form': form,
+                	'title': settings.TEMPLATE_CONTENT['events']['add']['title'],
+                	'desc': settings.TEMPLATE_CONTENT['events']['add']['desc'],
+                	'submit': settings.TEMPLATE_CONTENT['events']['add']['submit'],
+                	'form': form,
                 })
 
 
 # send #
 ########
+def send_invitation(event,m,invitation):
+  e_template =  settings.TEMPLATE_CONTENT['events']['send']['done']['email']['template']
+
+  #invitation email with registration link
+  subject = settings.TEMPLATE_CONTENT['events']['send']['done']['email']['subject'] % { 'title': str(event.title) }
+  message_content = {
+      'FULLNAME'    : gen_member_fullname(m),
+      'MESSAGE'     : str(invitation.message),
+  }
+
+  #send email
+  try:
+    return notify_by_email(r.user.email,m.email,subject,message_content,False,settings.MEDIA_ROOT + unicode(invitation.attachement))
+  except:
+    return notify_by_email(r.user.email,m.email,subject,message_content)
+
 @group_required('BOARD')
 def send(r,event_id):
-
-  e_template =  settings.TEMPLATE_CONTENT['events']['send']['done']['email']['template']
 
   Ev = Event.objects.get(id=event_id)
   I = Invitation.objects.get(event=Ev)
@@ -107,20 +124,15 @@ def send(r,event_id):
   title = settings.TEMPLATE_CONTENT['events']['send']['done']['title'] % str(Ev.title)
       
   email_error = { 'ok': True, 'who': (), }
+  recipient_list = []
   for m in get_active_members():
    
-    #invitation email with "YES/NO button"
-    subject = settings.TEMPLATE_CONTENT['events']['send']['done']['email']['subject'] % { 'title': str(Ev.title) }
-    invitation_message = gen_invitation_message(e_template,Ev,Event.OTH,m)
-    message_content = {
-      'FULLNAME'    : gen_member_fullname(m),
-      'MESSAGE'     : invitation_message,
-    }
-    #send email
-    ok=notify_by_email(r.user.email,m.email,subject,message_content)
-    if not ok: 
+    recipient_list.append(m.email)
+    ok=send_invitation(Ev,m,I)
+    if not ok:
       email_error['ok']=False
       email_error['who'].add(m.email)
+
 
   # error in email -> show error messages
   if not email_error['ok']:
@@ -133,9 +145,81 @@ def send(r,event_id):
   else:
     return TemplateResponse(r, settings.TEMPLATE_CONTENT['events']['send']['done']['template'], {
 	                'title': title, 
-        	        'message': settings.TEMPLATE_CONTENT['events']['send']['done']['message'] + ' ; '.join([gen_member_fullname(m) for m in get_active_members()]),
+			'message': settings.TEMPLATE_CONTENT['events']['send']['done']['message'] % { 'email': I.message, 'attachement': I.attachement, 'list': ' ; '.join([e for e in recipient_list]), },
                   })
  
+
+# register #
+############
+def register(r, event_hash):
+
+  E = Event.objects.get(registration=event_hash)
+
+  title         = settings.TEMPLATE_CONTENT['events']['register']['title'].format(E.title)
+  header        = settings.TEMPLATE_CONTENT['events']['register']['header']
+  submit        = settings.TEMPLATE_CONTENT['events']['register']['submit']
+
+  e_subject     = settings.TEMPLATE_CONTENT['events']['register']['email']['subject']
+  e_template    = settings.TEMPLATE_CONTENT['events']['register']['email']['template']
+
+  done_title    = settings.TEMPLATE_CONTENT['events']['register']['done']['title'].format(E.title)
+
+  if r.POST:
+    rf = RegistrationForm(r.POST)
+    if rf.is_valid():
+      P = rf.save(commit=False)
+      P.event = E
+      P.regcode = gen_reg_code(E,P)
+      try:
+        P.save()
+      except IntegrityError:
+        #error duplicate registration
+        return TemplateResponse(r, settings.TEMPLATE_CONTENT['events']['register']['done']['template'], {
+                        'title'         : title,
+                        'error_message' : settings.TEMPLATE_CONTENT['error']['duplicate'],
+                     })
+
+      e_message = gen_registration_message(e_template,E,P)
+
+      #notify by email
+      message_content = {
+        'FULLNAME'    : P.first_name + ' ' + P.last_name.upper(),
+        'MESSAGE'     : e_message,
+      }
+      #send email
+      ok=notify_by_email(P.email,e_subject,message_content,False)
+      if not ok:
+        #error in sending email
+        return TemplateResponse(r, settings.TEMPLATE_CONTENT['events']['register']['done']['template'], {
+                        'title'         : title,
+                        'error_message' : settings.TEMPLATE_CONTENT['error']['email'],
+                     })
+
+      #all fine done page
+      done_message = gen_event_overview(settings.TEMPLATE_CONTENT['events']['register']['done']['overview'],E,P)
+      return TemplateResponse(r, settings.TEMPLATE_CONTENT['events']['register']['done']['template'], {
+                        'title'         : done_title,
+                        'message'       : done_message,
+                   })
+    #error in form
+    return TemplateResponse(r, settings.TEMPLATE_CONTENT['events']['register']['done']['template'], {
+                        'title'         : title,
+                        'error_message' : settings.TEMPLATE_CONTENT['error']['gen'] + ' ; '.join([e for e in rf.errors]),
+                   })
+
+  else: #empty form
+    form = RegistrationForm()
+    teaser_message = gen_event_overview(settings.TEMPLATE_CONTENT['events']['register']['teaser'],E)
+    return TemplateResponse(r, settings.TEMPLATE_CONTENT['events']['register']['template'], {
+                        'title'         : title,
+                        'header'        : header,
+                        'form'          : form,
+                        'teaser'        : teaser_message,
+                        'submit'        : submit,
+                })
+
+
+
 
 # details #
 ###########
@@ -145,7 +229,7 @@ def details(r, event_id):
 
   event = Event.objects.get(pk=event_id)
   title = settings.TEMPLATE_CONTENT['events']['details']['title'] % { 'event' : event.title, }
-  message = gen_event_overview(settings.TEMPLATE_CONTENT['events']['details']['overview']['template'],event)
+  message = gen_event_overview(settings.TEMPLATE_CONTENT['events']['details']['overview'],event)
 
   return TemplateResponse(r, settings.TEMPLATE_CONTENT['events']['details']['template'], {
                    'title': title,
@@ -153,8 +237,8 @@ def details(r, event_id):
                 })
 
 
-# modify  #
-###########
+# modify #
+##########
 @group_required('BOARD')
 @crumb(u"Modifier un évènement",parent=list)
 def modify(r, event_id):
