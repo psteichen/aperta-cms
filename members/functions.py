@@ -132,12 +132,12 @@ def login_exists(username):
 
 
 def get_meeting_missing_active_members(meeting):
-  members = ()
+  members = []
   for m in get_active_members():
     try:
       Meeting_Attendance.objects.get(meeting=meeting,member=m)
     except Meeting_Attendance.DoesNotExist:
-      members.add(m)
+      members.append(m)
 
   return members
 
