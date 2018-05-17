@@ -5,6 +5,8 @@ from django.db.models import Q
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.hashers import make_password
 
+from cms.functions import getSaison
+
 from attendance.models import Meeting_Attendance
 
 from .models import Member, Role
@@ -63,11 +65,19 @@ def gen_member_fullname(member):
   return str(member.first_name) + u' ' + str.upper(member.last_name)
 
 def gen_member_fullname_n_role(member):
-  role = ''
+  roles = u''
   try:
-    role = ' (' + str(Role.objects.get(member=member).title) + ')'
-  except: pass
-  return str(member.first_name) + u' ' + str.upper(member.last_name) + role
+    R = Role.objects.filter(member__id=member.id,year=getSaison())
+    for r in R:
+      roles += str(r.type.title)
+      if r != R.last(): roles += u' ; '
+  except Role.DoesNotExist:
+    pass
+
+  if roles != u'': 
+    return str(member.first_name) + u' ' + str.upper(member.last_name) + u' (' + roles + ') '
+  else:
+    return str(member.first_name) + u' ' + str.upper(member.last_name)
 
 def gen_member_initial(m):
   initial_data = {}
