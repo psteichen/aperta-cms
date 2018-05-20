@@ -4,7 +4,7 @@
 ACTIONS = {
   'invite': (
     {
-      'label' 		: u'Inviter un(des) ami(s), conférencier(s) ou would-be(s).',
+      'label' 		: u'Inviter un(des) ami(s), conjoint(s), would-be(s) ou conférencier(s).',
       'icon'     	: 'plus',
       'grade'     	: 'danger',
       'url'           	: '/meetings/invite/{}/{}/',
