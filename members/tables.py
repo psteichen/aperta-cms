@@ -69,7 +69,7 @@ class MemberTable(Table):
     except Role.DoesNotExist:
       pass
 
-    picture = u'<i class="fa-stack fa-3x"><a href="#{id}Modal" data-toggle="modal"><img src="{pic}" alt="Photo" class="img-responsive img-circle" /></a></i>'.format(id=record.pk,pic=settings.MEDIA_URL+str(value)) + view_modal(record,roles)
+    picture = u'<i class="fa-stack"><a href="#{id}Modal" data-toggle="modal"><img src="{pic}" alt="Photo" class="img-responsive img-circle" /></a></i>'.format(id=record.pk,pic=settings.MEDIA_URL+str(value)) + view_modal(record,roles)
 
     return mark_safe(picture)
 
@@ -112,7 +112,7 @@ class MemberTable(Table):
 
   class Meta:
     model = Member
-    fields = ( 'photo', 'first_name', 'last_name', 'address', 'email', 'mobile', 'status', 'role', 'meetings', )
+    fields = ( 'photo', 'first_name', 'last_name', 'email', 'mobile', 'status', 'role', 'meetings', )
     attrs = {"class": "table table-striped"}
 
 #management table
@@ -149,7 +149,7 @@ class MgmtMemberTable(Table):
     except Role.DoesNotExist:
       pass
 
-    picture = u'<i class="fa-stack fa-3x"><a href="#{id}Modal" data-toggle="modal"><img src="{pic}" alt="Photo" class="img-responsive img-circle" /></a></i>'.format(id=record.pk,pic=settings.MEDIA_URL+str(value)) + view_modal(record,roles)
+    picture = u'<i class="fa-stack"><a href="#{id}Modal" data-toggle="modal"><img src="{pic}" alt="Photo" class="img-responsive img-circle"/></a></i>'.format(id=record.pk,pic=settings.MEDIA_URL+str(value)) + view_modal(record,roles)
 
     return mark_safe(picture)
 
@@ -198,7 +198,7 @@ class MgmtMemberTable(Table):
 
   class Meta:
     model = Member
-    fields = ( 'photo', 'first_name', 'last_name', 'address', 'email', 'mobile', 'status', 'role', 'meetings', )
+    fields = ( 'photo', 'first_name', 'last_name', 'email', 'mobile', 'status', 'role', 'meetings', )
     attrs = {"class": "table table-striped"}
 
 #roles table
