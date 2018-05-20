@@ -65,14 +65,13 @@ def attendance(r, event_type, event_id, attendance_hash):
           message = settings.TEMPLATE_CONTENT['attendance']['yes'] % { 'name': gen_member_fullname(m), }
           #add meeting information to the confirmation message
           message += settings.TEMPLATE_CONTENT['attendance']['details'] % { 'when': M.when, 'time': M.time, 'location': M.location, 'address': M.location.address, }
-          actions = settings.TEMPLATE_CONTENT['attendance']['actions']
           e_message = e_yes
-
-          #set meeting:num and member_id for invitee link
-          if actions:
-            for a in actions:
-              a['url'] = a['url'].format(str(M.num),str(member.id))
-
+          if M.type == Meeting.C:
+            actions = settings.TEMPLATE_CONTENT['attendance']['actions']
+            #set meeting:num and member_id for invitee link
+            if actions:
+              for a in actions:
+                a['url'] = a['url'].format(str(M.num),str(member.id))
   
         if attendance_hash == mTm.no_hash:
           # it's a NO
@@ -122,7 +121,6 @@ def attendance(r, event_type, event_id, attendance_hash):
         }
         #send email
         ok=notify_by_email(False,m.email,title,message_content)
-
 
 
   return TemplateResponse(r, settings.TEMPLATE_CONTENT['attendance']['template'], {

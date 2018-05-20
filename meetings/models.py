@@ -14,6 +14,14 @@ def rename_report(i, f):
   return fn['name'] + fn['ext']
 
 class Meeting(Model):
+  S=0
+  C=1
+  TYPES = (
+    (S,u'statutaire'),
+    (C,u'commune / avec conjoint'),
+  )
+
+
   num		= IntegerField(verbose_name='Numéro',primary_key=True)
   title		= CharField(verbose_name='Titre',max_length=100)
   when		= DateField(verbose_name='Date')
@@ -21,6 +29,7 @@ class Meeting(Model):
   location	= ForeignKey(Location,verbose_name='Lieu de Rencontre')
   deadline	= DateTimeField(verbose_name='Deadline')
   report        = FileField(verbose_name='Compte rendu', upload_to=rename_report,blank=True,null=True)
+  type		= IntegerField(choices=TYPES,default=S)
   
   def __str__(self):
     return str(self.title) + u' du ' + str(self.when)
