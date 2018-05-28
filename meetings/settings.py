@@ -89,7 +89,7 @@ MEETINGS_TMPL_CONTENT = {
       'none_missing'   	: u'Aucune message envoyé! Tous les membres se sont manifestés pour cette réunion.',
       'email': {
 	'template'	: 'meeting_invitation.txt',
-	'subject'	: u'[51 aperta] %(title)s',
+	'subject'	: u'%(title)s',
       },
     },
   },
@@ -114,7 +114,7 @@ Destinataires:
 ''',
       'email': {
 	'template'	: 'meeting_invitation_invitee.txt',
-	'subject'	: u'[51 aperta] %(title)s',
+	'subject'	: u'%(title)s',
       },
     },
   },
@@ -176,7 +176,7 @@ Destinataires:
       'message_send'   	: u'Destinataires : ',
       'email': {
 	'template'	: 'meeting_report.txt',
-	'subject'	: u'[51 aperta] Compte rendu de la %(title)s',
+	'subject'	: u'Compte rendu de la %(title)s',
       },
     },
   },
