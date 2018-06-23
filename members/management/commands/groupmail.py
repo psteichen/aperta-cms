@@ -1,48 +1,58 @@
 import re
 import email
+import sys
+import argparse
 from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
 from django.core.mail import send_mass_mail, EmailMessage
 from django.db.models import Q
+from django.conf import settings
 
 from members.models import Member
 
 class Command(BaseCommand):
-  option_list = BaseCommand.option_list + (
-	make_option('-f', '--from', dest='from',
-            	help='Sender'),
-	make_option('-g', '--group', dest='group',
-            	help='GROUP to send message to', metavar='GROUP'),
-	make_option('-m', '--message', dest='message',
-            	help='Email message to send', metavar='MESSAGE'),
-  	)
+  def add_arguments(self, parser):
+
+    # Positional arguments
+    parser.add_argument('message', nargs='?', type=argparse.FileType('r'), default=sys.stdin)
+
+    # Named (optional) arguments
+    parser.add_argument(
+      '--group', 
+      dest='group',
+      help='GROUP to send message to', 
+      metavar='GROUP',
+    )
 
   def handle(self, *args, **options):
     query = None
-    message = None
-    subject = '[FIFTY-ONE APERTA - ' + str.upper(str(options['group'])) + '] '
+    message = ''
+    subject = '[' + settings.EMAILS['tag'] + ' - ' + str.upper(str(options['group'])) + '] '
     emails = ()
 
-    # get members based on requested "group"
-    self.stdout.write('''Groupmail from <'''+str(options['from'])+'''> to group: <'''+str(options['group'])+'''>''')
+    # get raw email message
+    raw_message = email.message_from_string(options.get('message').read())
+    sender = raw_message['from']
+    group = options.get('group')
+    subject += str(raw_message['subject'])
 
-    if options['group'] == 'members':
+    self.stdout.write(self.style.NOTICE('''Groupmail from <'''+str(sender)+'''> to group: <'''+str(group)+'''>'''))
+
+    # get members based on requested "group"
+    if group == 'members':
       query = Member.objects.filter(Q(status=Member.ACT) | Q(status=Member.HON) | Q(status=Member.WBE))
-#    elif options['group'] == 'board':
-    elif options['group'] == 'test':
+    elif group == 'board':
       query = Member.objects.filter(role__isnull=False)
     else:
       query = None
 
     # get email parts from raw source
-    raw_message = email.message_from_string(str(options['message']))
     if raw_message.is_multipart():
       for payload in raw_message.get_payload():
-        message = payload.get_payload()
+        message += payload.get_payload()
     else:
         message = raw_message.get_payload()
-    subject += str(raw_message['subject'])
 
     # send(forward) mail to people of selected group
     if query is not None:
@@ -51,13 +61,13 @@ class Command(BaseCommand):
 	  (
           	subject,
           	message,
-        	options['from'],
+        	sender,
           	[m.email,],
 	  ),
 	)
-        self.stdout.write('Prepared message for <'+unicode(m)+'>')
+        self.stdout.write(self.style.NOTICE('Prepared message for <'+str(m)+'>'))
 
     send_mass_mail(emails)
-    self.stdout.write('Emails sent!')
+    self.stdout.write(self.style.SUCCESS('Emails sent!'))
 
 
