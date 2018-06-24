@@ -27,8 +27,7 @@ class Command(BaseCommand):
 
   def handle(self, *args, **options):
     query = None
-    message = ''
-    subject = '[' + settings.EMAILS['tag'] + ' - ' + str.upper(str(options['group'])) + '] '
+    subject = settings.EMAILS['tag'] + ' [' + str.upper(str(options['group'])) + '] '
     emails = ()
 
     # get raw email message
@@ -48,11 +47,43 @@ class Command(BaseCommand):
       query = None
 
     # get email parts from raw source
-    if raw_message.is_multipart():
-      for payload in raw_message.get_payload():
-        message += payload.get_payload()
+    body = ''
+    if raw_message.preamble is not None:
+      body += raw_message.preamble
+
+    for part in raw_message.walk():
+      if part.is_multipart():
+        continue
+
+      ctype = part.get_content_type()
+      cte = part.get_params(header='Content-Transfer-Encoding')
+      if (ctype is not None and not ctype.startswith('text')) or \
+       (cte is not None and cte[0][0].lower() == '8bit'):
+        part_body = part.get_payload(decode=False)
+      else:
+        charset = part.get_content_charset()
+        if charset is None or len(charset) == 0:
+            charsets = ['ascii', 'utf-8']
+        else:
+            charsets = [charset]
+
+        part_body = part.get_payload(decode=True)
+        for enc in charsets:
+            try:
+                part_body = part_body.decode(enc)
+                break
+            except UnicodeDecodeError as ex:
+                continue
+            except LookupError as ex:
+                continue
     else:
-        message = raw_message.get_payload()
+      part_body = part.get_payload(decode=False)
+
+    body += part_body
+
+    if raw_message.epilogue is not None:
+      body += raw_message.epilogue
+
 
     # send(forward) mail to people of selected group
     if query is not None:
@@ -60,7 +91,7 @@ class Command(BaseCommand):
         emails += (
 	  (
           	subject,
-          	message,
+          	body,
         	sender,
           	[m.email,],
 	  ),
