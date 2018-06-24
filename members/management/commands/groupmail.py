@@ -1,8 +1,9 @@
 import re
-import email
 import sys
 import argparse
 from optparse import make_option
+import mailparser
+import smtplib, email
 
 from django.core.management.base import BaseCommand, CommandError
 from django.core.mail import send_mass_mail, EmailMessage
@@ -27,14 +28,28 @@ class Command(BaseCommand):
 
   def handle(self, *args, **options):
     query = None
+    group = options.get('group')
     subject = settings.EMAILS['tag'] + ' [' + str.upper(str(options['group'])) + '] '
     emails = ()
 
     # get raw email message
-    raw_message = email.message_from_string(options.get('message').read())
-    sender = raw_message['from']
-    group = options.get('group')
-    subject += str(raw_message['subject'])
+    message = email.message_from_string(options.get('message').read())
+#    mail = mailparser.parse_from_string(options.get('message').read())
+
+    # get email parts from raw source
+#    body = None
+#    if raw_message.is_multipart():
+#      for payload in raw_message.get_payload():
+#        body = payload.get_payload()
+#        break
+#    else:
+#      body = raw_message.get_payload()
+
+#    email_header = raw_message.walk().next()
+#    sender = str(email_header['From'])
+#    subject += str(email_header['Subject'])
+    sender = message['From']
+    message.replace_header("Subject", subject + str(message["Subject"]))
 
     self.stdout.write(self.style.NOTICE('''Groupmail from <'''+str(sender)+'''> to group: <'''+str(group)+'''>'''))
 
@@ -46,59 +61,25 @@ class Command(BaseCommand):
     else:
       query = None
 
-    # get email parts from raw source
-    body = ''
-    if raw_message.preamble is not None:
-      body += raw_message.preamble
-
-    for part in raw_message.walk():
-      if part.is_multipart():
-        continue
-
-      ctype = part.get_content_type()
-      cte = part.get_params(header='Content-Transfer-Encoding')
-      if (ctype is not None and not ctype.startswith('text')) or \
-       (cte is not None and cte[0][0].lower() == '8bit'):
-        part_body = part.get_payload(decode=False)
-      else:
-        charset = part.get_content_charset()
-        if charset is None or len(charset) == 0:
-            charsets = ['ascii', 'utf-8']
-        else:
-            charsets = [charset]
-
-        part_body = part.get_payload(decode=True)
-        for enc in charsets:
-            try:
-                part_body = part_body.decode(enc)
-                break
-            except UnicodeDecodeError as ex:
-                continue
-            except LookupError as ex:
-                continue
-    else:
-      part_body = part.get_payload(decode=False)
-
-    body += part_body
-
-    if raw_message.epilogue is not None:
-      body += raw_message.epilogue
-
-
     # send(forward) mail to people of selected group
+    server = smtplib.SMTP('localhost')
     if query is not None:
       for m in query:
-        emails += (
-	  (
-          	subject,
-          	body,
-        	sender,
-          	[m.email,],
-	  ),
-	)
-        self.stdout.write(self.style.NOTICE('Prepared message for <'+str(m)+'>'))
+        message.replace_header("To", m.email)
+        server.sendmail(sender, m.email, message.as_string())
+#        emails += (
+#	  (
+#          	subject,
+#          	message.as_string(),
+#        	sender,
+#          	[m.email,],
+#	  ),
+#	)
+#        self.stdout.write(self.style.NOTICE('Prepared message for <'+str(m)+'>'))
+        self.stdout.write(self.style.NOTICE('Sending message for <'+str(m)+'>'))
 
-    send_mass_mail(emails)
+#    send_mass_mail(emails)
+    server.quit()
     self.stdout.write(self.style.SUCCESS('Emails sent!'))
 
 
