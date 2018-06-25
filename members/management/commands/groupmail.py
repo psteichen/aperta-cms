@@ -29,8 +29,8 @@ class Command(BaseCommand):
 
   def handle(self, *args, **options):
     query = None
-    group = options.get('group')
-    subject = settings.EMAILS['tag'] + ' [' + str.upper(str(options['group'])) + '] '
+    group = str(options.get('group'))
+    subject = settings.EMAILS['tag'] + ' [' + str.upper(group) + '] '
     emails = ()
 
     # get raw email message
@@ -56,7 +56,7 @@ class Command(BaseCommand):
 
     sender = str(message['from'])
     dest = str(message['to'])
-    message.replace_header('From', dest)
+    message.replace_header('Reply-To', group+'@'+settings.EMAILS['domain'])
     subject += str(message['subject'])
     message.replace_header('Subject', subject)
 
