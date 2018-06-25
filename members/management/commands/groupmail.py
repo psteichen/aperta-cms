@@ -60,7 +60,7 @@ class Command(BaseCommand):
     subject += str(message['subject'])
     message.replace_header('Subject', subject)
 
-    self.stdout.write(self.style.NOTICE('''Groupmail from <'''+str(sender)+'''> to group: <'''+str(group)+'''>'''))
+#    self.stdout.write(self.style.NOTICE('''Groupmail from <'''+str(sender)+'''> to group: <'''+str(group)+'''>'''))
 
     # get members based on requested "group"
     if group == 'members':
@@ -95,10 +95,10 @@ class Command(BaseCommand):
 #	  ),
 #	)
 #        self.stdout.write(self.style.NOTICE('Prepared message for <'+str(m)+'>'))
-        self.stdout.write(self.style.NOTICE('Sending message for <'+str(m)+'>'))
+#        self.stdout.write(self.style.NOTICE('Sending message for <'+str(m)+'>'))
 
 #    send_mass_mail(emails)
     server.quit()
-    self.stdout.write(self.style.SUCCESS('Emails sent!'))
+#    self.stdout.write(self.style.SUCCESS('Emails sent!'))
 
 
