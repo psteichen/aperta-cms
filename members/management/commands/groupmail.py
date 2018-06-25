@@ -10,6 +10,7 @@ from django.core.mail import send_mass_mail, EmailMessage
 from django.db.models import Q
 from django.conf import settings
 
+from cms.functions import notify_by_email
 from members.models import Member
 
 class Command(BaseCommand):
@@ -34,22 +35,23 @@ class Command(BaseCommand):
 
     # get raw email message
     message = email.message_from_string(options.get('message').read())
-#    mail = mailparser.parse_from_string(options.get('message').read())
+    mail = mailparser.parse_from_string(options.get('message').read())
 
     # get email parts from raw source
-#    body = None
-#    if raw_message.is_multipart():
-#      for payload in raw_message.get_payload():
-#        body = payload.get_payload()
-#        break
-#    else:
-#      body = raw_message.get_payload()
+    body = None
+    attachments = []
+    for part in message.walk():
+      if part.get_content_maintype() == 'multipart':
+        if part.get('Content-Disposition') is None:
+          continue
+        fileName = part.get_filename()
+        payload = part.get_payload(decode=True)
+        attachments.append({'name':fileName,'content':payload})
+      else:
+        body = part.get_payload()
 
-#    email_header = raw_message.walk().next()
-#    sender = str(email_header['From'])
-#    subject += str(email_header['Subject'])
-    sender = message['From']
-    message.replace_header("Subject", subject + str(message["Subject"]))
+    sender = str(message['from'])
+    subject += str(message['subject'])
 
     self.stdout.write(self.style.NOTICE('''Groupmail from <'''+str(sender)+'''> to group: <'''+str(group)+'''>'''))
 
@@ -65,12 +67,22 @@ class Command(BaseCommand):
     server = smtplib.SMTP('localhost')
     if query is not None:
       for m in query:
-        message.replace_header("To", m.email)
-        server.sendmail(sender, m.email, message.as_string())
+#        message.replace_header("To", m.email)
+#        server.sendmail(sender, m.email, message.as_string())
+
+        notify_by_email(
+		sender,
+		m.email,
+		subject,
+		body,
+		False,
+		attachments,
+		False
+        )
 #        emails += (
 #	  (
 #          	subject,
-#          	message.as_string(),
+#          	msg.as_string(),
 #        	sender,
 #          	[m.email,],
 #	  ),
@@ -79,7 +91,7 @@ class Command(BaseCommand):
         self.stdout.write(self.style.NOTICE('Sending message for <'+str(m)+'>'))
 
 #    send_mass_mail(emails)
-    server.quit()
+#    server.quit()
     self.stdout.write(self.style.SUCCESS('Emails sent!'))
 
 

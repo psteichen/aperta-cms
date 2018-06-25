@@ -65,9 +65,11 @@ def notify_by_email(sender,to,subject,message_content,cc=False,attachment=False,
                 from_email=sender,
                 to=[to]
           )
-  email.esp_extra = {"sender_domain": settings.EMAIL_SENDER_DOMAIN}
-  message_content['FOOTER'] = settings.EMAILS['footer']
-  email.body = render_to_string(template,message_content)
+#  email.esp_extra = {"sender_domain": settings.EMAIL_SENDER_DOMAIN}
+  if template:
+    message_content['FOOTER'] = settings.EMAILS['footer']
+    email.body = render_to_string(template,message_content)
+  else: email.body = str(message_content)
   if attachment:
     if is_array(attachment):
       for a in attachment: attach_to_email(email,a)
