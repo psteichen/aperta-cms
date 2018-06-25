@@ -38,20 +38,27 @@ class Command(BaseCommand):
     mail = mailparser.parse_from_string(options.get('message').read())
 
     # get email parts from raw source
-    body = None
-    attachments = []
-    for part in message.walk():
-      if part.get_content_maintype() == 'multipart':
-        if part.get('Content-Disposition') is None:
-          continue
-        fileName = part.get_filename()
-        payload = part.get_payload(decode=True)
-        attachments.append({'name':fileName,'content':payload})
-      else:
-        body = part.get_payload()
+#    body = message.get_body()
+#    attachments = message.iter_attchments()
+#    body = ''
+#    attachments = []
+#    if message.is_multipart():
+#      for part in message.walk():
+#        if part.get_content_maintype() == 'multipart':
+#          if part.get('Content-Disposition') is None:
+#            filename = part.get_filename()
+#            payload = part.get_payload(decode=True)
+#            attachments.append({'name':filename,'content':payload})
+#          else:
+#            body += part.get_payload()
+#    else:
+#      body = message.part.get_payload()
 
     sender = str(message['from'])
+    dest = str(message['to'])
+    message.replace_header('From', dest)
     subject += str(message['subject'])
+    message.replace_header('Subject', subject)
 
     self.stdout.write(self.style.NOTICE('''Groupmail from <'''+str(sender)+'''> to group: <'''+str(group)+'''>'''))
 
@@ -67,18 +74,18 @@ class Command(BaseCommand):
     server = smtplib.SMTP('localhost')
     if query is not None:
       for m in query:
-#        message.replace_header("To", m.email)
-#        server.sendmail(sender, m.email, message.as_string())
+        message.replace_header("To", m.email)
+        server.sendmail(sender, m.email, message.as_string())
 
-        notify_by_email(
-		sender,
-		m.email,
-		subject,
-		body,
-		False,
-		attachments,
-		False
-        )
+#        notify_by_email(
+#		sender,
+#		m.email,
+#		subject,
+#		body,
+#		False,
+#		attachments,
+#		False
+#        )
 #        emails += (
 #	  (
 #          	subject,
@@ -91,7 +98,7 @@ class Command(BaseCommand):
         self.stdout.write(self.style.NOTICE('Sending message for <'+str(m)+'>'))
 
 #    send_mass_mail(emails)
-#    server.quit()
+    server.quit()
     self.stdout.write(self.style.SUCCESS('Emails sent!'))
 
 
