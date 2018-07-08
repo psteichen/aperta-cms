@@ -257,11 +257,13 @@ def r_type(r):
 # profile #
 ###########
 @group_required('MEMBER')
-@crumb(u'Profile utilisateur: {user}'.format(user=name_from_pk(User)))
+@crumb(u'{user}'.format(user=name_from_pk(User)),parent=list)
 def profile(r, username):
 
+  U = None
+  if username: U = User.objects.get(username=username)
   try:
-    member 	= Member.objects.get(user=r.user)
+    member 	= Member.objects.get(user=U)
   except Member.DoesNotExist:
     # non-member user, probably an admin -> redirect to admin console
     return redirect('/admin/')

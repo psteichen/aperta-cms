@@ -47,7 +47,7 @@ ACTIONS = {
       'icon'     	: 'pencil',
       'grade'     	: 'info',
       'url'           	: '/members/profile/modify/{}/',
-      'has_perms'	: 'MEMBER',
+      'has_perms'	: 'BOARD',
     },
   ),
 }
@@ -80,7 +80,7 @@ MEMBERS_TMPL_CONTENT = {
   'profile': {
     'template'  	: 'done.html',
     'actions'     	: ACTIONS['profile'],
-    'title'     	: u'Profile utilisateur',
+    'title'     	: u'Détail membre',
     'overview' : {
       'template'	: 'overview_member.html',
       'photo'		: u'Photo',
