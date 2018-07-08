@@ -58,9 +58,10 @@ class Command(BaseCommand):
     dest = str(message['to'])
     try:
       message.replace_header('Reply-To', group+'@'+settings.EMAILS['domain'])
-    except:
+    except KeyError:
       message.add_header('Reply-To', group+'@'+settings.EMAILS['domain'])
-    subject += str(message['subject'])
+
+    subject += str(message['subject']).replace(subject,'')
     message.replace_header('Subject', subject)
 
 #    self.stdout.write(self.style.NOTICE('''Groupmail from <'''+str(sender)+'''> to group: <'''+str(group)+'''>'''))
