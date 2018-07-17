@@ -16,8 +16,10 @@ class Command(BaseCommand):
 
     # get members based on requested "group"
     for g in groups:
+      if g == 'all':
+        query =  Member.objects.filter(status=Member.ACT) | Member.objects.filter(status=Member.HON) | Member.objects.filter(status=Member.WBE) | Member.objects.filter(status=Member.STB)
       if g == 'members':
-        query =  Member.objects.filter(status=Member.ACT) | Member.objects.filter(status=Member.HON) | Member.objects.filter(status=Member.WBE)
+        query =  Member.objects.filter(status=Member.ACT) | Member.objects.filter(status=Member.WBE)
       elif g == 'board':
         query = Member.objects.filter(role__isnull=False)
       else:

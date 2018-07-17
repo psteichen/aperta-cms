@@ -67,12 +67,13 @@ class Command(BaseCommand):
 #    self.stdout.write(self.style.NOTICE('''Groupmail from <'''+str(sender)+'''> to group: <'''+str(group)+'''>'''))
 
     # get members based on requested "group"
+    query = None
+    if group == 'all':
+      query = Member.objects.filter(Q(status=Member.ACT) | Q(status=Member.HON) | Q(status=Member.WBE) | Q(status=Member.STB)) 
     if group == 'members':
-      query = Member.objects.filter(Q(status=Member.ACT) | Q(status=Member.HON) | Q(status=Member.WBE))
-    elif group == 'board':
+      query = Member.objects.filter(Q(status=Member.ACT) | Q(status=Member.WBE))
+    if group == 'board':
       query = Member.objects.filter(role__isnull=False)
-    else:
-      query = None
 
     # send(forward) mail to people of selected group
     server = smtplib.SMTP('localhost')
