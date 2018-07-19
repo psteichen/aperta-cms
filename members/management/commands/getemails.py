@@ -2,7 +2,9 @@ import re
 
 from django.core.management.base import BaseCommand, CommandError
 
-from members.models import Member
+from cms.functions import getSaison
+
+from members.models import Member, Role
 
 class Command(BaseCommand):
   help = 'Get list of member emails by status'
@@ -21,7 +23,8 @@ class Command(BaseCommand):
       if g == 'members':
         query =  Member.objects.filter(status=Member.ACT) | Member.objects.filter(status=Member.WBE)
       elif g == 'board':
-        query = Member.objects.filter(role__isnull=False)
+        query = Member.objects.filter(role__year=getSaison())
+#        query = Role.objects.filter(year=getSaison()).values('member')
       else:
         query = None
 

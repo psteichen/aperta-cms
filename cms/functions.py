@@ -167,7 +167,7 @@ def visualiseDateTime(dtIn):
   if type(dtIn) is datetime: return dtIn.strftime('%a le ') + dtIn.strftime('%d %b %Y').lstrip('0') + u' à ' + dtIn.strftime('%Hh%M').lstrip('0')
 
 def getSaison():
-  if int(date.today().strftime('%M')) < 8: # we are after August -> new season started
+  if int(date.today().strftime('%m')) < 7: # we are after August -> new season started
     y1 = str(int(date.today().strftime('%Y')) - 1)
   else:
     y1 = date.today().strftime('%Y')

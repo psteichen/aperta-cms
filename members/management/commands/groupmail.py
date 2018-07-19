@@ -10,7 +10,7 @@ from django.core.mail import send_mass_mail, EmailMessage
 from django.db.models import Q
 from django.conf import settings
 
-from cms.functions import notify_by_email
+from cms.functions import notify_by_email, getSaison
 from members.models import Member
 
 class Command(BaseCommand):
@@ -73,7 +73,7 @@ class Command(BaseCommand):
     if group == 'members':
       query = Member.objects.filter(Q(status=Member.ACT) | Q(status=Member.WBE))
     if group == 'board':
-      query = Member.objects.filter(role__isnull=False)
+      query = Member.objects.filter(role__year=getSaison())
 
     # send(forward) mail to people of selected group
     server = smtplib.SMTP('localhost')
