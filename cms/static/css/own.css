@@ -19,3 +19,29 @@ div.alert {
   margin: 0 50px 50px 50px;
   padding: 20px;
 }
+
+.cal {
+  margin: 0 0 10px 0;
+  padding: 0;
+}
+
+.cal .panel-heading {
+  margin: 0;
+  padding: 5px;
+  width: 75px;
+}
+.cal .panel-body {
+  margin: 0;
+  padding: 5px;
+  width: 75px;
+}
+.cal .panel-footer {
+  margin: 0;
+  padding: 1px;
+  width: 75px;
+}
+
+.cal h4, .cal h2 {
+  margin: 0;
+  padding: 0;
+

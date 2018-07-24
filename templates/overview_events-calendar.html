@@ -1,0 +1,37 @@
+<div class="overview">
+
+  {% for e in events reversed %}
+  <div class="col-sm-6 col-md-4 col-xl-3">
+    <div class="panel panel-primary pull-right text-center cal">
+      <div class="panel-heading">
+        <h4 class="panel-title">{{ e.when|date:"F" }}</h4>
+      </div>
+      <div class="panel-body">
+        <h2><b>{{ e.when|date:"d" }}</b></h2>
+      </div>
+      <div class="panel-footer">
+        <small>{{ e.when|date:"Y" }}</small>
+      </div>
+    </div>
+    <div class="thumbnail">
+      {% if e.image %}<img src="{{ e.image }}" alt="{{ e.title }}" />{% endif %}
+      <div class="caption">
+        <h3>{{ e.title }}</h3>
+        <div class="row">
+          <div class="col-xs-1"><i class="fa fa-map-marker"></i></div>
+          <div class="col-xs-7">{{ e.location }}</div>
+        </div>
+        <div class="row">
+          <div class="col-xs-1"><i class="fa fa-list"></i></div>
+          <div class="col-xs-10"><pre>{{ e.agenda }}</pre></div>
+        </div>
+        <div class="btn-group">
+          <a href="/events/reg/{{ e.registration }}" class="btn btn-sm btn-danger" role="button">{{ overview.register }}</a>
+          <a href="/events/list/{{ e.pk }}" class="btn btn-sm btn-default" role="button">{{ overview.view }}</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+
+</div>

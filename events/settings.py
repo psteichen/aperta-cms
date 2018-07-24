@@ -17,6 +17,15 @@ EVENTS_TMPL_CONTENT = {
   'title'       	: u'Évènements',
   'template'    	: 'list.html',
   'actions'     	: ACTIONS['main'],
+  'calendar': {
+    'template'          : 'done.html',
+    'title'             : u'Calendrier des évènements',
+    'overview' : {
+      'template'        : 'overview_events-calendar.html',
+      'register'        : u"S'enregistrer",
+      'view'        	: u"S'informer",
+    },
+  },
   'add': {
     'template'		: 'form.html',
     'title'     	: u'Créer un évènement',

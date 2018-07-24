@@ -15,6 +15,14 @@ from .models import Invitation, Participant
 # EVENTS SUPPORTING FUNCTIONS #
 ###############################
 
+def gen_events_calendar(overview,events):
+  content = { 'overview' : overview }
+
+  content['events'] = events
+
+  return render_to_string(overview['template'],content)
+
+
 def get_event_attendance(event):
   out=''
   for p in Participant.objects.filter(event=event):

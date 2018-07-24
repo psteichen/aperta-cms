@@ -164,7 +164,7 @@ def send(r, meeting_num):
 
   # all fine -> done
   else:
-    I.sent = datetime.now()
+    I.sent = timezone.now()
     I.save()
     return TemplateResponse(r, settings.TEMPLATE_CONTENT['meetings']['send']['done']['template'], {
 	                'title': title, 

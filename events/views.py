@@ -18,7 +18,7 @@ from cms.functions import notify_by_email, group_required
 from members.models import Member
 from members.functions import get_active_members, gen_member_fullname, is_board
 
-from .functions import gen_event_overview, gen_event_initial, gen_reg_hash
+from .functions import gen_event_overview, gen_event_initial, gen_reg_hash, gen_events_calendar
 from .models import Event, Invitation, Distribution
 from .forms import EventForm, ListEventsForm, RegistrationForm
 from .tables  import EventTable, MgmtEventTable
@@ -32,13 +32,17 @@ from .tables  import EventTable, MgmtEventTable
 ############
 @group_required('MEMBER')
 @crumb(u'Calendrier')
-def claendar(r):
+def calendar(r):
 
-  events = Event.objects.filter(when__gt=today()) #HERE
+#  events = Event.objects.filter(when__gt=timezone.now())
+  events = Event.objects.all()
+
+  title = settings.TEMPLATE_CONTENT['events']['calendar']['title']
+  message = gen_events_calendar(settings.TEMPLATE_CONTENT['events']['calendar']['overview'],events)
 
   return TemplateResponse(r, settings.TEMPLATE_CONTENT['events']['calendar']['template'], {
-                   'title': settings.TEMPLATE_CONTENT['events']['calendar']['title'],
-                   'events': events,
+                   'title': title,
+                   'message': message,
                 })
 
 
