@@ -28,6 +28,20 @@ from .tables  import EventTable, MgmtEventTable
 # EVENTS VIEWS #
 ################
 
+# calendar #
+############
+@group_required('MEMBER')
+@crumb(u'Calendrier')
+def claendar(r):
+
+  events = Event.objects.filter(when__gt=today()) #HERE
+
+  return TemplateResponse(r, settings.TEMPLATE_CONTENT['events']['calendar']['template'], {
+                   'title': settings.TEMPLATE_CONTENT['events']['calendar']['title'],
+                   'events': events,
+                })
+
+
 # list #
 ########
 @group_required('MEMBER')

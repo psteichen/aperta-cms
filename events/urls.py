@@ -1,9 +1,10 @@
 from django.conf.urls import include, url
 
-from .views import list, add, send, details, modify, register#, photos
+from .views import list, calendar, add, send, details, modify, register#, photos
 
 urlpatterns = [
   url(r'^$', list, name='list'),
+  url(r'^calendar/$', calendar, name='calendar'),
   url(r'^list/(?P<event_id>.+?)/$', details, name='details'),
   url(r'^reg/(?P<event_hash>.+?)/$', register, name='register'),
 
