@@ -10,6 +10,21 @@ ACTIONS = {
       'url'             : '/events/add/',
       'has_perms'       : 'BOARD',
     },
+    {
+      'label'         	: u'Importer le Calendrier',
+      'icon'          	: 'upload',
+      'grade'         	: 'warning',
+      'url'             : '/upload/calendar/',
+      'has_perms'     	: 'BOARD',
+    },
+    {
+      'label'           : u'Lieux de rencontre',
+      'icon'            : 'home',
+      'grade'           : 'info',
+      'url'             : '/locations/',
+      'has_perms'       : 'BOARD',
+    },
+
   ),
 }
 

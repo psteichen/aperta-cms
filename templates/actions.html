@@ -18,7 +18,7 @@
     <div class="panel panel-primary {% if part.grade %}panel-{{ part.grade }}{% endif %}">
      {% if part.heading %}
       <div class="panel-heading">
-       <h3 class="panel-title text-center">{% if part.icon %}<i class="fa fa-{{ part.icon }}"></i>&nbsp;&nbsp;{% endif %}{{ part.heading|safe }}{% if part.icon %}&nbsp;&nbsp;<i class="fa fa-{{ part.icon }}"></i>{% endif %}</h3>
+       <h2 class="text-center">{% if part.icon %}<i class="fa fa-{{ part.icon }}"></i>&nbsp;&nbsp;{% endif %}{{ part.heading|safe }}{% if part.icon %}&nbsp;&nbsp;<i class="fa fa-{{ part.icon }}"></i>{% endif %}</h2>
       </div>
      {% endif %}
       <div class="panel-body">
