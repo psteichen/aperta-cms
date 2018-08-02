@@ -1,5 +1,7 @@
 <div class="overview">
 
+  <hr/>
+
   {% for e in events reversed %}
   <div class="col-sm-6 col-md-4 col-xl-3">
 
@@ -30,7 +32,7 @@
         <h3>{{ e.title }}</h3>
         <div class="row">
           <div class="col-xs-1"><i class="fa fa-map-marker"></i></div>
-          <div class="col-xs-7">{{ e.location }}</div>
+          <div class="col-xs-7">{{ e.location.name }}</div>
         </div>
 <!--
         <div class="row">
@@ -40,11 +42,11 @@
 -->
       </div>
 
-      <div class="btn-group">
-        <a href="/events/reg/{{ e.registration }}" class="btn btn-sm btn-danger" role="button">{{ overview.register }}</a>
-        <a href="/events/list/{{ e.pk }}" class="btn btn-sm btn-default" role="button">{{ overview.view }}</a></p>
-      </div>
-    
+        <div class="btn-group">
+          <a href="/events/reg/{{ e.registration }}" class="btn btn-sm btn-danger" role="button">{{ overview.register }}</a>
+          <a href="/events/list/{{ e.pk }}" class="btn btn-sm btn-default" role="button">{{ overview.view }}</a></p>
+        </div>
+
     </div>
   </div>
   {% endfor %}
