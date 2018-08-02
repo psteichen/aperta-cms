@@ -15,10 +15,11 @@ from .models import Invitation, Participant
 # EVENTS SUPPORTING FUNCTIONS #
 ###############################
 
-def gen_events_calendar(overview,events):
+def gen_events_calendar(overview,events,board):
   content = { 'overview' : overview }
 
   content['events'] = events
+  content['board'] = board
 
   return render_to_string(overview['template'],content)
 

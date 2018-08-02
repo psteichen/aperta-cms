@@ -38,11 +38,12 @@ def calendar(r):
   events = Event.objects.all()
 
   title = settings.TEMPLATE_CONTENT['events']['calendar']['title']
-  message = gen_events_calendar(settings.TEMPLATE_CONTENT['events']['calendar']['overview'],events)
+  message = gen_events_calendar(settings.TEMPLATE_CONTENT['events']['calendar']['overview'],events,is_board(r.user))
 
   return TemplateResponse(r, settings.TEMPLATE_CONTENT['events']['calendar']['template'], {
-                   'title': title,
-                   'message': message,
+                   'title'	: title,
+                   'actions'	: settings.TEMPLATE_CONTENT['events']['calendar']['actions'],
+                   'message'	: message,
                 })
 
 
