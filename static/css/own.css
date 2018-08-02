@@ -44,4 +44,11 @@ div.alert {
 .cal h4, .cal h2 {
   margin: 0;
   padding: 0;
+}
+
+.cal-container {
+  margin: 0 0 10px 0;
+  padding: 0 15px 0 15px;
+  min-height: 300px;
+}
 
