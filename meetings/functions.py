@@ -33,7 +33,7 @@ def gen_meeting_listing(template,meeting):
   ]
 
   #records table (alphabetical order on last_name)
-  members = Member.objects.all().order_by('last_name')
+  members = get_active_members().order_by('last_name')
   content['listing']['members'] = []
   ok = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-check"></i>&nbsp;'
   nok = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-times"></i>&nbsp;'
