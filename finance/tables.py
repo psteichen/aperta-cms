@@ -10,7 +10,7 @@ class BankExtractTable(Table):
   ynum		= Column(verbose_name=u'Détails', empty_values=())
 
   def render_ynum(self, value, record):
-    return unicode(record)
+    return str(record)
 
   class Meta:
     model = BankExtract
