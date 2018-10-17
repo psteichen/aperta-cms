@@ -138,11 +138,12 @@ def send_invitation(event,m,invitation):
 
   #send email
   try:
-    return notify_by_email(r.user.email,m.email,subject,message_content,False,settings.MEDIA_ROOT + unicode(invitation.attachement))
+    return notify_by_email(None,m.email,subject,message_content,False,settings.MEDIA_ROOT + str(invitation.attachement))
   except:
-    return notify_by_email(r.user.email,m.email,subject,message_content)
+    return notify_by_email(None,m.email,subject,message_content)
 
 @group_required('BOARD')
+@crumb(u'Envoie des invitations',parent=list)
 def send(r,event_id):
 
   Ev = Event.objects.get(id=event_id)

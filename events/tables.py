@@ -62,9 +62,9 @@ class MgmtEventTable(Table):
       sent = I.sent
     except: pass
     if sent: #already sent, resend?
-      link = '<center><a class="btn btn-success btn-sm" href="/event/send/{}/" title="Renvoyer"><i class="fa fa-envelope"></i></a></center>'.format(escape(record.pk))
+      link = '<center><a class="btn btn-success btn-sm" href="/events/send/{}/" title="Renvoyer"><i class="fa fa-envelope"></i></a></center>'.format(escape(record.pk))
     else: #not yet sent
-      link = '<center><a class="btn btn-danger btn-sm" href="/event/send/{}/" title="Envoyer"><i class="fa fa-envelope"></i></a></center>'.format(escape(record.pk))
+      link = '<center><a class="btn btn-danger btn-sm" href="/events/send/{}/" title="Envoyer"><i class="fa fa-envelope"></i></a></center>'.format(escape(record.pk))
 
     return mark_safe(link)
 

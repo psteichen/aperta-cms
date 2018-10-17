@@ -20,7 +20,7 @@ class EventForm(ModelForm):
       'time'		: TextInput(attrs={'type': 'time', 'id': 'tpicker', }),
       'location'	: Textarea(attrs={'placeholder': "Adresse détaillé du lieu de l'événement.",}),
       'agenda'  	: Textarea(attrs={'placeholder': "Agenda ou description de l'événememt.",}),
-      'deadline'	: TextInput(attrs={'type': 'date', 'id': 'dtpicker', }),
+      'deadline'	: TextInput(attrs={'type': 'datetime', 'id': 'dtpicker', }),
     }
     help_texts = {
       'deadline'	: 'Date de clôture des inscriptions',

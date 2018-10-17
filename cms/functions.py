@@ -61,7 +61,7 @@ def notify_by_email(sender,to,subject,message_content,cc=False,attachment=False,
 
   if not sender: sender = settings.EMAILS['sender']['default']
   email = EmailMultiAlternatives(
-                subject=settings.EMAILS['tag'] + " " + subject,
+                subject=str(settings.EMAILS['tag']) + " " + str(subject),
                 from_email=sender,
                 to=[to]
           )
