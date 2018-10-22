@@ -11,7 +11,7 @@ def rename_report(i, f):
   fn = rmf('meetings', f, i.title)
 
   from os import sep
-  return fn['name'] + fn['ext']
+  return str(fn['name']) + str(fn['ext'])
 
 class Meeting(Model):
   S=0
