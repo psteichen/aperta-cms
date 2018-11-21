@@ -20,7 +20,7 @@ class Event(Model):
   time		= TimeField(verbose_name='Heure de début')
   location      = CharField(verbose_name='Lieu',max_length=500)
   deadline	= DateTimeField(verbose_name='Deadline')
-  agenda        = CharField(verbose_name='Agenda',max_length=500)
+  agenda        = CharField(verbose_name='Agenda',max_length=5000)
   registration  = CharField(verbose_name='Code de régistration',max_length=25)
   
   def __str__(self):

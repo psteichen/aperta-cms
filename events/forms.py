@@ -31,10 +31,11 @@ class RegistrationForm(ModelForm):
 
   class Meta:
     model = Participant
-    fields = ( 'first_name', 'last_name', 'email', 'affiliation', )
-    widgets = {
-      'affiliation'     : RadioSelect(),
-    }
+    fields = ( 'first_name', 'last_name', 'email', )
+#    fields = ( 'first_name', 'last_name', 'email', 'affiliation', )
+#    widgets = {
+#      'affiliation'     : RadioSelect(),
+#    }
 
 
 
