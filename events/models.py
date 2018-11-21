@@ -77,5 +77,5 @@ class Participant(Model):
   def __str__(self):
     affil = ''
     if self.affiliation: affil = ' ['+str(self.affiliation)+']'
-    return str(self.first_name) + ' ' + str(self.last_name) + ' <' + self.email + '>' + affil
+    return str(self.first_name) + ' ' + str(self.last_name) + ' <' + self.email + '>' + affil + ' - ' + self.regcode
 

@@ -28,7 +28,7 @@ def get_event_attendance(event):
   out=''
   for p in Participant.objects.filter(event=event):
     out += '''
-''' + unicode(p)
+''' + str(p)
 
   return out
 

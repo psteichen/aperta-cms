@@ -6,6 +6,7 @@ from datetime import date, timedelta, datetime
 from django.template.response import TemplateResponse
 from django.conf import settings
 from django.utils import timezone
+from django.db import IntegrityError
 
 from django_tables2  import RequestConfig
 from formtools.wizard.views import SessionWizardView
@@ -18,7 +19,7 @@ from cms.functions import notify_by_email, group_required
 from members.models import Member
 from members.functions import get_active_members, gen_member_fullname, is_board
 
-from .functions import gen_event_overview, gen_event_initial, gen_reg_hash, gen_events_calendar
+from .functions import gen_event_overview, gen_event_initial, gen_reg_hash, gen_events_calendar, gen_reg_code, gen_registration_message
 from .models import Event, Invitation, Distribution
 from .forms import EventForm, ListEventsForm, RegistrationForm
 from .tables  import EventTable, MgmtEventTable
@@ -215,7 +216,7 @@ def register(r, event_hash):
         'MESSAGE'     : e_message,
       }
       #send email
-      ok=notify_by_email(P.email,e_subject,message_content,False)
+      ok=notify_by_email(False,P.email,e_subject,message_content)
       if not ok:
         #error in sending email
         return TemplateResponse(r, settings.TEMPLATE_CONTENT['events']['register']['done']['template'], {
