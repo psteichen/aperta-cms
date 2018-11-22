@@ -1,10 +1,10 @@
 {% autoescape off %}
 Merci de votre enregistrement, au plaisir de vous accueillir à notre événement.
 
-Titre:          {{ title }}
-Lieu:          	{{ location }}
-Date:           {{ when }} (heure de début {{ time }})
-{% if price != 0 %}Prix:           {{ price }} EUR{% endif %}
+Titre:       {{ title }}
+Lieu:        {{ location }}
+Date:        {{ when }} (heure de début {{ time }})
+{% if price != 0 %}Prix:        {{ price }} EUR{% endif %}
 
 Agenda
 ------
@@ -13,4 +13,9 @@ Agenda
 VOTRE CODE D'ACCES: {{ code }}
 
 Veuillez avoir ce code avec vous le jour de l'événement !
+
+
+Informations supplémentaires:
+------
+{{ info }}
 {% endautoescape %}

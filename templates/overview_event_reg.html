@@ -3,25 +3,29 @@
   <div class="panel-body">
     <div class="row">
       <div class="col-sm-6">
-        <i>{{ overview.date }}</i><pre>{{ when }} {{ time }}</pre>
+        <h3>{{ overview.date }}</h3><blockquote>{{ when }} {{ time }}</blockquote>
       </div>
       <div class="col-sm-6">
-        <i>{{ overview.location }}</i><pre>{{ location }}</pre>
+        <h3>{{ overview.location }}</h3><blockquote>{{ location }}</blockquote>
       </div>
     </div>
     <br/>
     <div class="row">
       <div class="col-sm-6">
-        <i>{{ overview.agenda }}</i><pre>{{ agenda }}</pre>
+        <h3>{{ overview.agenda }}</h3><blockquote>{{ agenda|safe }}</blockquote>
       </div>
       <div class="col-sm-6">
-        <i>{{ overview.info }}</i><pre>{{ invitation }}</pre>
+        {% if invitation %}
+        <h3>{{ overview.info }}</h3><blockquote>{{ invitation|safe }}</blockquote>
+        {% endif %}
+        {% if attachement %}
         <a href="{{ attachement.url }}" target="_blank">{{ attachement.name }}</a>
+        {% endif %}
       </div>
     </div>
     <div class="row">
-      <div class="col-sm-12">
-        <i>{{ overview.regcode }}</i>&nbsp;{{ regcode|safe }}
+      <div class="col-sm-12 lead">
+        <i>{{ overview.regcode }}</i>&nbsp;<b>{{ regcode }}</b>
       </div>
     </div>
   </div>

@@ -27,8 +27,7 @@ def gen_events_calendar(overview,events,board):
 def get_event_attendance(event):
   out=''
   for p in Participant.objects.filter(event=event):
-    out += '''
-''' + str(p)
+    out += str(p) + '<br/>'
 
   return out
 
@@ -95,6 +94,11 @@ def gen_registration_message(template,event,participant):
   content['time'] = visualiseDateTime(event.time)
   content['location'] = html2text(event.location)
   content['agenda'] = html2text(event.agenda)
+  try:
+    I = Invitation.objects.get(event=event)
+    content['info'] = html2text(str(I.message))
+  except Invitation.DoesNotExist:
+    pass
   content['price'] = event.price
   content['code'] = participant.regcode
 
