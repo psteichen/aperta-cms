@@ -15,11 +15,12 @@
         <h3>{{ overview.agenda }}</h3><blockquote>{{ agenda|safe }}</blockquote>
       </div>
       <div class="col-sm-6">
+        <h3>{{ overview.invitation }}</h3>
         {% if invitation %}
-        <h3>{{ overview.invitation }}</h3><blockquote>{{ invitation|safe }}</blockquote>
+        <blockquote>{{ invitation|safe }}</blockquote>
         {% endif %}
         {% if attachement %}
-        <a href="{{ attachement.url }}" target="_blank">{{ attachement.name }}</a>
+        <i class="fa fa-link"></i>&nbsp;<a href="{{ attachement.url }}" target="_blank">Document à télécharger</a>
         {% endif %}
       </div>
     </div>
