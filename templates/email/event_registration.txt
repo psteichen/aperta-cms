@@ -1,9 +1,10 @@
 {% autoescape off %}
-Merci de votre enregistrement, au plaisir de vous accueillir à noter événement.
+Merci de votre enregistrement, au plaisir de vous accueillir à notre événement.
 
 Titre:          {{ title }}
-Lieur:          {{ location }}
+Lieu:          	{{ location }}
 Date:           {{ when }} (heure de début {{ time }})
+{% if price != 0 %}Prix:           {{ price }} EUR{% endif %}
 
 Agenda
 ------

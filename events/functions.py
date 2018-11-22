@@ -40,6 +40,7 @@ def gen_event_overview(overview,event,p=False):
   content['time'] = visualiseDateTime(event.time)
   content['location'] = event.location
   content['agenda'] = event.agenda
+  content['price'] = event.price
   try:
     I = Invitation.objects.get(event=event)
     content['invitation'] = I.message
@@ -87,11 +88,14 @@ def gen_reg_code(e,p):
 def gen_registration_message(template,event,participant):
   content = {}
 
+  from html2text import html2text
+
   content['title'] = event.title
   content['when'] = event.when
   content['time'] = visualiseDateTime(event.time)
-  content['location'] = event.location
-  content['agenda'] = event.agenda
+  content['location'] = html2text(event.location)
+  content['agenda'] = html2text(event.agenda)
+  content['price'] = event.price
   content['code'] = participant.regcode
 
   return render_to_string(template,content)

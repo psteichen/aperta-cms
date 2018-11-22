@@ -1,8 +1,8 @@
 <div class="teaser">
   <p class="lead">{{ overview.title }}</p>
-  <i>{{ overview.date }}</i><pre>{{ when }} {{ time }}</pre>
-  <i>{{ overview.location }}</i><pre>{{ location }}</pre>
-  <br/>
-  <i>{{ overview.agenda }}</i><blockquote>{{ agenda|safe }}</blockquote>
-  <i>{{ overview.info }}</i><pre>{{ invitation }}</pre>
+  <h3>{{ overview.date }}</h3><blockquote>{{ when }} {{ time }}</blockquote>
+  <h3>{{ overview.location }}</h3><blockquote>{{ location|safe }}</blockquote>
+  <h3>{{ overview.agenda }}</h3><blockquote>{{ agenda|safe }}</blockquote>
+  {% if price != 0 %} <h3>{{ overview.price }}</h3><blockquote>{{ price }} EUR</blockquote>{% endif %}
+  {% if invitation %} <h3>{{ overview.info }}</h3><blockquote>{{ invitation }}</blockquote>{% endif %}
 </div>

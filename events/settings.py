@@ -93,6 +93,7 @@ EVENTS_TMPL_CONTENT = {
       'date'            : u'Date',
       'location'        : u'Lieu',
       'agenda'          : u'Agenda',
+      'price'        	: u'Prix de la participation',
       'info'            : u'Informations supplémetaires',
     },
     'email': {
@@ -107,6 +108,7 @@ EVENTS_TMPL_CONTENT = {
         'date'          : u'Date and heure de début',
         'location'      : u'Lieu',
         'agenda'        : u'Agenda',
+        'price'        	: u'Prix de la participation',
         'info'          : u'Informations supplémetaires',
         'regcode'       : u"Votre code d'accès :",
       },
@@ -131,6 +133,7 @@ EVENTS_TMPL_CONTENT = {
       'date'            : u'Date et heure',
       'location'        : u'Lieu de rencontre',
       'agenda'          : u'Agenda',
+      'price'        	: u'Prix de la participation',
       'invitation'      : u"Texte de l'Invitation",
       'attachement'     : u'Informations supplémentaires',
       'attendance'      : u'Liste des inscrits',
