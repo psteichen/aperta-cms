@@ -197,6 +197,7 @@ def r_add(r):
         U = R.member.user
         g = Group.objects.get(name='BOARD') 
         g.user_set.add(U)
+	ML_add(group,email)
 
       # all fine -> done
       return TemplateResponse(r, settings.TEMPLATE_CONTENT['members']['roles']['add']['done']['template'], {

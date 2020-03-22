@@ -151,3 +151,55 @@ def get_meeting_missing_active_members(meeting):
 
   return members
 
+
+## gandi.net mailinglist functions
+import requests
+GANDI_ML_URL = "https://api.gandi.net/v5/email/forwards/aperta.lu"
+
+def ML_get(name):
+  headers = {'authorization': 'Apikey '+settings.GANDI_API_KEY}
+  response = requests.request("GET", GANDI_ML_URL, headers=headers)
+  data = response.json()
+  dest = None
+  for d in data:
+    if d['source'] == name: return dest = d['destinations']
+    
+  return False
+ 
+def ML_create(name,dest)
+  import json
+  d=[]
+  d.add(dest)
+
+  p = {}
+  p['source'] = name
+  p['destinations'] = d
+
+  payload = json.dumps(p)
+  headers = {
+	'authorization': 'Apikey '+settings.GANDI_API_KEY
+	'content-type': "application/json"
+  }
+  response = requests.request("POST", GANDI_ML_URL, data=payload, headers=headers)
+ 
+def ML_update(name,old,new)
+  import json
+  old.add(new)
+
+  p = {}
+  p['destinations'] = old
+
+  url = GANDI_ML_URL+"/"+name
+  payload = json.dumps(p)
+  headers = {
+	'authorization': 'Apikey '+settings.GANDI_API_KEY
+	'content-type': "application/json"
+  }
+  response = requests.request("PUT", url, data=payload, headers=headers)
+ 
+def ML_add(name,email):
+  r = ML_get(name)
+  if r == False: ML_create(name,email)
+  else: ML_update(name,r,email)
+
+
