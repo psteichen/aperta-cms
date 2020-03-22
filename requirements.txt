@@ -8,3 +8,4 @@ django-anymail
 icalendar
 html2text
 Markdown
+requests
