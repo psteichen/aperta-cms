@@ -22,16 +22,15 @@ def ML_get(name):
   headers = {'authorization': 'Apikey '+settings.GANDI_API_KEY}
   response = request("GET", GANDI_ML_URL, headers=headers)
   data = response.json()
-  dest = None
-  for d in data:
-    if d['source'] == name: return dest = d['destinations']
+  for d in data: 
+    if d['source'] == name: return d['destinations']
     
   return False
  
-def ML_create(name,dest)
+def ML_create(name,dest):
   import json
   d=[]
-  d.add(dest)
+  d.append(dest)
 
   p = {}
   p['source'] = name
@@ -39,14 +38,14 @@ def ML_create(name,dest)
 
   payload = json.dumps(p)
   headers = {
-	'authorization': 'Apikey '+settings.GANDI_API_KEY
+	'authorization': 'Apikey '+settings.GANDI_API_KEY,
 	'content-type': "application/json"
   }
   response = request("POST", GANDI_ML_URL, data=payload, headers=headers)
  
-def ML_update(name,old,new)
+def ML_update(name,old,new):
   import json
-  old.add(new)
+  old.append(new)
 
   p = {}
   p['destinations'] = old
@@ -54,7 +53,7 @@ def ML_update(name,old,new)
   url = GANDI_ML_URL+"/"+name
   payload = json.dumps(p)
   headers = {
-	'authorization': 'Apikey '+settings.GANDI_API_KEY
+	'authorization': 'Apikey '+settings.GANDI_API_KEY,
 	'content-type': "application/json"
   }
   response = request("PUT", url, data=payload, headers=headers)

@@ -103,6 +103,7 @@ def modify(r,mem_id):
     mf = MemberForm(r.POST,r.FILES,instance=M)
     if mf.is_valid():
       M = mf.save()
+      #TODO: if email changes -> adjust MLs
 
       # all fine -> done
       return TemplateResponse(r, settings.TEMPLATE_CONTENT['members']['modify']['done']['template'], {
@@ -199,7 +200,7 @@ def r_add(r):
         g.user_set.add(U)
 
         # add to board ML
-	ML_add(settings.EMAILS['ml']['board'],U.email)
+        ML_add(settings.EMAILS['ml']['board'],U.email)
 
       # all fine -> done
       return TemplateResponse(r, settings.TEMPLATE_CONTENT['members']['roles']['add']['done']['template'], {
