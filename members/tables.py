@@ -191,7 +191,6 @@ class MgmtMemberTable(Table):
     link = '<a class="btn btn-danger btn-sm" href="/members/modify/{}/"><i class="fa fa-pencil"></i></a>'.format(escape(record.pk))
     return mark_safe(link)
 
-
   class Meta:
     model = Member
     fields = ( 'photo', 'first_name', 'last_name', 'email', 'mobile', 'status', 'role', 'meetings', )
@@ -200,9 +199,14 @@ class MgmtMemberTable(Table):
 #roles table
 class RoleTable(Table):
   modify      = Column(verbose_name=u'Modifier',empty_values=())
+  remove	= Column(verbose_name=u'Enlever',empty_values=())
 
   def render_modify(self, record):
     link = '<a class="btn btn-danger btn-sm" href="/members/roles/modify/{}/"><i class="fa fa-pencil"></i></a>'.format(escape(record.pk))
+    return mark_safe(link)
+
+  def render_remove(self, record):
+    link = '<a class="btn btn-danger btn-sm" href="/members/roles/remove/{}/"><i class="fa fa-trash"></i></a>'.format(escape(record.pk))
     return mark_safe(link)
 
   class Meta:

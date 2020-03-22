@@ -129,6 +129,16 @@ MEMBERS_TMPL_CONTENT = {
         'message'     : u'Détails : ',
       },
     },
+    'remove': {
+      'template'      : 'form.html',
+      'title'         : u'Enlevé un Rôle',
+      'desc'          : '',
+      'submit'        : u'Enregistrer',
+      'done': {
+        'template'    : 'done.html',
+        'title'       : u'Le rôle [{}] a été enlevé.',
+      },
+    },
     'type': {
       'template'      : 'form.html',
       'title'         : u'Nouveau Rôle-Type',

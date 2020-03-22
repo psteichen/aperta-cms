@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.hashers import make_password
 
-from cms.functions import getSaison
+from cms.functions import getSaison, debug
 
 from attendance.models import Meeting_Attendance
 
@@ -43,12 +43,10 @@ def ML_create(name,dest):
   }
   response = request("POST", GANDI_ML_URL, data=payload, headers=headers)
  
-def ML_update(name,old,new):
+def ML_update(name,dest):
   import json
-  old.append(new)
-
   p = {}
-  p['destinations'] = old
+  p['destinations'] = dest
 
   url = GANDI_ML_URL+"/"+name
   payload = json.dumps(p)
@@ -61,7 +59,17 @@ def ML_update(name,old,new):
 def ML_add(name,email):
   r = ML_get(name)
   if r == False: ML_create(name,email)
-  else: ML_update(name,r,email)
+  else: 
+    r.append(email)
+    ML_update(name,r)
+
+def ML_del(name,email):
+  r = ML_get(name)
+  try:
+    r.remove(email)
+    ML_update(name,r)
+  except:
+    pass
 
 
 #

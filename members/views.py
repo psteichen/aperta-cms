@@ -22,7 +22,7 @@ from meetings.models import Meeting
 from events.models import Event
 from attendance.functions import gen_attendance_hashes
 
-from .functions import is_board, is_member, create_user, gen_member_initial, gen_role_initial, gen_member_overview, gen_member_fullname, gen_username, gen_random_password, ML_add
+from .functions import is_board, is_member, create_user, gen_member_initial, gen_role_initial, gen_member_overview, gen_member_fullname, gen_username, gen_random_password, ML_add, ML_del
 from .models import User, Member, Role, RoleType
 from .forms import MemberForm, RoleForm, RoleTypeForm
 from .tables  import MemberTable, MgmtMemberTable, RoleTable
@@ -144,7 +144,7 @@ def roles(request):
                         })
 
 
-# roles modify #
+# role modify #
 ################
 @group_required('BOARD')
 @crumb(u'Modifier le rôle [{role}]'.format(role=name_from_pk(Role)), parent=roles)
@@ -182,7 +182,7 @@ def r_modify(r,role_id):
                 'form': form,
                 })
 
-# roles  add #
+# role add #
 ##############
 @group_required('BOARD')
 @crumb(u'Ajouter un rôle', parent=roles)
@@ -224,7 +224,24 @@ def r_add(r):
                 'form': form,
                 })
 
-# roles  type #
+# role remove #
+################
+@group_required('BOARD')
+@crumb(u'Enlever le rôle [{role}]'.format(role=name_from_pk(Role)), parent=roles)
+def r_remove(r,role_id):
+
+  R = Role.objects.get(pk=role_id)
+
+  ML_del(settings.EMAILS['ml']['board'],R.member.user.email)
+  R.delete()
+
+  # all fine -> done
+  return TemplateResponse(r, settings.TEMPLATE_CONTENT['members']['roles']['remove']['done']['template'], {
+                'title': settings.TEMPLATE_CONTENT['members']['roles']['remove']['done']['title'].format(str(R)), 
+         })
+
+
+# role_type add #
 #################
 @group_required('BOARD')
 @crumb(u'Créer un type de rôle', parent=roles)
@@ -310,7 +327,7 @@ def p_modify(r, username):
     else:
       return TemplateResponse(r, settings.TEMPLATE_CONTENT['members']['profile']['modify']['done']['template'], {
                 'title': settings.TEMPLATE_CONTENT['members']['profile']['modify']['done']['title'], 
-                'error_message': settings.TEMPLATE_CONTENT['error']['gen'] + ' ; '.join([e for e in mf.errors]),
+                'error_message': settings.TEMPLATE_CONTENT['error']['gen'],
                 })
   # no post yet -> empty form
   else:
