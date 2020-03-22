@@ -12,6 +12,62 @@ from attendance.models import Meeting_Attendance
 from .models import Member, Role
 
 
+#
+## gandi.net mailinglist functions
+#
+from requests import request
+GANDI_ML_URL = "https://api.gandi.net/v5/email/forwards/aperta.lu"
+
+def ML_get(name):
+  headers = {'authorization': 'Apikey '+settings.GANDI_API_KEY}
+  response = request("GET", GANDI_ML_URL, headers=headers)
+  data = response.json()
+  dest = None
+  for d in data:
+    if d['source'] == name: return dest = d['destinations']
+    
+  return False
+ 
+def ML_create(name,dest)
+  import json
+  d=[]
+  d.add(dest)
+
+  p = {}
+  p['source'] = name
+  p['destinations'] = d
+
+  payload = json.dumps(p)
+  headers = {
+	'authorization': 'Apikey '+settings.GANDI_API_KEY
+	'content-type': "application/json"
+  }
+  response = request("POST", GANDI_ML_URL, data=payload, headers=headers)
+ 
+def ML_update(name,old,new)
+  import json
+  old.add(new)
+
+  p = {}
+  p['destinations'] = old
+
+  url = GANDI_ML_URL+"/"+name
+  payload = json.dumps(p)
+  headers = {
+	'authorization': 'Apikey '+settings.GANDI_API_KEY
+	'content-type': "application/json"
+  }
+  response = request("PUT", url, data=payload, headers=headers)
+ 
+def ML_add(name,email):
+  r = ML_get(name)
+  if r == False: ML_create(name,email)
+  else: ML_update(name,r,email)
+
+
+#
+## user creation and management functions
+#
 def gen_username(fn, ln, pad=0):
   username = ''
   i=0
@@ -38,6 +94,9 @@ def create_user(first_name,last_name,email):
   U.last_name = last_name
   U.save()
   U.groups.add(Group.objects.get(name='MEMBER'))
+
+  # add to members ML
+  ML_add(settings.EMAILS['ml']['members'],U.email)
 
   return U
 
@@ -150,56 +209,5 @@ def get_meeting_missing_active_members(meeting):
       members.append(m)
 
   return members
-
-
-## gandi.net mailinglist functions
-import requests
-GANDI_ML_URL = "https://api.gandi.net/v5/email/forwards/aperta.lu"
-
-def ML_get(name):
-  headers = {'authorization': 'Apikey '+settings.GANDI_API_KEY}
-  response = requests.request("GET", GANDI_ML_URL, headers=headers)
-  data = response.json()
-  dest = None
-  for d in data:
-    if d['source'] == name: return dest = d['destinations']
-    
-  return False
- 
-def ML_create(name,dest)
-  import json
-  d=[]
-  d.add(dest)
-
-  p = {}
-  p['source'] = name
-  p['destinations'] = d
-
-  payload = json.dumps(p)
-  headers = {
-	'authorization': 'Apikey '+settings.GANDI_API_KEY
-	'content-type': "application/json"
-  }
-  response = requests.request("POST", GANDI_ML_URL, data=payload, headers=headers)
- 
-def ML_update(name,old,new)
-  import json
-  old.add(new)
-
-  p = {}
-  p['destinations'] = old
-
-  url = GANDI_ML_URL+"/"+name
-  payload = json.dumps(p)
-  headers = {
-	'authorization': 'Apikey '+settings.GANDI_API_KEY
-	'content-type': "application/json"
-  }
-  response = requests.request("PUT", url, data=payload, headers=headers)
- 
-def ML_add(name,email):
-  r = ML_get(name)
-  if r == False: ML_create(name,email)
-  else: ML_update(name,r,email)
 
 

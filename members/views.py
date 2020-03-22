@@ -22,7 +22,7 @@ from meetings.models import Meeting
 from events.models import Event
 from attendance.functions import gen_attendance_hashes
 
-from .functions import is_board, is_member, create_user, gen_member_initial, gen_role_initial, gen_member_overview, gen_member_fullname, gen_username, gen_random_password
+from .functions import is_board, is_member, create_user, gen_member_initial, gen_role_initial, gen_member_overview, gen_member_fullname, gen_username, gen_random_password, ML_add
 from .models import User, Member, Role, RoleType
 from .forms import MemberForm, RoleForm, RoleTypeForm
 from .tables  import MemberTable, MgmtMemberTable, RoleTable
@@ -197,7 +197,9 @@ def r_add(r):
         U = R.member.user
         g = Group.objects.get(name='BOARD') 
         g.user_set.add(U)
-	ML_add(group,email)
+
+        # add to board ML
+	ML_add(settings.EMAILS['ml']['board'],U.email)
 
       # all fine -> done
       return TemplateResponse(r, settings.TEMPLATE_CONTENT['members']['roles']['add']['done']['template'], {
