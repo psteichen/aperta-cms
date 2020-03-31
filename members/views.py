@@ -105,10 +105,18 @@ def modify(r,mem_id):
   if r.POST:
     mf = MemberForm(r.POST,r.FILES,instance=M)
     if mf.is_valid():
-      M = mf.save()
-      #TODO: if email changes -> adjust MLs
-      #TODO: if status changes to inactive -> remove from MLs
+      if mf.has_changed():
+        #if email changes -> adjust MLs
+        if 'email' in mf.changed_data:
+          ML_del(settings.EMAILS['ml']['members'],M.email)
+          ML_add(settings.EMAILS['ml']['members'],mf.cleaned_data['email'])
 
+        #if status changes to inactive -> remove from MLs
+        if 'status' in mf.changed_data: 
+          if mf.cleaned_data['status'] >= Member.STB:
+             ML_del(settings.EMAILS['ml']['members'],M.email)
+
+      M = mf.save()
       # all fine -> done
       return TemplateResponse(r, settings.TEMPLATE_CONTENT['members']['modify']['done']['template'], {
                 'title': settings.TEMPLATE_CONTENT['members']['modify']['done']['title'].format(str(M)),
