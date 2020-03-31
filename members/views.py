@@ -63,6 +63,9 @@ def add(r):
       M.user = U
       M.save()
 
+      # add to board ML
+      ML_add(settings.EMAILS['ml']['members'],U.email)
+
       #gen attendance hashes (to avoid errors with future events & meetings)
       for meeting in Meeting.objects.all():
         gen_attendance_hashes(meeting,Event.MEET,M)
@@ -104,6 +107,7 @@ def modify(r,mem_id):
     if mf.is_valid():
       M = mf.save()
       #TODO: if email changes -> adjust MLs
+      #TODO: if status changes to inactive -> remove from MLs
 
       # all fine -> done
       return TemplateResponse(r, settings.TEMPLATE_CONTENT['members']['modify']['done']['template'], {
