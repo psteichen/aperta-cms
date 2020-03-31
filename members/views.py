@@ -110,6 +110,9 @@ def modify(r,mem_id):
         if 'email' in mf.changed_data:
           ML_del(settings.EMAILS['ml']['members'],M.email)
           ML_add(settings.EMAILS['ml']['members'],mf.cleaned_data['email'])
+          if is_board(M.user):
+            ML_del(settings.EMAILS['ml']['board'],M.email)
+            ML_add(settings.EMAILS['ml']['board'],mf.cleaned_data['email'])
 
         #if status changes to inactive -> remove from MLs
         if 'status' in mf.changed_data: 
