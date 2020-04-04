@@ -22,7 +22,7 @@ from meetings.models import Meeting
 from events.models import Event
 from attendance.functions import gen_attendance_hashes
 
-from .functions import is_board, is_member, create_user, gen_member_initial, gen_role_initial, gen_member_overview, gen_member_fullname, gen_username, gen_random_password, ML_add, ML_del
+from .functions import is_board, is_member, create_user, gen_member_initial, gen_role_initial, gen_member_overview, gen_member_fullname, gen_username, gen_random_password, ML_update, remove_from_groups, add_to_groups, remove_from_board
 from .models import User, Member, Role, RoleType
 from .forms import MemberForm, RoleForm, RoleTypeForm
 from .tables  import MemberTable, MgmtMemberTable, RoleTable
@@ -63,15 +63,15 @@ def add(r):
       M.user = U
       M.save()
 
-      # add to board ML
-      ML_add(settings.EMAILS['ml']['members'],U.email)
-
       #gen attendance hashes (to avoid errors with future events & meetings)
       for meeting in Meeting.objects.all():
         gen_attendance_hashes(meeting,Event.MEET,M)
       for event in Event.objects.all():
         gen_attendance_hashes(event,Event.OTH,M)
       
+      # add to board ML
+      ML_update('members')
+
       # all fine -> done
       return TemplateResponse(r, settings.TEMPLATE_CONTENT['members']['add']['done']['template'], {
                 'title': settings.TEMPLATE_CONTENT['members']['add']['done']['title'], 
@@ -106,20 +106,17 @@ def modify(r,mem_id):
     mf = MemberForm(r.POST,r.FILES,instance=M)
     if mf.is_valid():
       if mf.has_changed():
-        #if email changes -> adjust MLs
-        if 'email' in mf.changed_data:
-          ML_del(settings.EMAILS['ml']['members'],M.email)
-          ML_add(settings.EMAILS['ml']['members'],mf.cleaned_data['email'])
-          if is_board(M.user):
-            ML_del(settings.EMAILS['ml']['board'],M.email)
-            ML_add(settings.EMAILS['ml']['board'],mf.cleaned_data['email'])
-
-        #if status changes to inactive -> remove from MLs
+        #if status changes to inactive -> remove from groups
         if 'status' in mf.changed_data: 
-          if mf.cleaned_data['status'] >= Member.STB:
-             ML_del(settings.EMAILS['ml']['members'],M.email)
+          if mf.cleaned_data['status'] >= Member.STB: remove_from_groups(M)
+          elif mf.cleaned_data['status'] < Member.STB: add_to_groups(M)
 
       M = mf.save()
+
+      # updates ML
+      ML_update('members')
+      ML_update('board')
+
       # all fine -> done
       return TemplateResponse(r, settings.TEMPLATE_CONTENT['members']['modify']['done']['template'], {
                 'title': settings.TEMPLATE_CONTENT['members']['modify']['done']['title'].format(str(M)),
@@ -208,14 +205,11 @@ def r_add(r):
     if rf.is_valid():
       R = rf.save()
 
-      # add member to group board of role is board too
-      if R.type.type == RoleType.A: 
-        U = R.member.user
-        g = Group.objects.get(name='BOARD') 
-        g.user_set.add(U)
+      # add member to group board of role is of type A
+      if R.type.type == RoleType.A: add_to_board(R.member)
 
-        # add to board ML
-        ML_add(settings.EMAILS['ml']['board'],U.email)
+      # update ML
+      ML_update('board')
 
       # all fine -> done
       return TemplateResponse(r, settings.TEMPLATE_CONTENT['members']['roles']['add']['done']['template'], {
@@ -246,9 +240,10 @@ def r_add(r):
 def r_remove(r,role_id):
 
   R = Role.objects.get(pk=role_id)
-
-  ML_del(settings.EMAILS['ml']['board'],R.member.user.email)
+  remove_from_board(R.member)
   R.delete()
+
+  ML_update('board')
 
   # all fine -> done
   return TemplateResponse(r, settings.TEMPLATE_CONTENT['members']['roles']['remove']['done']['template'], {

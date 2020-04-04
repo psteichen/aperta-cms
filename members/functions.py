@@ -12,6 +12,9 @@ from attendance.models import Meeting_Attendance
 from .models import Member, Role
 
 
+def get_active_members():
+  return Member.objects.filter(Q(status=Member.ACT)|Q(status=Member.WBE)|Q(status=Member.HON)).order_by('last_name')
+
 #
 ## gandi.net mailinglist functions
 #
@@ -43,34 +46,26 @@ def ML_create(name,dest):
   }
   response = request("POST", GANDI_ML_URL, data=payload, headers=headers)
  
-def ML_update(name,dest):
-  import json
-  p = {}
-  p['destinations'] = dest
+def ML_update(name):
+  r = ML_get(name)
+  emails = list(User.objects.filter(groups__name=name.upper()).values_list('email'))
+  if emails == []: return False
+  if r == False: ML_create(name,emails)
+  else: 
+    import json
+    p = {}
+    p['destinations'] = emails
 
-  url = GANDI_ML_URL+"/"+name
-  payload = json.dumps(p)
-  headers = {
+    url = GANDI_ML_URL+"/"+name
+    payload = json.dumps(p)
+    headers = {
 	'authorization': 'Apikey '+settings.GANDI_API_KEY,
 	'content-type': "application/json"
-  }
-  response = request("PUT", url, data=payload, headers=headers)
+    }
+    response = request("PUT", url, data=payload, headers=headers)
+
+    return True
  
-def ML_add(name,email):
-  r = ML_get(name)
-  if r == False: ML_create(name,email)
-  else: 
-    r.append(email)
-    ML_update(name,r)
-
-def ML_del(name,email):
-  r = ML_get(name)
-  try:
-    r.remove(email)
-    ML_update(name,r)
-  except:
-    pass
-
 
 #
 ## user creation and management functions
@@ -122,10 +117,6 @@ def is_member(user):
     if g.name == 'MEMBER': return True
 
   return False
-
-
-def get_active_members():
-  return Member.objects.filter(Q(status=Member.ACT)|Q(status=Member.WBE)|Q(status=Member.HON)).order_by('last_name')
 
 def gen_member_fullname(member):
   return str(member.first_name) + u' ' + str.upper(member.last_name)
@@ -217,4 +208,35 @@ def get_meeting_missing_active_members(meeting):
 
   return members
 
+          
+def remove_from_board(M):
+  U = M.user
+  g = Group.objects.get(name='BOARD') 
+  g.user_set.remove(U)
+
+def remove_from_groups(M):
+  U = M.user
+  g = Group.objects.get(name='MEMBER') 
+  g.user_set.remove(U)
+  h = Group.objects.get(name='BOARD') 
+  h.user_set.remove(U)
+
+def add_to_board(M):
+  U = M.user
+  g = Group.objects.get(name='BOARD') 
+  g.user_set.add(U)
+
+def has_role(M):
+  try:
+    Role.objects.get(member=M)
+    return True
+  except Role.DoesNotExist:
+    return False
+def add_to_groups(M):
+  U = M.user
+  g = Group.objects.get(name='MEMBER') 
+  g.user_set.add(U)
+  if has_role(M):
+    h = Group.objects.get(name='BOARD') 
+    h.user_set.add(U)
 
