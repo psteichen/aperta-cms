@@ -113,7 +113,7 @@ def modify(r,mem_id):
 
       M = mf.save()
 
-      # updates ML
+      # ML updates
       ML_update('members')
       ML_update('board')
 
