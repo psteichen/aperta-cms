@@ -9,7 +9,7 @@ from cms.functions import getSaison, debug
 
 from attendance.models import Meeting_Attendance
 
-from .models import Member, Role
+from .models import Member, Role, RoleType
 
 
 def get_active_members():
@@ -244,6 +244,16 @@ def add_to_board(M):
   U = M.user
   g = Group.objects.get(name='BOARD') 
   g.user_set.add(U)
+
+def update_board():
+  # update board group based on roles
+  board = Group.objects.get(name='BOARD') 
+  users = User.objects.all()
+  for u in users:
+    board.user_set.remove(u)
+    R = Role.objects.filter(member__user=u,year=getSaison())
+    for r in R:
+      if r.type.type == RoleType.A: board.user_set.add(u)
 
 def has_role(M):
   try:
