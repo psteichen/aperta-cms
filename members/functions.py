@@ -102,6 +102,13 @@ def create_user(first_name,last_name,email):
 
   return U
 
+def update_user(member):
+  U = member.user
+  U.first_name = member.first_name
+  U.last_name = member.last_name
+  U.email = member.email
+  U.save()
+
 def is_board(user):
   if user.is_superuser: return True
 
@@ -232,6 +239,7 @@ def has_role(M):
     return True
   except Role.DoesNotExist:
     return False
+
 def add_to_groups(M):
   U = M.user
   g = Group.objects.get(name='MEMBER') 

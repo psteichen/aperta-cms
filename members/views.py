@@ -22,7 +22,7 @@ from meetings.models import Meeting
 from events.models import Event
 from attendance.functions import gen_attendance_hashes
 
-from .functions import is_board, is_member, create_user, gen_member_initial, gen_role_initial, gen_member_overview, gen_member_fullname, gen_username, gen_random_password, ML_update, remove_from_groups, add_to_groups, remove_from_board
+from .functions import is_board, is_member, create_user, gen_member_initial, gen_role_initial, gen_member_overview, gen_member_fullname, gen_username, gen_random_password, ML_update, remove_from_groups, add_to_groups, remove_from_board, update_user
 from .models import User, Member, Role, RoleType
 from .forms import MemberForm, RoleForm, RoleTypeForm
 from .tables  import MemberTable, MgmtMemberTable, RoleTable
@@ -59,7 +59,7 @@ def add(r):
       M = mf.save(commit=False)
 
       # create user
-      U = create_user(M.first_name,M.last_name, M.email)
+      U = create_user(M.first_name, M.last_name, M.email)
       M.user = U
       M.save()
 
@@ -112,6 +112,7 @@ def modify(r,mem_id):
           elif mf.cleaned_data['status'] < Member.STB: add_to_groups(M)
 
       M = mf.save()
+      update_user(M)
 
       # ML updates
       ML_update('members')
