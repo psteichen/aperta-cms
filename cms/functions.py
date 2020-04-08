@@ -18,7 +18,7 @@ from django.utils import timezone
 def debug(app,message):
   if settings.DEBUG:
     from sys import stderr as errlog
-    print >>errlog, 'DEBUG ['+str(app)+']: '+str(message)
+    print('DEBUG ['+str(app)+']: '+str(message), file=errlog)
 
 
 def check_if_setup():
