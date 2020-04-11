@@ -32,47 +32,49 @@ def ML_get(name):
  
 def ML_create(name,dest):
   import json
-  d=[]
-  d.append(dest)
 
   p = {}
   p['source'] = settings.EMAILS['ml'][name]
-  p['destinations'] = d
+  p['destinations'] = dest
 
-  debug('members','create ML '+settings.EMAILS['ml'][name])
-  debug('members','emails for list: ['+settings.EMAILS['ml'][name]+']: '+str(d))
+  debug('members.functions.ML_create','create ML '+settings.EMAILS['ml'][name])
+  debug('members.functions.ML_create','emails: '+str(dest))
 
   payload = json.dumps(p)
   headers = {
 	'authorization': 'Apikey '+settings.GANDI_API_KEY,
 	'content-type': "application/json"
   }
+  debug('members.functions.ML_create','POST url: '+str(GANDI_ML_URL))
+  debug('members.functions.ML_create','POST headers: '+str(headers))
+  debug('members.functions.ML_create','POST paylod as json: '+str(payload))
   response = request("POST", GANDI_ML_URL, data=payload, headers=headers)
+  debug('members.functions.ML_create','POST (create ML via API): '+str(response))
 
   return response.status_code
  
 def ML_update(name):
   r = ML_get(name)
-  debug('members','get ML ('+settings.EMAILS['ml'][name]+'): '+str(r))
+  debug('members.functions.ML_update','get ML ('+settings.EMAILS['ml'][name]+'): '+str(r))
   emails = list(User.objects.filter(groups__name=str(name)).values_list('email',flat=True))
-  debug('members','emails for list: ['+settings.EMAILS['ml'][name]+']: '+str(emails))
+  debug('members.functions.ML_update','emails for list: ['+settings.EMAILS['ml'][name]+']: '+str(emails))
   if emails == []: return False
   if r == False: return ML_create(name,emails)
   else: 
     import json
     p = {}
     p['destinations'] = emails
-    debug('members','put emails in paylod: '+str(p))
+    debug('members.functions.ML_update','put emails in paylod: '+str(p))
 
     url = GANDI_ML_URL+"/"+settings.EMAILS['ml'][name]
     payload = json.dumps(p)
-    debug('members','paylod as json: '+str(payload))
+    debug('members.functions.ML_update','paylod as json: '+str(payload))
     headers = {
 	'authorization': 'Apikey '+settings.GANDI_API_KEY,
 	'content-type': "application/json"
     }
     response = request("PUT", url, data=payload, headers=headers)
-    debug('members','PUT (update ML via API): '+str(response))
+    debug('members.functions.ML_update','PUT (update ML via API): '+str(response))
 
     return response.text
 
