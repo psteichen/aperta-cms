@@ -39,6 +39,9 @@ def ML_create(name,dest):
   p['source'] = settings.EMAILS['ml'][name]
   p['destinations'] = d
 
+  debug('members','create ML '+settings.EMAILS['ml'][name])
+  debug('members','emails for list: ['+settings.EMAILS['ml'][name]+']: '+str(d))
+
   payload = json.dumps(p)
   headers = {
 	'authorization': 'Apikey '+settings.GANDI_API_KEY,
