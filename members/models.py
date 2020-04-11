@@ -79,7 +79,3 @@ class Role(Model):
   def __str__(self):
     return str(self.type) + ' : ' + str(self.member)
 
-  class Meta:
-    unique_together = ( 'member', 'type', )
-
-
